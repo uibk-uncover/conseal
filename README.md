@@ -1,4 +1,4 @@
-[![PyPI version](https://badge.fury.io/py/conseal.svg)](https://pypi.org/project/jpeglib/)
+[![PyPI version](https://badge.fury.io/py/conseal.svg)](https://pypi.org/project/conseal/)
 [![Commit CI/CD](https://github.com/uibk-uncover/conseal/actions/workflows/on_commit.yml/badge.svg?branch=master)](https://github.com/uibk-uncover/conseal/actions/workflows/on_commit.yml)
 [![Release CI/CD](https://github.com/uibk-uncover/conseal/actions/workflows/on_release.yml/badge.svg)](https://github.com/uibk-uncover/conseal/actions/workflows/on_release.yml)
 [![Documentation Status](https://readthedocs.org/projects/conseal/badge/?version=latest)](https://conseal.readthedocs.io/)
@@ -13,7 +13,7 @@
 
 # conseal
 
-Python implementations with modern image steganographic algorithms.
+Python implementations of modern image steganographic algorithms.
 
 
 ## Installation

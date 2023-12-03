@@ -4,7 +4,6 @@ Author: Martin Benes
 Affiliation: University of Innsbruck
 """
 
-import sys
 import unittest
 
 # logging

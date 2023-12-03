@@ -19,7 +19,7 @@ def get_p(
 
     where
         x_i is the original value at the i-th position,
-        y_i = argmin_{z \in {x_i - 1, x_i + 1}} D(X, zX_~i) is the modified value at the i-th position,
+        y_i = argmin_{z in {x_i - 1, x_i + 1}} D(X, zX_~i) is the modified value at the i-th position,
         Z is a normalization factor,
         y_i X_~i denotes the cover image whose i-th value has been modified to Y_i = y_i and all other pixels remain unchanged, and
         lambda is a constant.
