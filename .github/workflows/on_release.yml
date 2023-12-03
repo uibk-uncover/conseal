@@ -19,18 +19,18 @@ jobs:
           # Sources:
           # https://github.com/scikit-learn/scikit-learn/blob/main/.github/workflows/wheels.yml
           # https://cibuildwheel.readthedocs.io/en/stable/options/
-          # # Windows
-          # - os: windows-2019
-          #   arch: AMD64
-          # - os: windows-2019
-          #   arch: x86
-          # # MacOS
-          # - os: macos-11
-          #   arch: x86_64
-          # - os: macos-11
-          #   arch: arm64
-          # - os: macos-11
-          #   arch: universal2
+          # Windows
+          - os: windows-2019
+            arch: AMD64
+          - os: windows-2019
+            arch: x86
+          # MacOS
+          - os: macos-11
+            arch: x86_64
+          - os: macos-11
+            arch: arm64
+          - os: macos-11
+            arch: universal2
           # Linux
           - os: ubuntu-20.04
             arch: x86_64
@@ -110,7 +110,7 @@ jobs:
     name: Upload to PyPi
     needs: [build_wheels, make_sdist, unit_tests]
     runs-on: ubuntu-latest
-    if: ${{github.event_name == 'release' && github.event.action == 'created'}}
+    # if: ${{github.event_name == 'release' && github.event.action == 'created'}}
     steps:
       - name: Downloads artifact
         uses: actions/download-artifact@v3
