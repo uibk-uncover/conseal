@@ -1,25 +1,9 @@
 name: Release CI/CD # workflow name
 on: # trigger
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-  # release:
-  #   branches: [master]
-  #   types:
-  #     - created
-  push:
-    branches: [main]
-=======
   release:
     branches: [main]
     types:
       - created
->>>>>>> Stashed changes
-=======
-  release:
-    branches: [main]
-    types:
-      - created
->>>>>>> 2407511 (dev branched out)
 
 
 jobs:
