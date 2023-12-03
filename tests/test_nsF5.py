@@ -9,7 +9,6 @@ import jpeglib
 import logging
 import numpy as np
 from parameterized import parameterized
-import sys
 import tempfile
 import unittest
 

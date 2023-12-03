@@ -4,16 +4,13 @@ Author: Martin Benes
 Affiliation: University of Innsbruck
 """
 
+import conseal as cl
 import logging
 import numpy as np
 import os
 from parameterized import parameterized
-import sys
 import tempfile
 import unittest
-
-sys.path.append('.')
-import conseal as cl
 
 
 class TestSimulate(unittest.TestCase):
