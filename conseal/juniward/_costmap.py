@@ -270,9 +270,6 @@ def compute_cost_per_block(
     assert height % 8 == 0, "Expected height to be a multiple of 8"
     assert width % 8 == 0, "Expected width to be a multiple of 8"
 
-    if implementation not in {IMPLEMENTATION_ORIGINAL, IMPLEMENTATION_FIX_OFF_BY_ONE}:
-        raise ValueError(f'Expected implementation to be either "{IMPLEMENTATION_ORIGINAL}" or "{IMPLEMENTATION_FIX_OFF_BY_ONE}".')
-
     # Sigma avoids division by zero but also controls the content sensitivity.
     # Very small sigmas make the embedding very sensitive to the image content.
     # Large sigmas smooth out the embedding change probabilities.

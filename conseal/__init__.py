@@ -5,6 +5,7 @@ from . import juniward
 from . import nsF5
 from . import uerd
 from . import simulate
+from . import tools
 
 # abbreviations of enum
 JUNIWARD_ORIGINAL = juniward.Implementation.JUNIWARD_ORIGINAL
