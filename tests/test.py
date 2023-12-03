@@ -15,8 +15,10 @@ if __name__ == "__main__":
     logging.info(f"{conseal.__version__=}")
 
 # === unit tests ===
+from test_juniward import TestJUNIWARD  # noqa: F401,E402
 from test_nsF5 import TestnsF5  # noqa: F401,E402
 from test_simulate import TestSimulate  # noqa: F401,E402
+from test_uerd import TestUERD  # noqa: F401,E402
 # ==================
 
 # run unittests
