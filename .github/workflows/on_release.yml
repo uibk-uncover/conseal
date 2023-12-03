@@ -4,7 +4,10 @@ on: # trigger
     branches: [main]
     types:
       - created
+<<<<<<< HEAD
 
+=======
+>>>>>>> 21b4d2d (dev branched out)
 
 jobs:
   build_wheels:
