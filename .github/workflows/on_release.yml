@@ -60,7 +60,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          path: ./wheelhouse/conseal_*.whl
+          path: ./wheelhouse/conseal*.whl
 
   make_sdist:
     name: Make source distribution
