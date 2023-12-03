@@ -44,7 +44,7 @@ Documentation = "https://conseal.readthedocs.io/"
 Source = "https://github.com/martinbenes1996/jpeglib/"
 
 [project.optional-dependencies]
-test = ['flake8']
+dev = ['flake8']
 deploy = []
 
 [tool.pytest.ini_options]
