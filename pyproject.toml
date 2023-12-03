@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "conseal"
+version = "2023.12.a0"
+dependencies = [
+  "numpy",
+  "scipy"
+]
+requires-python = ">= 3.8"
+authors = [
+    {name = "Martin Benes", email = "martin.benes@uibk.ac.at"},
+    {name = "Benedikt Lorch", email = "benedikt.lorch@uibk.ac.at"}
+]
+description = "Implementation of modern image steganographic algorithms"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["steganography", "image", "jpeg"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Other Audience",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Communications",
+    "Topic :: Education",
+    "Topic :: Multimedia",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Security",
+    "Topic :: Utilities"
+]
+
+[project.urls]
+Homepage = "https://pypi.org/project/jpeglib/"
+Documentation = "https://conseal.readthedocs.io/"
+Source = "https://github.com/martinbenes1996/jpeglib/"
+
+[project.optional-dependencies]
+test = ['flake8']
+deploy = []
