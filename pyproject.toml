@@ -46,3 +46,9 @@ Source = "https://github.com/martinbenes1996/jpeglib/"
 [project.optional-dependencies]
 test = ['flake8']
 deploy = []
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+    "integration",
+]
