@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "conseal"
 version = "2023.12.a0"
 dependencies = [
-  "jpeglib",
+  "jpeglib ~= 1.0.0",
   "numpy",
   "scipy"
 ]
@@ -45,11 +45,16 @@ Documentation = "https://conseal.readthedocs.io/"
 Source = "https://github.com/martinbenes1996/jpeglib/"
 
 [project.optional-dependencies]
-dev = ['flake8']
+dev = [
+    "flake8",
+    "parameterized"
+]
 deploy = []
 
-[tool.pytest.ini_options]
-testpaths = [
-    "tests",
-    "integration",
-]
+[tool.coverage.report]
+fail_under = 80
+
+[tool.coverage.run]
+branch = true
+include = ["conseal/*"]
+command_line = "-m unittest discover -s tests/"
