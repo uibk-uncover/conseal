@@ -13,7 +13,7 @@ import tempfile
 import unittest
 
 from defs import ASSETS_DIR, COVER_DIR
-STEGO_DIR = ASSETS_DIR / 'UERD'
+STEGO_DIR = ASSETS_DIR / 'uerd'
 
 
 class TestUERD(unittest.TestCase):
