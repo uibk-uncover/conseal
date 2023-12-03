@@ -16,8 +16,6 @@ def simulate(
     rho: typing.Union[np.ndarray, typing.Tuple[np.ndarray]],
     alpha: float,
     n: int,
-    color_strategy: str = None,
-    gamma: float = .25,
     seed: int = None,
     **kw,
 ) -> typing.Union[np.ndarray, typing.Tuple[np.ndarray]]:
@@ -28,7 +26,18 @@ def simulate(
     else:
         q = 2
 
-    raise NotImplementedError
+    # ternary
+    if q == 3:
+        return _ternary.ternary(
+            rho[0], rho[1],
+            alpha=alpha,
+            n=n,
+            seed=seed,
+            **kw,
+        )
+    # other
+    else:
+        raise NotImplementedError(f'{q=} not implemented')
 
 
 def average_payload(

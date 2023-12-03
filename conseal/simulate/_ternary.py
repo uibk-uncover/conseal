@@ -217,5 +217,10 @@ def ternary(
     Returns:
         (np.ndarray): Simulated binary changes in the cover, 0 (keep), 1 or -1 (change).
     """
-    (pChangeP1, pChangeM1), lbda = probability(rhoP1=rhoP1, rhoM1=rhoM1, alpha=alpha, n=n)
+    (pChangeP1, pChangeM1), lbda = probability(
+        rhoP1=rhoP1,
+        rhoM1=rhoM1,
+        alpha=alpha,
+        n=n,
+    )
     return simulate(pChangeP1, pChangeM1, **kw)
