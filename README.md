@@ -10,10 +10,15 @@
 [![PyPi license](https://badgen.net/pypi/license/pip/)](https://pypi.com/project/conseal/)
 [![Last commit](https://img.shields.io/github/last-commit/uibk-uncover/conseal)](https://GitHub.com/uibk-uncover/conseal)
 
+<img src="docs/seal.png" width="25%"/>
 
 # conseal
 
-Python implementations of modern image steganographic algorithms.
+Python package, containing implementations of modern image steganographic algorithms.
+
+> :warning: The package can perform simulated embedding only, which is useful for steganalysis research. We will not provide end-to-end implementation of steganography.
+
+
 
 
 ## Installation
@@ -28,6 +33,8 @@ pip3 install conseal
 or using the cloned repository
 
 ```bash
+git clone https://github.com/uibk-uncover/conseal/
+cd conseal
 pip3 install .
 ```
 
@@ -39,6 +46,59 @@ Import the library in Python 3
 ```python
 import conseal as cl
 ```
+
+Simulated embedding at 0.4 bpnzAC into `"cover.jpeg"`` is implemented for following algorithms:
+
+- J-UNIWARD
+
+```python
+# load cover
+im = jpeglib.read_spatial("cover.jpeg", jpeglib.JCS_GRAYSCALE)
+jpeg = jpeglib.read_dct("cover.jpeg")
+# embed J-UNIWARD 0.4
+jpeg.Y = cl.juniward.simulate_single_channel(
+    cover_spatial=im.spatial[..., 0],  # spatial
+    cover_dct_coeffs=jpeg.Y,
+    quantization_table=jpeg.qt[0],
+    embedding_rate=0.4,
+    seed=12345
+)
+# save result as stego image
+jpeg.write_dct("stego.jpeg")
+```
+
+- UERD
+
+```python
+# load cover
+jpeg = jpeglib.read_dct("cover.jpeg")
+# embed UERD 0.4
+jpeg.Y = cl.uerd.simulate_single_channel(
+    cover_dct_coeffs=jpeg.Y,
+    quantization_table=jpeg.qt[0],
+    embedding_rate=0.4,
+    seed=12345
+)
+# save result as stego image
+jpeg.write_dct("stego.jpeg")
+```
+
+- nsF5
+
+```python
+# load cover
+jpeg = jpeglib.read_dct("cover.jpeg")
+# embed UERD 0.4
+jpeg.Y = cl.nsF5.simulate_single_channel(
+    cover_dct_coeffs=jpeg.Y,
+    quantization_table=jpeg.qt[0],
+    embedding_rate=0.4,
+    seed=12345
+)
+# save result as stego image
+jpeg.write_dct("stego.jpeg")
+```
+
 
 
 ## Credits
