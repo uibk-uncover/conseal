@@ -47,8 +47,7 @@ Source = "https://github.com/martinbenes1996/jpeglib/"
 [project.optional-dependencies]
 dev = [
     "flake8",
-    "parameterized",
-    "cibuildwheel"
+    "parameterized"
 ]
 deploy = []
 

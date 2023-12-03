@@ -56,7 +56,7 @@ jobs:
           pip install -e '.[dev]'
       - name: Build wheels
         shell: bash
-        run: python -m cibuildwheel --output-dir wheelhouse
+        run: pip wheel -w wheelhouse .
         env:
           CIBW_BUILD: cp310*
           CIBW_SKIP: pp* *-musllinux*
@@ -100,10 +100,6 @@ jobs:
         with:
           name: artifact
           path: dist
-      - name: Build
-        shell: bash
-        run: |
-          pip install -e '.[dev]'
       - name: Install wheel
         run: pip install --find-links ./dist conseal --no-index
       - name: Run unittests
