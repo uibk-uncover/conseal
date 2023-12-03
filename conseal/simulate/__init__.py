@@ -5,30 +5,22 @@ Affiliation: University of Innsbruck
 """
 
 import numpy as np
-from typing import Tuple, Union
+import typing
 
 from ._defs import get_p
 from . import _ternary
 from ._ternary import ternary
 
-__all__ = [
-    '_costmap',
-    '_simulate',
-    'compute_distortion',
-    'compute_cost',
-    'simulate_single_channel',
-]
-
 
 def simulate(
-    rho: Union[np.ndarray, Tuple[np.ndarray]],
+    rho: typing.Union[np.ndarray, typing.Tuple[np.ndarray]],
     alpha: float,
     n: int,
     color_strategy: str = None,
     gamma: float = .25,
     seed: int = None,
     **kw,
-) -> Union[np.ndarray, Tuple[np.ndarray]]:
+) -> typing.Union[np.ndarray, typing.Tuple[np.ndarray]]:
     # multiple rhos given
     if not isinstance(rho, np.ndarray):
         q = len(rho) + 1
@@ -36,26 +28,7 @@ def simulate(
     else:
         q = 2
 
-    # # color strategy
-    # if color_strategy is None:
-    #     pass
-    # if color_strategy.lower() in {'ccfr', 'joint', 'arb', 'repartition'}:
-    #     pass
-    #     # use gamma
-    # elif color_strategy.lower() in {'r', 'red'}:
-    #     pass
-    # elif color_strategy.lower() in {'g', 'green'}:
-    #     pass
-    # elif color_strategy.lower() in {'b', 'blue'}:
-    #     pass
-    # elif color_strategy.lower() in {'y', 'lumo', 'luminance', 'gray'}:
-    #     pass
-    # elif color_strategy.lower() in {'cb'}:
-    #     pass
-    # elif color_strategy.lower() in {'cr'}:
-    #     pass
-    # else:
-    #     raise NotImplementedError(f'unknown color strategy {color_strategy}')
+    raise NotImplementedError
 
 
 def average_payload(
@@ -78,3 +51,13 @@ def average_payload(
         )
     else:
         raise NotImplementedError(f'not implemented {q}ary probability')
+
+
+__all__ = [
+    '_defs',
+    '_ternary',
+    'ternary',
+    'get_p',
+    'simulate',
+    'average_payload',
+]

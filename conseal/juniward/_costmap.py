@@ -34,7 +34,8 @@ def evaluate_distortion(X, Y):
     """
     Evaluate the UNIWARD distortion function between two 2-D images X and Y.
 
-    The UNIWARD distortion function is the sum of relative changes of all wavelet coefficients with respect to the cover image.
+    The UNIWARD distortion function is the sum of relative changes
+    of all wavelet coefficients with respect to the cover image.
 
     Note that both images are padded symmetrically with the cover image margins.
     This is necessary to match the Matlab implementation.
