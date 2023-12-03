@@ -1,3 +1,8 @@
+"""
+
+Author: Martin Benes, Benedikt Lorch
+Affiliation: University of Innsbruck
+"""
 
 import numpy as np
 import scipy.optimize
@@ -58,9 +63,3 @@ def inv_entropy(
         return (_entropy(p, 1-p) - h)**2
 
     return scipy.optimize.fminbound(mse_H_eq_h, 0, .5, xtol=1e-4)
-
-    # return scipy.optimize.minimize_scalar(
-    #     mse_H_eq_h,
-    #     method='Bounded',
-    #     bounds=(0, 1)
-    # ).x

@@ -33,9 +33,4 @@ def get_qt_from_jpeglib(filepath):
     :param filepath: path to JPEG image
     :return: quantization table given by jpeglib
     """
-
-    jpeg = jpeglib.read_dct(filepath)
-    qt = jpeg.qt
-    quant_tbl_no = jpeg.quant_tbl_no
-
-    return qt
+    return jpeglib.read_dct(filepath).qt
