@@ -7,7 +7,7 @@ on: # trigger
 
 # parallel jobs to perform
 jobs:
-  build_test:
+  test:
     name: Build for test
     runs-on: ubuntu-latest # runner
     if: ${{ (!contains(github.event.head_commit.message, '#notest') && !contains(github.event.head_commit.message, '#nolinuxtest')) || github.ref == 'refs/heads/master' }}
@@ -23,24 +23,6 @@ jobs:
         shell: bash
         run: |
           pip install .
-
-  test:
-    name: Run test
-    needs: [build_test]
-    runs-on: ubuntu-latest # runner
-    steps: # tasks
-      - name: Set Github Workspace # access Github Workspace
-        uses: actions/checkout@v2
-      - name: Set up Python 3.10 # set architecture and Python3
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-          architecture: "x64" # architecture
-      - name: Downloads artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: artifact
-          path: dist
       - name: Evaluate code quality
         shell: bash
         run: |
