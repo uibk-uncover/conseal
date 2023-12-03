@@ -22,6 +22,7 @@ __all__ = [
     'nsF5',
     'uerd',
     'simulate',
+    'tools',
     'JUNIWARD_ORIGINAL',
     'JUNIWARD_FIX_OFF_BY_ONE',
     '__version__',

@@ -21,6 +21,8 @@ from .. import tools
 
 
 class Implementation(enum.Enum):
+    """"""
+
     JUNIWARD_ORIGINAL = enum.auto()
     """Original J-UNIWARD implementation."""
     JUNIWARD_FIX_OFF_BY_ONE = enum.auto()

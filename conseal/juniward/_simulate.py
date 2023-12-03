@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 
 Author: Benedikt Lorch, Martin Benes

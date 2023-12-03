@@ -19,10 +19,11 @@ import numpy as np
 from scipy.signal import convolve2d
 import typing
 
-from ..simulate import _ternary
 
-
-def compute_block_energies(dct_coeffs, quantization_table):
+def compute_block_energies(
+    dct_coeffs: np.ndarray,
+    quantization_table: np.ndarray,
+) -> np.ndarray:
     """Compute block energy as described in Eq. 3
 
     :param dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
@@ -44,7 +45,10 @@ def compute_block_energies(dct_coeffs, quantization_table):
     return block_energies
 
 
-def compute_cost(block_energies, quantization_table):
+def compute_cost(
+    block_energies: np.ndarray,
+    quantization_table: np.ndarray,
+) -> np.ndarray:
     """Compute embedding cost as described in Eq. 4
 
     :param block_energies: ndarray of shape [num_vertical_blocks, num_horizontal_blocks]

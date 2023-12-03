@@ -58,11 +58,6 @@ def simulate_single_channel(
     if n == 0:
         raise ValueError('There are no non-zero AC coefficients for embedding')
 
-    # Rearrange from [num_vertical_blocks, num_horizontal_blocks, 8, 8] to [num_vertical_blocks * 8, num_horizontal_blocks * 8]
-    # rho_p1_2d = rho_p1.transpose((0, 2, 1, 3)).reshape(num_vertical_blocks * 8, num_horizontal_blocks * 8)
-    # rho_m1_2d = rho_m1.transpose((0, 2, 1, 3)).reshape(num_vertical_blocks * 8, num_horizontal_blocks * 8)
-    # cover_dct_coeffs_2d = cover_dct_coeffs.transpose((0, 2, 1, 3)).reshape(num_vertical_blocks * 8, num_horizontal_blocks * 8)
-
     # simulator
     (pChangeP1, pChangeM1), lbda = _ternary.probability(
         rhoP1=rho_p1,

@@ -10,8 +10,8 @@ from .dct import nzAC
 
 # modules
 from . import dct
-from . import spatial
 from . import jpeg
+from . import spatial
 
 
 __all__ = [
@@ -21,5 +21,6 @@ __all__ = [
     'EPS',
     'nzAC',
     'dct',
+    'jpeg',
     'spatial',
 ]
