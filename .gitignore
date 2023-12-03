@@ -49,3 +49,6 @@ venv.bak/
 
 # Apple
 .DS_Store
+
+# Wheels
+wheelhouse
