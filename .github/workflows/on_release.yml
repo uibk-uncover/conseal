@@ -57,13 +57,6 @@ jobs:
       - name: Build wheels
         shell: bash
         run: pip wheel -w wheelhouse .
-        env:
-          CIBW_BUILD: cp310*
-          CIBW_SKIP: pp* *-musllinux*
-          CIBW_ARCHS: ${{ matrix.arch }}
-          CIBW_PRERELEASE_PYTHONS: 1
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
