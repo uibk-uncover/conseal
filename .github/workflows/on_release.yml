@@ -1,11 +1,9 @@
 name: Release CI/CD # workflow name
 on: # trigger
-  # release:
-  #   branches: [master]
-  #   types:
-  #     - created
-  push:
-    branches: [main]
+  release:
+    branches: [master]
+    types:
+      - created
 
 jobs:
 
@@ -19,23 +17,23 @@ jobs:
           # Sources:
           # https://github.com/scikit-learn/scikit-learn/blob/main/.github/workflows/wheels.yml
           # https://cibuildwheel.readthedocs.io/en/stable/options/
-          # Windows
-          - os: windows-2019
-            arch: AMD64
-          - os: windows-2019
-            arch: x86
-          # MacOS
-          - os: macos-11
-            arch: x86_64
-          - os: macos-11
-            arch: arm64
-          - os: macos-11
-            arch: universal2
+          # # Windows
+          # - os: windows-2019
+          #   arch: AMD64
+          # - os: windows-2019
+          #   arch: x86
+          # # MacOS
+          # - os: macos-11
+          #   arch: x86_64
+          # - os: macos-11
+          #   arch: arm64
+          # - os: macos-11
+          #   arch: universal2
           # Linux
           - os: ubuntu-20.04
             arch: x86_64
-          - os: ubuntu-20.04
-            arch: i686
+          # - os: ubuntu-20.04
+          #   arch: i686
           # - os: ubuntu-20.04  # raspberry pi
           #   arch: aarch64
 
