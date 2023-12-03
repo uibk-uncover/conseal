@@ -94,7 +94,9 @@ jobs:
           name: artifact
           path: dist
       - name: Install wheel
-        run: pip install --find-links ./dist conseal --no-index
+        run: |
+          pip install jpeglib numpy scipy
+          pip install --find-links ./dist conseal --no-index
       - name: Run unittests
         shell: bash
         run: python tests/test.py
