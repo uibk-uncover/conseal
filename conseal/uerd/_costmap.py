@@ -90,11 +90,14 @@ def compute_distortion(
     quantization_table: np.ndarray,
     wet_cost: float = 10**13,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
-    """Computes the distortion rho_+1 and rho_-1.
+    """Computes the distortion rho_p1 and rho_m1.
 
-    :param cover_dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type cover_dct_coeffs: np.ndarray
     :param quantization_table: ndarray of shape [8, 8]
+    :type quantization_table: np.ndarray
     :param wet_cost: constant what the cost for wet pixel is
+    :type wet_cost: float
     :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     """
     # Compute block energies
