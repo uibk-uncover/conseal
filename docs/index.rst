@@ -1,10 +1,10 @@
 conseal
-===================================
+=======
 
 **conseal** is a Python package, containing implementations of modern image steganographic algorithms.
 
 .. image:: seal.png
-  :width: 600
+  :width: 300
   :alt: Here is supposed to be seal.
 
 .. note::
