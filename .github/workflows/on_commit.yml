@@ -30,7 +30,8 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
       - name: Run unittests
         shell: bash
-        run: python tests/test.py
+        run: |
+          python -m unittest
       - name: Print log
         shell: bash
         if: always()

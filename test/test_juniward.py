@@ -10,7 +10,7 @@ import unittest
 import numpy as np
 from scipy.io import loadmat
 
-from defs import ASSETS_DIR
+from .defs import ASSETS_DIR
 STEGO_DIR = ASSETS_DIR / 'juniward'
 COVER_DIR = STEGO_DIR / 'cover'
 

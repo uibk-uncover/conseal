@@ -12,7 +12,7 @@ from parameterized import parameterized
 import tempfile
 import unittest
 
-from defs import ASSETS_DIR, COVER_DIR
+from .defs import ASSETS_DIR, COVER_DIR
 STEGO_DIR = ASSETS_DIR / 'nsF5'
 
 
