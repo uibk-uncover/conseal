@@ -6,7 +6,7 @@ Affiliation: University of Innsbruck
 
 # globals
 from .common import entropy, inv_entropy, _entropy, EPS
-from .dct import nzAC
+from .dct import nzAC, AC
 
 # modules
 from . import dct
@@ -20,6 +20,7 @@ __all__ = [
     '_entropy',
     'EPS',
     'nzAC',
+    'AC',
     'dct',
     'jpeg',
     'spatial',
