@@ -103,6 +103,6 @@ im_dct.write_dct("stego.jpeg")
 
 Developed by [Martin Benes](https://github.com/martinbenes1996) and [Benedikt Lorch](https://github.com/btlorch/), University of Innsbruck, 2023.
 
-The J-UNIWARD and nsF5 implementations in this package are based on the original Matlab code provided by the Digital Data Embedding Lab at Binghamton University. We also thank Patrick Bas for sharing his implementation of UERD with us.
+The J-UNIWARD and nsF5 implementations in this package are based on the original Matlab code provided by the Digital Data Embedding Lab at Binghamton University. We also thank Patrick Bas and Rémi Cogranne for sharing their implementations of UERD with us.
 
 We have made our best effort to ensure that our implementations produce identical results as the original Matlab implementations. However, it is the user's responsibility to verify this.

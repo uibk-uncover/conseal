@@ -89,7 +89,7 @@ def compute_distortion(
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
     wet_cost: float = 10**13,
-) -> typing.Tuple[np.ndarray]:
+) -> typing.Tuple[np.ndarray, np.ndarray]:
     """Computes the distortion rho_+1 and rho_-1.
 
     :param cover_dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
