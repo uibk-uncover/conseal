@@ -29,23 +29,23 @@ Tools
 Mid-level API
 -------------
 
-Distortion of JPEG Steganography
-""""""""""""""""""""""""""""""""
+Distortion
+""""""""""
 
 .. autofunction:: conseal.juniward.compute_distortion
 
 .. autofunction:: conseal.uerd.compute_distortion
 
-Simulator API
-"""""""""""""
+Mid-level Simulator API
+"""""""""""""""""""""""
 
 .. autofunction:: conseal.simulate.ternary
 
 Low-level API
 -------------
 
-Distortion of JPEG Steganography
-""""""""""""""""""""""""""""""""
+Cost or probability
+"""""""""""""""""""
 
 .. autofunction:: conseal.juniward.compute_cost
 
@@ -53,8 +53,8 @@ Distortion of JPEG Steganography
 
 .. autofunction:: conseal.nsF5.probability
 
-Simulator API
-"""""""""""""
+Low-level Simulator API
+"""""""""""""""""""""""
 
 .. autofunction:: conseal.simulate._ternary.probability
 
