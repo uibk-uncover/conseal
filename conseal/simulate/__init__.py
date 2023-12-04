@@ -19,6 +19,23 @@ def simulate(
     seed: int = None,
     **kw,
 ) -> typing.Union[np.ndarray, typing.Tuple[np.ndarray]]:
+    """
+
+    :param rho:
+    :type rho: np.ndarray
+    :param alpha:
+    :type alpha: float
+    :param n:
+    :type n: int
+    :param seed:
+    :type seed: int
+    :return:
+    :rtype: np.ndarray
+
+    :Example:
+
+    >>> # TODO
+    """
     # multiple rhos given
     if not isinstance(rho, np.ndarray):
         q = len(rho) + 1
@@ -50,6 +67,27 @@ def average_payload(
     pM1: np.ndarray = None,
     q: int = 3,
 ) -> float:
+    """
+
+    :param lbda:
+    :type lbda: float
+    :param rhoPM1:
+    :type rhoPM1: np.ndarray
+    :param rhoP1:
+    :type rhoP1: np.ndarray
+    :param rhoM1:
+    :type rhoM1: np.ndarray
+    :param pPM1:
+    :type pPM1: np.ndarray
+    :param pP1:
+    :type pP1: np.ndarray
+    :param pM1:
+    :type pM1: np.ndarray
+    :param q:
+    :type q: int
+    :return:
+    :rtype: float
+    """
     if q == 3:
         return _ternary.average_payload(
             lbda=lbda,
