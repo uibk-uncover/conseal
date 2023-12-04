@@ -84,6 +84,9 @@ It allows user to separately calculate the distortion, and perform the simulatio
 ...   n=im_dct.Y.size,
 ...   seed=12345)
 
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+
 
 At low-level API
 ----------------
@@ -101,7 +104,7 @@ as well as the probabilities and simulation.
 ...   rhoM1=rhoM1,
 ...   alpha=0.4,
 ...   n=im_dct.Y.size)
->>> delta = cl.simulate._ternary.simulate(
+>>> im_dct.Y += cl.simulate._ternary.simulate(
 ...   pChangeP1=pP1,
 ...   pChangeM1=pM1,
 ...   seed=12345)
