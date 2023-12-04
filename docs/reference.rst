@@ -25,6 +25,8 @@ Tools
 
 .. autofunction:: conseal.tools.nzAC
 
+.. autofunction:: conseal.tools.AC
+
 
 Mid-level API
 -------------
