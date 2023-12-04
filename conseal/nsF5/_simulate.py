@@ -40,6 +40,17 @@ def simulate_single_channel(
     embedding_rate: float = 1.,
     seed: int = None,
 ) -> np.ndarray:
+    """Simulate embedding into a single channel.
+
+    :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type cover_dct_coeffs: np.ndarray
+    :param embedding_rate: embedding rate
+    :type embedding_rate: float
+    :param seed: random seed for STC simulator
+    :type seed: int
+    :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: np.ndarray
+    """
 
     assert len(cover_dct_coeffs.shape) == 4, "Expected DCT coefficients to have 4 dimensions"
     assert cover_dct_coeffs.shape[2] == cover_dct_coeffs.shape[3] == 8, "Expected blocks of size 8x8"

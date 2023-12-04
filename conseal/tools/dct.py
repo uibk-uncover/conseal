@@ -11,13 +11,25 @@ from .common import entropy
 
 
 def nzAC(dct: np.ndarray) -> int:
-    """Non-zero DCT AC coefficients from 4D DCT tensor."""
+    """Computes number of non-zero DCT AC coefficients from 4D DCT tensor.
+
+    :param dct: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type dct: np.ndarray
+    :return: number of non-zero DCT AC coefficients
+    :rtype: int
+    """
     assert len(dct.shape) == 4, "Expected 4D DCT input array"
     return (dct != 0).sum() - (dct[:, :, 0, 0] != 0).sum()
 
 
 def AC(dct: np.ndarray) -> int:
-    """DCT AC coefficients from 4D DCT tensor."""
+    """Computes number of DCT AC coefficients from 4D DCT tensor.
+
+    :param dct: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type dct: np.ndarray
+    :return: number of DCT AC coefficients
+    :rtype: int
+    """
     assert len(dct.shape) == 4, "Expected 4D DCT input array"
     return dct.size - np.prod(dct.shape[:2])
 

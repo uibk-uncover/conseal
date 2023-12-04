@@ -26,7 +26,7 @@ from .. import tools
 
 
 class Implementation(enum.Enum):
-    """"""
+    """J-UNIWARD implementation to choose from"""
 
     JUNIWARD_ORIGINAL = enum.auto()
     """Original J-UNIWARD implementation."""
@@ -373,12 +373,19 @@ def compute_distortion(
     """
     Compute the embedding probability map for a given image. Averages the probabilities for embedding +1 and -1.
     :param cover_spatial: grayscale image in spatial domain
+    :type cover_spatial: np.ndarray
     :param cover_dct_coeffs: DCT coefficients of the image
+    :type cover_dct_coeffs: np.ndarray
     :param quant_table: quantization table of shape [8, 8]
+    :type quant_table: np.ndarray
     :param dtype: float32 or float64
+    :type dtype: np.dtype
     :param implementation: choose J-UNIWARD implementation
+    :type implementation: :class:`Implementation`
     :param wet_cost: cost for unembeddable coefficients
+    :type wet_cost: float
     :return: probability map in DCT domain of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: tuple np.ndarray
     """
     # Count number of embeddable DCT coefficients
     num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)
