@@ -1,7 +1,9 @@
-"""Simulation of UERD steganographic embedding.
+"""Simulation of the UERD steganography method.
 
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
+
+We thank Patrick Bas for sharing his implementation of UERD with us.
 """
 
 import numpy as np
