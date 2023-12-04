@@ -48,7 +48,7 @@ class TestJUNIWARD(unittest.TestCase):
         img_dct = jpeglib.read_dct(cover_filepath)
         qt = img_dct.qt[0]
 
-        costs = cl.juniward.compute_cost(
+        costs = cl.juniward._costmap.compute_cost(
             spatial=img_spatial,
             quant_table=qt,
             implementation=cl.JUNIWARD_ORIGINAL,
@@ -72,7 +72,7 @@ class TestJUNIWARD(unittest.TestCase):
         dct_coeffs = img_dct.Y
         qt = img_dct.qt[0]
 
-        costs = cl.juniward.compute_cost(
+        costs = cl.juniward._costmap.compute_cost(
             spatial=img_spatial,
             quant_table=qt,
             implementation=cl.JUNIWARD_FIX_OFF_BY_ONE,
