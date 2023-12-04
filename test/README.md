@@ -14,9 +14,14 @@ Because we could not find a numpy equivalent to Matlab's `randperm`, our nsF5 me
 
 ## Running the tests
 
-The tests should be run from inside the `tests` directory.
+The tests should be run from the project root directory.
 
 ```bash
-cd tests
-python tests.py
+python3 -m unittest
+```
+
+You can also run a specific test file.
+
+```bash
+python -m unittest test.test_uerd
 ```

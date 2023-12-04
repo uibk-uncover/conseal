@@ -11,7 +11,7 @@ import numpy as np
 from parameterized import parameterized
 import unittest
 
-from defs import ASSETS_DIR, COVER_DIR
+from .defs import ASSETS_DIR, COVER_DIR
 STEGO_DIR = ASSETS_DIR / 'uerd'
 
 
