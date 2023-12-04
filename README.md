@@ -16,9 +16,7 @@
 
 Python package, containing implementations of modern image steganographic algorithms.
 
-> :warning: The package can perform simulated embedding only, which is useful for steganalysis research. We will not provide end-to-end implementation of steganography.
-
-
+> :warning: The package only simulates the embedding, which is useful for steganalysis research. We do not provide any end-to-end steganography method.
 
 
 ## Installation
@@ -47,60 +45,64 @@ Import the library in Python 3
 import conseal as cl
 ```
 
-Simulated embedding at 0.4 bpnzAC into `"cover.jpeg"`` is implemented for following algorithms:
+This package currently contains the three JPEG steganography methods J-UNIWARD, UERD, and nsF5. The following examples show how to embed a JPEG cover image `cover.jpeg` with an embedding rate of 0.4 bits per non-zero AC coefficient (bpnzAC):
 
 - J-UNIWARD
 
 ```python
 # load cover
-im = jpeglib.read_spatial("cover.jpeg", jpeglib.JCS_GRAYSCALE)
-jpeg = jpeglib.read_dct("cover.jpeg")
+im_spatial = jpeglib.read_spatial("cover.jpeg", jpeglib.JCS_GRAYSCALE)
+im_dct = jpeglib.read_dct("cover.jpeg")
 # embed J-UNIWARD 0.4
-jpeg.Y = cl.juniward.simulate_single_channel(
-    cover_spatial=im.spatial[..., 0],  # spatial
-    cover_dct_coeffs=jpeg.Y,
-    quantization_table=jpeg.qt[0],
+im_dct.Y = cl.juniward.simulate_single_channel(
+    cover_spatial=im_spatial.spatial[..., 0],  # spatial
+    cover_dct_coeffs=im_dct.Y,
+    quantization_table=im_dct.qt[0],
     embedding_rate=0.4,
     seed=12345
 )
 # save result as stego image
-jpeg.write_dct("stego.jpeg")
+im_dct.write_dct("stego.jpeg")
 ```
 
 - UERD
 
 ```python
 # load cover
-jpeg = jpeglib.read_dct("cover.jpeg")
+im_dct = jpeglib.read_dct("cover.jpeg")
 # embed UERD 0.4
-jpeg.Y = cl.uerd.simulate_single_channel(
-    cover_dct_coeffs=jpeg.Y,
-    quantization_table=jpeg.qt[0],
+im_dct.Y = cl.uerd.simulate_single_channel(
+    cover_dct_coeffs=im_dct.Y,
+    quantization_table=im_dct.qt[0],
     embedding_rate=0.4,
     seed=12345
 )
 # save result as stego image
-jpeg.write_dct("stego.jpeg")
+im_dct.write_dct("stego.jpeg")
 ```
 
 - nsF5
 
 ```python
 # load cover
-jpeg = jpeglib.read_dct("cover.jpeg")
+im_dct = jpeglib.read_dct("cover.jpeg")
 # embed UERD 0.4
 jpeg.Y = cl.nsF5.simulate_single_channel(
-    cover_dct_coeffs=jpeg.Y,
-    quantization_table=jpeg.qt[0],
+    cover_dct_coeffs=im_dct.Y,
+    quantization_table=im_dct.qt[0],
     embedding_rate=0.4,
     seed=12345
 )
 # save result as stego image
-jpeg.write_dct("stego.jpeg")
+im_dct.write_dct("stego.jpeg")
 ```
 
 
 
-## Credits
+## Credits and Acknowledgements
 
 Developed by [Martin Benes](https://github.com/martinbenes1996) and [Benedikt Lorch](https://github.com/btlorch/), University of Innsbruck, 2023.
+
+The implementations in this package are based on Matlab codes provided by the Digital Data Embedding Lab at Binghamton University, and by Patrick Bas and Rémi Cogranne.
+
+We have made our best effort to ensure that our implementations produce identical results as the original Matlab implementations. However, it is the user's responsibility to verify this.
