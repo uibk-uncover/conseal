@@ -6,7 +6,7 @@ Affiliation: University of Innsbruck
 
 # costmap
 from . import _costmap
-from ._costmap import compute_distortion, compute_cost, Implementation
+from ._costmap import compute_distortion, Implementation
 
 # simulate
 from . import _simulate
@@ -20,7 +20,6 @@ __all__ = [
     '_costmap',
     '_simulate',
     'compute_distortion',
-    'compute_cost',
     'simulate_single_channel',
     'Implementation',
     'JUNIWARD_ORIGINAL',

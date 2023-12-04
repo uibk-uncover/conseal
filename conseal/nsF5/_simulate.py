@@ -12,9 +12,7 @@ Affiliation: University of Innsbruck
 This implementation is derived from the original Matlab implementation provided by the paper authors: https://dde.binghamton.edu/download/stego_algorithms/
 """
 
-from collections.abc import Sequence
 import numpy as np
-from typing import List, Union, Tuple
 
 from .. import tools
 
@@ -35,42 +33,6 @@ def average_payload(
     nzAC = tools.dct.nzAC(cover)
     alpha_hat = tools.H(num_changes / nzAC)
     return alpha_hat
-
-
-def probability(
-    cover_dct_coefs: np.ndarray,
-    alpha: float = 1.,
-) -> np.ndarray:
-    """Returns nsF5 probability map for consequent simulation."""
-
-    assert len(cover_dct_coefs.shape) == 4, "Expected DCT coefficients to have 4 dimensions"
-    assert cover_dct_coefs.shape[2] == cover_dct_coefs.shape[3] == 8, "Expected blocks of size 8x8"
-
-    # No embedding
-    if np.isclose(alpha, 0):
-        return np.zeros_like(cover_dct_coefs)
-
-    # Compute change rate on bound
-    beta = tools.inv_entropy(alpha)
-
-    # Number of nonzero AC DCT coefficients
-    nzAC = tools.dct.nzAC(cover_dct_coefs)
-    if nzAC == 0:
-        raise ValueError('There are no non-zero AC coefficients for embedding')
-
-    # probability map
-    p = np.ones(cover_dct_coefs.shape, dtype='float64') * beta
-
-    # do not change zeros or DC mode
-    p[cover_dct_coefs == 0] = 0
-    p[:, :, 0, 0] = 0
-
-    # substract absolute value
-    pP1, pM1 = p.copy(), p.copy()
-    pP1[cover_dct_coefs > 0] = 0
-    pM1[cover_dct_coefs < 0] = 0
-
-    return pP1, pM1
 
 
 def simulate_single_channel(
@@ -161,74 +123,4 @@ def simulate_single_channel(
     return cover_dct_coeffs + delta
 
 
-def simulate_batch(
-    cover_dct_coeffs: Tuple[np.ndarray],
-    alphas: Tuple[float],
-    seed: int,
-) -> List[np.ndarray]:
-    """
-
-    Args:
-        cover_dct_coefs list of np.ndarrays: Batch of cover DCT coefficients.
-        alpha list of floats: Embedding rate for each of the items in the batch
-        seed (int): Seed for random generator.
-    """
-    # Set up buffer for results
-    results_buffer = []
-
-    # Iterate over number of input items or channels
-    batch_size = len(cover_dct_coeffs)
-    for i in range(batch_size):
-        # Simulate embedding for single channel
-        channel = cover_dct_coeffs[i]
-        alpha = alphas[i]
-
-        stego_dct_coeffs = simulate_single_channel(channel, alpha, seed)
-
-        # Append result to buffer
-        results_buffer.append(stego_dct_coeffs)
-
-    return results_buffer
-
-
-def simulate(
-    cover_dct_coeffs: Union[np.ndarray, Tuple[np.ndarray]],
-    embedding_rate: Union[float, Tuple[float]] = 1.,
-    seed: int = None,
-) -> Union[np.ndarray, List[np.ndarray]]:
-    """
-    Wrapper method to simulate nsF5 embedding.
-
-    Given a single input DCT coefficients, the method calls `simulate_single_channel`.
-    Given a list of DCT coefficients, the method calls `simulate_batch`.
-
-    Returns ndarray with changes to be applied to the input coefficients, or a list of ndarrays in batch mode.
-
-    Args:
-        cover_dct_coefs (single np.ndarray, or list of np.ndarrays): Cover DCT(s).
-        embedding_rate (single float, or list of floats): Embedding rate.
-        seed (int): Seed for random generator.
-    """
-
-    is_batch = isinstance(cover_dct_coeffs, Sequence)
-
-    # Process batch
-    if is_batch:
-        batch_size = len(cover_dct_coeffs)
-        alphas = embedding_rate
-
-        # If alpha is a single number, expand alpha to batch shape
-        if not isinstance(alphas, Sequence):
-            alphas = (embedding_rate,) * batch_size
-
-        return simulate_batch(cover_dct_coeffs=cover_dct_coeffs, alphas=alphas, seed=seed)
-
-    # Process single channel
-    return simulate_single_channel(
-        cover_dct_coeffs=cover_dct_coeffs,
-        embedding_rate=embedding_rate,
-        seed=seed,
-    )
-
-
-__all__ = ['simulate']
+__all__ = ['simulate_single_channel']
