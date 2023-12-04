@@ -26,15 +26,25 @@ def simulate_single_channel(
     """J-UNIWARD embedding
 
     :param cover_spatial: spatial image of shape [height, width]
+    :type cover_spatial: np.ndarray
     :param cover_dct_coeffs: corresponding quantized DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type cover_dct_coeffs: np.ndarray
     :param quantization_table: quantization table of shape [8, 8]
+    :type quantization_table: np.ndarray
     :param embedding_rate: rate of bits to embed per nzAC coefficient
+    :type embedding_rate: float
     :param wet_cost: cost for unembeddable coefficients
-    :param dtype: precision
+    :type wet_cost: float
+    :param dtype: float32 or float64
+    :type dtype: np.dtype
     :param implementation: choose J-UNIWARD implementation
+    :type implementation: :class:`Implementation`
     :param generator: type of random number generator passed on to the stego noise simulator
+    :type generator: np.random.Generator
     :param seed: random seed for embedding simulator
+    :type seed: int
     :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: np.ndarray
     """
     # Count number of embeddable DCT coefficients
     num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)
