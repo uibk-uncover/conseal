@@ -42,11 +42,8 @@ def simulate_single_channel(
     if np.isclose(embedding_rate, 0):
         return cover_dct_coeffs
 
-    num_vertical_blocks, num_horizontal_blocks = cover_dct_coeffs.shape[:2]
-
     # Compute distortion
-    rho_p1, rho_m1 = compute_distortion(
-        cover_dct_coeffs, quantization_table, wet_cost)
+    rho_p1, rho_m1 = compute_distortion(cover_dct_coeffs, quantization_table, wet_cost)
 
     # Determine number of available coefficients
     if "bpp" == payload_mode:

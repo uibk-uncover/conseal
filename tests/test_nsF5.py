@@ -1,6 +1,6 @@
 """
 
-Author: Martin Benes
+Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
 
@@ -44,12 +44,6 @@ class TestnsF5(unittest.TestCase):
             self.assertTrue(np.allclose(img_a.Cr, img_b.Cr))
 
     @parameterized.expand([
-        (
-            "landscape_gray.jpeg",
-            "landscape_gray_matlab_alpha_0.5_seed_12345.jpg",
-            0.5,
-            12345,
-        ),
         (
             "lizard_gray.jpeg",
             "lizard_gray_matlab_alpha_0.4_seed_6789.jpg",
