@@ -29,8 +29,8 @@ The code before use a cover image, which can be loaded as follows.
 The lower the level, the more control, but more verbose code becomes.
 
 
-High-level API
---------------
+At high-level API
+-----------------
 
 Using the high-level API, you call a single function, provide the cover, and receive stego.
 
@@ -57,8 +57,8 @@ J-UNIWARD computes the distortion in decompressed domain,
 so it must be provided alongside the DCT coefficients.
 
 
-Mid-level API
--------------
+At mid-level API
+----------------
 
 Mid-level API exposes the separation principle.
 It allows user to separately calculate the distortion, and perform the simulation of coding.
@@ -85,8 +85,8 @@ It allows user to separately calculate the distortion, and perform the simulatio
 ...   seed=12345)
 
 
-Low-level API
--------------
+At low-level API
+----------------
 
 Low-level API allows accessing the raw costs (without wet cost modification),
 as well as the probabilities and simulation.
