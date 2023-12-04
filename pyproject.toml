@@ -40,9 +40,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://pypi.org/project/jpeglib/"
+Homepage = "https://pypi.org/project/conseal/"
 Documentation = "https://conseal.readthedocs.io/"
-Source = "https://github.com/martinbenes1996/jpeglib/"
+Source = "https://github.com/uibk-uncover/conseal/"
 
 [project.optional-dependencies]
 dev = [

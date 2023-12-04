@@ -10,7 +10,7 @@
 [![PyPi license](https://badgen.net/pypi/license/pip/)](https://pypi.com/project/conseal/)
 [![Last commit](https://img.shields.io/github/last-commit/uibk-uncover/conseal)](https://GitHub.com/uibk-uncover/conseal)
 
-<img src="docs/seal.png" width="25%"/>
+<img src="docs/seal.png" width="500pt"/>
 
 # conseal
 
