@@ -45,15 +45,17 @@ def compute_block_energies(
 
 
 def compute_cost(
-    block_energies: np.ndarray,
+    cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
 ) -> np.ndarray:
     """Compute embedding cost as described in Eq. 4
 
-    :param block_energies: ndarray of shape [num_vertical_blocks, num_horizontal_blocks]
+    :param cover_dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :param quantization_table: ndarray of shape [8, 8]
     :return: embedding cost of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     """
+    # Compute block energies
+    block_energies = compute_block_energies(cover_dct_coeffs, quantization_table)
     num_vertical_blocks, num_horizontal_blocks = block_energies.shape
 
     # Compute energy in 8-neighborhood using a convolution
@@ -100,11 +102,8 @@ def compute_distortion(
     :type wet_cost: float
     :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     """
-    # Compute block energies
-    block_energies = compute_block_energies(cover_dct_coeffs, quantization_table)
-
     # Compute embedding cost rho
-    rho = compute_cost(block_energies, quantization_table)
+    rho = compute_cost(cover_dct_coeffs, quantization_table)
 
     # Adjust embedding costs
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost

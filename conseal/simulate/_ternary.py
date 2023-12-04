@@ -44,7 +44,7 @@ def calc_lambda(
     message_length: int,
     n: int,
     objective: typing.Callable = None,
-):
+) -> float:
     """Implements binary search for lambda.
 
     The i-th element is embedded with a probability of
@@ -159,7 +159,7 @@ def simulate(
     generator: str = None,
     order: str = 'C',
     seed: int = None,
-):
+) -> np.ndarray:
     """
     Simulates changes using the given probability maps.
 
