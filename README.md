@@ -87,7 +87,7 @@ im_dct.write_dct("stego.jpeg")
 # load cover
 im_dct = jpeglib.read_dct("cover.jpeg")
 # embed UERD 0.4
-jpeg.Y = cl.nsF5.simulate_single_channel(
+im_dct.Y = cl.nsF5.simulate_single_channel(
     cover_dct_coeffs=im_dct.Y,
     quantization_table=im_dct.qt[0],
     embedding_rate=0.4,
@@ -99,7 +99,7 @@ im_dct.write_dct("stego.jpeg")
 
 
 
-## Credits and Acknowledgements
+## Acknowledgements and Disclaimer
 
 Developed by [Martin Benes](https://github.com/martinbenes1996) and [Benedikt Lorch](https://github.com/btlorch/), University of Innsbruck, 2023.
 
