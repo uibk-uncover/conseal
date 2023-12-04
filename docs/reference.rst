@@ -47,11 +47,11 @@ Low-level API
 Cost or probability
 """""""""""""""""""
 
-.. autofunction:: conseal.juniward.compute_cost
+.. autofunction:: conseal.juniward._costmap.compute_cost
 
-.. autofunction:: conseal.uerd.compute_cost
+.. autofunction:: conseal.uerd._costmap.compute_cost
 
-.. autofunction:: conseal.nsF5.probability
+.. autofunction:: conseal.nsF5._costmap.probability
 
 Low-level Simulator API
 """""""""""""""""""""""
