@@ -215,13 +215,14 @@ def ternary(
 ) -> np.ndarray:
     """Simulates ternary embedding given distortion and embedding rate.
 
-    Args:
-        rhoP1, rhoM1 (np.ndarray): Distortion tensors for +1 and -1.
-        alpha (float): Embedding rate.
-        n (int): Cover size (only embeddable elements).
-        kw (dict): Additional arguments passed on to _ternary.simulate().
-    Returns:
-        (np.ndarray): Simulated binary changes in the cover, 0 (keep), 1 or -1 (change).
+    :param rhoP1: Distortion tensor for -1.
+    :type rhoP1: np.ndarray
+    :param rhoM1: Distortion tensor for +1.
+    :type rhoM1: np.ndarray
+    :param n: Cover size.
+    :type n: int
+    :return: Simulated binary changes in cover, 0 (keep), 1 or -1 (change).
+    :rtype: np.ndarray
     """
     (pChangeP1, pChangeM1), lbda = probability(
         rhoP1=rhoP1,

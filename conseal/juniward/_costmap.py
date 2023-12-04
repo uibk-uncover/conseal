@@ -122,7 +122,7 @@ def evaluate_distortion(X, Y):
 
 def compute_cost(
     spatial: np.ndarray,
-    quant_table: np.ndarray,
+    quantization_table: np.ndarray,
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
 ):
@@ -133,7 +133,7 @@ def compute_cost(
        n_1 and n_2 are the height and width of the image.
 
     :param spatial: grayscale image in spatial domain
-    :param quant_table: quantization table of shape [8, 8]
+    :param quantization_table: quantization table of shape [8, 8]
     :param dtype: float32 or float64
     :param implementation: choose J-UNIWARD implementation
     :return: cost map for embedding into the DCT coefficients, shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
@@ -176,7 +176,7 @@ def compute_cost(
             # Simulate a single pixel change in the DCT domain
             test_coeffs = np.zeros((8, 8), dtype=dtype)
             test_coeffs[j, i] = 1
-            spatial_impact[j, i] = tools.dct.idct2(test_coeffs) * quant_table[j, i]
+            spatial_impact[j, i] = tools.dct.idct2(test_coeffs) * quantization_table[j, i]
 
     # Pre-compute impact on wavelet coefficients when a JPEG coefficients is changed by 1
     # Changing one pixel will affect s x s wavelet coefficients, where s is the size of the 2D wavelet support.
@@ -365,19 +365,19 @@ def compute_cost_per_block(
 def compute_distortion(
     cover_spatial: np.ndarray,
     cover_dct_coeffs: np.ndarray,
-    quant_table: np.ndarray,
+    quantization_table: np.ndarray,
     dtype: typing.Type = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
     wet_cost: float = 10**13,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
-    """
-    Compute the embedding probability map for a given image. Averages the probabilities for embedding +1 and -1.
-    :param cover_spatial: grayscale image in spatial domain
+    """Computes the distortion rho_p1 and rho_m1.
+
+    :param cover_spatial: decompressed DCT, array of shape [8*num_vertical_blocks, 8*num_horizontal_blocks]
     :type cover_spatial: np.ndarray
-    :param cover_dct_coeffs: DCT coefficients of the image
+    :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: np.ndarray
-    :param quant_table: quantization table of shape [8, 8]
-    :type quant_table: np.ndarray
+    :param quantization_table: ndarray of shape [8, 8]
+    :type quantization_table: np.ndarray
     :param dtype: float32 or float64
     :type dtype: np.dtype
     :param implementation: choose J-UNIWARD implementation
@@ -396,7 +396,7 @@ def compute_distortion(
     # Compute costmap
     costmap = compute_cost(
         spatial=cover_spatial,
-        quant_table=quant_table,
+        quantization_table=quantization_table,
         dtype=dtype,
         implementation=implementation,
     )
@@ -421,7 +421,7 @@ def compute_distortion(
 def compute_embedding_probability(
     cover_spatial: np.ndarray,
     cover_dct_coeffs: np.ndarray,
-    quant_table: np.ndarray,
+    quantization_table: np.ndarray,
     embedding_rate: float,
     dtype: typing.Type = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
@@ -431,7 +431,7 @@ def compute_embedding_probability(
     Compute the embedding probability map for a given image. Averages the probabilities for embedding +1 and -1.
     :param cover_spatial: grayscale image in spatial domain
     :param cover_dct_coeffs: DCT coefficients of the image
-    :param quant_table: quantization table of shape [8, 8]
+    :param quantization_table: quantization table of shape [8, 8]
     :param embedding_rate: rate of bits to embed per nzAC coefficient
     :param dtype: float32 or float64
     :param implementation: choose J-UNIWARD implementation
@@ -448,7 +448,7 @@ def compute_embedding_probability(
     rho_p1, rho_m1 = compute_distortion(
         cover_spatial=cover_spatial,
         cover_dct_coeffs=cover_dct_coeffs,
-        quant_table=quant_table,
+        quantization_table=quantization_table,
         dtype=dtype,
         implementation=implementation,
         wet_cost=wet_cost,
