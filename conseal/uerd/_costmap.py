@@ -1,15 +1,14 @@
-"""Implementation of UERD steganographic embedding.
+"""
+Implementation of the UERD steganography method as described in
 
-Described in:
-L. Guo, J. Ni, W. Su, C. Tang and Y.-Q. Shi.
-"Using Statistical Image Model for JPEG Steganography: Uniform Embedding Revisited,"
-IEEE TIFS 2015. https://ieeexplore.ieee.org/document/7225122
+L. Guo, J. Ni, W. Su, C. Tang and Y.-Q. Shi
+"Using Statistical Image Model for JPEG Steganography: Uniform Embedding Revisited"
+IEEE Transactions on Information Forensics and Security, 2015
+https://ieeexplore.ieee.org/document/7225122
 
-The idea of uniform embedding distortion (UED) is to spread the changes
-across all the DCT coefficients (including the DC, zero and non-zero AC coefficients).
+The idea of uniform embedding distortion (UED) is to spread the changes across all the DCT coefficients (including the DC, zero and non-zero AC coefficients).
 
-The uniform embedding revisited distortion (UERD) incorporates
-the complexity of the specific DCT block and the specific DCT mode.
+The uniform embedding revisited distortion (UERD) incorporates the complexity of the specific DCT block and the specific DCT mode.
 
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck

@@ -1,15 +1,15 @@
-"""Implementation of nsF5 steganographic embedding.
+"""
+Implementation of the nsF5 steganography method as described in
 
-Described in:
 J. Fridrich, T. Pevny, and J. Kodovsky.
-"Statistically undetectable JPEG steganography: Dead ends, challenges, and opportunities,"
-MMSec 2007. http://dde.binghamton.edu/kodovsky/pdf/Fri07-ACM.pdf
+"Statistically undetectable JPEG steganography: Dead ends, challenges, and opportunities"
+Multimedia & Security, 2007
+http://dde.binghamton.edu/kodovsky/pdf/Fri07-ACM.pdf
 
-Code inspired by Kodovsky's Matlab implementation:
-https://dde.binghamton.edu/download/stego_algorithms/
-
-Author: Martin Benes, Benedikt Lorch
+Author: Benedikt Lorch, Martin Benes
 Affiliation: University of Innsbruck
+
+This implementation is derived from the original Matlab implementation provided by the paper authors: https://dde.binghamton.edu/download/stego_algorithms/
 """
 
 from collections.abc import Sequence
