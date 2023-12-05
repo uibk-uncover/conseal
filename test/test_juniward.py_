@@ -110,8 +110,8 @@ class TestJUNIWARD(unittest.TestCase):
             wet_cost=10**10,
         )
         (pChangeP1, pChangeM1), lbda = cl.simulate._ternary.probability(
-            rhoP1=cl.tools.dct.jpeglib_to_jpegio(rho_p1),
-            rhoM1=cl.tools.dct.jpeglib_to_jpegio(rho_m1),
+            rho_p1=cl.tools.dct.jpeglib_to_jpegio(rho_p1),
+            rho_m1=cl.tools.dct.jpeglib_to_jpegio(rho_m1),
             alpha=.4,
             n=cl.tools.dct.nzAC(cover_dct_coeffs),
         )

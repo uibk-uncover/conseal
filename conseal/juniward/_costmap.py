@@ -141,6 +141,9 @@ def compute_cost(
             # Can also be verified by setting the DCT coefficient to a very high value.
             rc = rc[pad_size - 8: height + 7 + pad_size, pad_size - 8:width + 7 + pad_size]
 
+        else:
+            raise NotImplementedError(f'unknonw implementation {implementation}')
+
         reference_covers.append(rc)
 
     #

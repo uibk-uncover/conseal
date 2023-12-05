@@ -47,17 +47,17 @@ class TestUERD(unittest.TestCase):
 
         # Transform costmaps into embedding probability maps
         n = cl.tools.dct.nzAC(cover_dct_coeffs)
-        (pChangeP1, pChangeM1), lbda = cl.simulate._ternary.probability(
-            rhoP1=rho_p1_2d,
-            rhoM1=rho_m1_2d,
+        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+            rho_p1=rho_p1_2d,
+            rho_m1=rho_m1_2d,
             alpha=embedding_rate,
             n=n,
         )
 
         # Simulate embedding
         delta_dct_coeffs_2d = cl.simulate._ternary.simulate(
-            pChangeP1=pChangeP1,
-            pChangeM1=pChangeM1,
+            p_p1=p_p1,
+            p_m1=p_m1,
             generator='MT19937',
             seed=seed,
         )
@@ -83,23 +83,23 @@ class TestUERD(unittest.TestCase):
         jpeg_s = jpeg_c.copy()
 
         # Simulate the stego
-        rhoP1, rhoM1 = cl.uerd.compute_distortion(jpeg_c.Y, jpeg_c.qt[0])
-        (pChangeP1, pChangeM1), lbda = cl.simulate._ternary.probability(
-            rhoP1, rhoM1,
+        rho_p1, rho_m1 = cl.uerd.compute_distortion(jpeg_c.Y, jpeg_c.qt[0])
+        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+            rho_p1, rho_m1,
             alpha=alpha,
             n=jpeg_c.Y.size,
         )
         jpeg_s.Y += cl.simulate._ternary.simulate(
-            pChangeP1,
-            pChangeM1,
+            p_p1,
+            p_m1,
             seed=12345,
         )
 
         # Estimate average relative payload
         _, Hx = cl.simulate.average_payload(
             lbda=lbda,
-            pP1=pChangeP1,
-            pM1=pChangeM1,
+            p_p1=p_p1,
+            p_m1=p_m1,
             q=3
         )
 
