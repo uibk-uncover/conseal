@@ -36,7 +36,7 @@ class TestSimulate(unittest.TestCase):
         (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
             rho_p1, rho_m1,
             alpha,
-            len(rhoP1),
+            len(rho_p1),
         )
         # estimate average relative payload
         _, Hp = cl.simulate.average_payload(lbda=lbda, p_p1=p_p1, p_m1=p_m1)

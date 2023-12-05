@@ -73,8 +73,8 @@ def simulate_single_channel(
 
     # STC simulation
     stego_noise_dct_2d = simulate.ternary(
-        rhoP1=rho_p1_2d,
-        rhoM1=rho_m1_2d,
+        rho_p1=rho_p1_2d,
+        rho_m1=rho_m1_2d,
         alpha=embedding_rate,
         n=num_non_zero_AC_coeffs,
         generator=generator,
