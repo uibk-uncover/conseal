@@ -4,6 +4,7 @@ Author: Benedikt Lorch, Martin Benes
 Affiliation: University of Innsbruck
 """
 
+import numpy
 import numpy as np
 import typing
 
@@ -26,25 +27,25 @@ def simulate_single_channel(
     """J-UNIWARD embedding
 
     :param cover_spatial: spatial image of shape [height, width]
-    :type cover_spatial: :class:`np.ndarray`
+    :type cover_spatial: :class:`numpy.ndarray`
     :param cover_dct_coeffs: corresponding quantized DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: :class:`np.ndarray`
+    :type cover_dct_coeffs: :class:`numpy.ndarray`
     :param quantization_table: quantization table of shape [8, 8]
-    :type quantization_table: :class:`np.ndarray`
+    :type quantization_table: :class:`numpy.ndarray`
     :param embedding_rate: rate of bits to embed per nzAC coefficient
     :type embedding_rate: float
     :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
     :param dtype: float32 or float64
-    :type dtype: np.dtype
+    :type dtype: :class:`numpy.dtype`
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
     :param generator: type of random number generator passed on to the stego noise simulator
-    :type generator: :class:`np.random.Generator`
+    :type generator: :class:`numpy.random.Generator`
     :param seed: random seed for embedding simulator
     :type seed: int
     :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: np.ndarray
+    :rtype: :class:`numpy.ndarray`
     """
     # Count number of embeddable DCT coefficients
     num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)
