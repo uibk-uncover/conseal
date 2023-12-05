@@ -21,7 +21,6 @@ Simulators of JPEG Steganography
 .. autofunction:: conseal.nsF5.simulate_single_channel
 
 
-
 Mid-level API
 -------------
 
@@ -43,6 +42,7 @@ Tools
 .. autofunction:: conseal.tools.nzAC
 
 .. autofunction:: conseal.tools.AC
+
 
 Low-level API
 -------------

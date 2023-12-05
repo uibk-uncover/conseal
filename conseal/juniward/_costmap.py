@@ -73,7 +73,11 @@ def compute_cost(
     # Get 2D wavelet filters - Daubechies 8
     # 1D high-pass decomposition filter
     # In the paper, the high-pass filter is denoted as g.
-    high_pass_decomposition_filter = np.array([-0.0544158422, 0.3128715909, -0.6756307363, 0.5853546837, 0.0158291053, -0.2840155430, -0.0004724846, 0.1287474266, 0.0173693010, -0.0440882539, -0.0139810279, 0.0087460940, 0.0048703530, -0.0003917404, -0.0006754494, -0.0001174768])
+    high_pass_decomposition_filter = np.array([
+        -.0544158422, .3128715909, -.6756307363, .5853546837,
+        .0158291053, -.2840155430, -.0004724846, .1287474266,
+        .0173693010, -.0440882539, -.0139810279, .0087460940,
+        .0048703530, -.0003917404, -.0006754494, -.0001174768])
     wavelet_filter_size = len(high_pass_decomposition_filter)
 
     # 1D low-pass decomposition filter

@@ -1,9 +1,9 @@
 """Simulation of the UERD steganography method.
 
+We thank Patrick Bas for sharing his implementation of UERD with us.
+
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
-
-We thank Patrick Bas for sharing his implementation of UERD with us.
 """
 
 import numpy as np
@@ -23,15 +23,18 @@ def simulate_single_channel(
 ) -> np.ndarray:
     """Simulate embedding into a single channel.
 
-    :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :param cover_dct_coeffs: quantized DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: array of shape [8, 8]
+    :param quantization_table: quantized table of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: embedding rate
+    :param embedding_rate: embedding rate, in unit specified by payload_mode
     :type embedding_rate: float
-    :param payload_mode: "bpp" or "bpnzAC"
+    :param payload_mode: unit used by embedding rate, either
+        "bpc" (bits per DCT coefficient), or
+        "bpnzAC" (bits per non-zero DCT AC coefficient).
     :type payload_mode: str
-    :param wet_cost: constant what the cost for wet pixel is
+    :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
     :param seed: random seed for STC simulator
     :type seed: int
@@ -40,17 +43,25 @@ def simulate_single_channel(
 
     :Example:
 
-    >>> #TODO
+    >>> im_dct.Y = cl.uerd.simulate_single_channel(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0],  # QT
+    ...   embedding_rate=0.4,  # alpha
+    ...   seed=12345)  # seed
     """
-
     if np.isclose(embedding_rate, 0):
         return cover_dct_coeffs
 
     # Compute distortion
-    rho_p1, rho_m1 = compute_distortion(cover_dct_coeffs, quantization_table, wet_cost)
+    rho_p1, rho_m1 = compute_distortion(
+        cover_dct_coeffs=cover_dct_coeffs,
+        quantization_table=quantization_table,
+        payload_mode=payload_mode,
+        wet_cost=wet_cost,
+    )
 
     # Determine number of available coefficients
-    if "bpp" == payload_mode:
+    if "bpc" == payload_mode:
         n = cover_dct_coeffs.size
     elif "bpnzAC" == payload_mode:
         n = tools.dct.nzAC(cover_dct_coeffs)

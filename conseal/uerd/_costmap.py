@@ -103,14 +103,19 @@ def compute_cost(
 def compute_distortion(
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
+    payload_mode: str = 'bpc',
     wet_cost: float = 10**13,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
-    """Computes the distortion rho_p1 and rho_m1.
+    """Computes the UERD distortion, adjusted for wet costs.
 
     :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param payload_mode: unit used by embedding rate, either
+        "bpc" (bits per DCT coefficient), which is the default setting, or
+        "bpnzAC" (bits per non-zero DCT AC coefficient).
+    :type payload_mode: str
     :param wet_cost: constant what the cost for wet pixel is
     :type wet_cost: float
     :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
@@ -118,13 +123,28 @@ def compute_distortion(
 
     :Example:
 
-    >>> # TODO
+    Distortion is computed as follows.
+
+    >>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0])  # QT
+
+    Overwrite the default parameters with custom values.
+
+    >>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+    ...     cover_dct_coeffs
+    )
     """
     # Compute embedding cost rho
     rho = compute_cost(cover_dct_coeffs, quantization_table)
 
     # Adjust embedding costs
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
+
+    # Do not embed into DCT DC or zero values
+    if payload_mode == 'bpnzAC':
+        rho[cover_dct_coeffs == 0] = wet_cost
+        rho[:, :, 0, 0] = wet_cost
 
     # Do not embed +1 if the DCT coefficient has maximum value
     rho_p1 = np.copy(rho)

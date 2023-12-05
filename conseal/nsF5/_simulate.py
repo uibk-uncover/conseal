@@ -18,15 +18,17 @@ from .. import tools
 
 
 def average_payload(
-    cover: np.ndarray,
-    stego: np.ndarray,
+    cover_dct_coeffs: np.ndarray,
+    stego_dct_coeffs: np.ndarray,
 ) -> float:
     """Estimates payload [bpnzac] embedded in the stego with nsF5.
 
-    :param cover: Cover.
-    :type cover: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param stego: Stego.
-    :type stego: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param cover_dct_coeffs: quantized DCT coefficients of cover,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param stego_dct_coeffs: quantized DCT coefficients of stego,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type stego_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: Estimated embedding rate.
     :rtype: float
 
@@ -34,15 +36,14 @@ def average_payload(
 
     >>> # TODO
     """
-    num_changes = (cover != stego).sum()
-    nzAC = tools.dct.nzAC(cover)
-    alpha_hat = tools.H(num_changes / nzAC)
-    return alpha_hat
+    num_changes = (cover_dct_coeffs != stego_dct_coeffs).sum()
+    nzAC = tools.dct.nzAC(cover_dct_coeffs)
+    return tools.H(num_changes / nzAC)
 
 
 def simulate_single_channel(
     cover_dct_coeffs: np.ndarray,
-    embedding_rate: float = 1.,
+    embedding_rate: float,
     seed: int = None,
 ) -> np.ndarray:
     """Simulate embedding into a single channel.
@@ -58,9 +59,12 @@ def simulate_single_channel(
 
     :Example:
 
-    >>> # TODO
+    >>> im_dct.Y = cl.nsF5.simulate_single_channel(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0],  # QT
+    ...   embedding_rate=0.4,  # alpha
+    ...   seed=12345)  # seed
     """
-
     assert len(cover_dct_coeffs.shape) == 4, "Expected DCT coefficients to have 4 dimensions"
     assert cover_dct_coeffs.shape[2] == cover_dct_coeffs.shape[3] == 8, "Expected blocks of size 8x8"
 

@@ -14,10 +14,14 @@ EPS = np.finfo(np.float64).eps
 def _entropy(*ps) -> float:
     """Computes n-ary entropy.
 
-    Args:
-        ps (*): Change probabilities.
-    Returns:
-        (float): Entropy.
+    :param ps: Probability tensors.
+    :type ps:
+    :return: Entropy.
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
     """
     # probabilities
     px = np.array(list(ps))
@@ -33,10 +37,16 @@ def _entropy(*ps) -> float:
 def entropy(p: np.ndarray, p2: np.ndarray = None) -> float:
     """Computes entropy with complement probability added.
 
-    Args:
-        p (*): Change probabilities.
-    Returns:
-        (float): Binary entropy.
+    :param p: Probability tensor.
+    :type p: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param p2: Probability tensor.
+    :type p2: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: Entropy
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
     """
     if p2 is None:
         # Binary entropy
@@ -51,10 +61,14 @@ def inv_entropy(
 ) -> float:
     """Computes inverse entropy.
 
-    Args:
-        h (float): Entropy.
-    Returns:
-        (float): Probability.
+    :param h:
+    :type h:
+    :return:
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
     """
     global EPS
 
