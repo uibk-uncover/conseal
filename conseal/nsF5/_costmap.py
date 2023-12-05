@@ -22,10 +22,11 @@ def probability(
     """Returns nsF5 probability map for consequent simulation.
 
     :param cover_dct_coefs:
-    :type cover_dct_coefs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type cover_dct_coefs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param alpha:
     :type alpha: float
     :return:
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 

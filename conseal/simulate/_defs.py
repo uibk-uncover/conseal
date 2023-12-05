@@ -34,7 +34,7 @@ def get_p(
     :param lbda: parameter value.
     :type lbda: float
     :return: probability of embedding into each location, same shape as rho1
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
