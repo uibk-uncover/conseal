@@ -21,13 +21,25 @@ Import the package with
 The code before use a cover image, which can be loaded as follows.
 
 >>> import jpeglib
->>> im_spatial = jpeglib.read_spatial(
+>>> im_dct = jpeglib.read_dct("cover.jpeg")
+>>> im_spatial = jpeglib.read_spatial(  # for J-UNIWARD
 ...   "cover.jpeg",
 ...   jpeglib.JCS_GRAYSCALE)
->>> im_dct = jpeglib.read_dct("cover.jpeg")
+>>> # here change im_dct.Y
+>>> im_dct.write_dct("stego.jpeg")
+
+.. note::
+
+   ``conseal`` expects DCT tensor in 4D shape [block height, block width, 8, 8].
+   If you use to 2D DCT representation (used by jpegio, for instance),
+   you have to convert it to 4D and back as follows.
+
+   >>> dct4 = dct2.reshape(dct2.shape[0]//8, 8, -1, 8).transpose(0, 2, 1, 3)
+
+   >>> dct2 = dct4.transpose(0, 2, 1, 3).reshape(dct4.shape[0]*8, -1)
 
 
-``Conseal`` provides several API on different levels of abstraction.
+Package ``conseal`` provides several API on different levels of abstraction.
 The lower the level, the more control, but more verbose code becomes.
 
 
