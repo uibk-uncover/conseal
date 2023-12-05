@@ -14,7 +14,7 @@ def nzAC(dct: np.ndarray) -> int:
     """Computes number of non-zero DCT AC coefficients from 4D DCT tensor.
 
     :param dct: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type dct: np.ndarray
+    :type dct: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: number of non-zero DCT AC coefficients
     :rtype: int
     """
@@ -26,7 +26,7 @@ def AC(dct: np.ndarray) -> int:
     """Computes number of DCT AC coefficients from 4D DCT tensor.
 
     :param dct: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type dct: np.ndarray
+    :type dct: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: number of DCT AC coefficients
     :rtype: int
     """
@@ -39,7 +39,21 @@ def embedding_rate(
     dct_s: np.ndarray,
     q: int = 3,
 ) -> float:
-    """Estimate embedding rate in DCT domain"""
+    """Estimate embedding rate in DCT domain.
+
+    :param dct_c:
+    :type dct_c: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param dct_s:
+    :type dct_s: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param q:
+    :type q: int
+    :return:
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
+    """
     # no changes
     if (dct_c == dct_s).all():
         return 0.
@@ -74,13 +88,14 @@ def embedding_rate(
 def Lambda(x: float) -> np.array:
     """DCT scaling function.
 
-    Args:
-        x (float): Input value.
-    Returns:
-        (float): sqrt(1/2) for x=0, otherwise 1
-    Examples:
-        >>> Lambda(0) # -> 0.70710678
-        >>> Lambda(-1) # -> 1.
+    :param x: Input value.
+    :type x: float
+    :return:
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+    >>> Lambda(0) # -> 0.70710678
+    >>> Lambda(-1) # -> 1.
     """
     return 1. if x != 0 else 1/np.sqrt(2)
 
@@ -104,6 +119,10 @@ def jpeglib_to_jpegio(dct_coeffs: np.ndarray) -> np.ndarray:
     Convert DCT coefficient array shape from 4D jpeglib format to 2D jpegio format
     :param dct_coeffs: DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :return: DCT coefficients reshaped to [num_vertical_blocks * 8, num_horizontal_blocks * 8]
+
+    :Example:
+
+    >>> # TODO
     """
     num_vertical_blocks, num_horizontal_blocks, block_height, block_width = dct_coeffs.shape
     assert block_height == 8, "Expected block height of 8"
@@ -123,6 +142,10 @@ def jpegio_to_jpeglib(dct_coeffs: np.ndarray) -> np.ndarray:
     Convert DCT coefficient array shape from 2D jpegio format to 4D jpeglib format
     :param dct_coeffs: DCT coefficients of shape [num_vertical_blocks * 8, num_horizontal_blocks * 8]
     :return: DCT coefficients reshaped to [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+
+    :Example:
+
+    >>> # TODO
     """
     # From jpegio 2D to jpeglib 4D
     assert dct_coeffs.shape[0] % 8 == 0
@@ -143,7 +166,13 @@ def jpegio_to_jpeglib(dct_coeffs: np.ndarray) -> np.ndarray:
 def compute_DCT_mat() -> np.ndarray:
     """
     Computes the 8x8 DCT matrix
+
     :return: ndarray of shape [8, 8]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
     """
     [col, row] = np.meshgrid(range(8), range(8))
     dct_mat = 0.5 * np.cos(np.pi * (2 * col + 1) * row / (2 * 8))
@@ -160,6 +189,10 @@ def block_dct2(
     :param spatial_blocks: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :param dct_mat: ndarray of shape [8, 8]. If None, the DCT matrix is computed on-the-fly.
     :return: DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+
+    :Example:
+
+    >>> # TODO
     """
     if dct_mat is None:
         dct_mat = compute_DCT_mat()
@@ -176,11 +209,18 @@ def block_idct2(
     dct_coeffs: np.ndarray,
     dct_mat: np.ndarray = None,
 ) -> np.ndarray:
-    """
-    Apply 2D inverse DCT to image blocks
+    """Apply 2D inverse DCT to image blocks
+
     :param dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param dct_mat: ndarray of shape [8, 8]. If None, the DCT matrix is computed on-the-fly.
+    :type dct_map: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: spatial blocks of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
     """
     if dct_mat is None:
         dct_mat = compute_DCT_mat()
