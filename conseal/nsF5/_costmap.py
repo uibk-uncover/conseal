@@ -18,7 +18,7 @@ from .. import tools
 def probability(
     cover_dct_coefs: np.ndarray,
     alpha: float = 1.,
-):
+) -> np.ndarray:
     """Returns nsF5 probability map for consequent simulation.
 
     :param cover_dct_coefs:
@@ -26,7 +26,6 @@ def probability(
     :param alpha:
     :type alpha: float
     :return:
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
 
     :Example:
 
