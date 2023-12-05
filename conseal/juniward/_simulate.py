@@ -27,17 +27,17 @@ def simulate_single_channel(
     """J-UNIWARD embedding
 
     :param cover_spatial: spatial image of shape [height, width]
-    :type cover_spatial: :class:`np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param cover_dct_coeffs: corresponding quantized DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: :class:`np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param quantization_table: quantization table of shape [8, 8]
-    :type quantization_table: :class:`np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param embedding_rate: rate of bits to embed per nzAC coefficient
     :type embedding_rate: float
     :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
     :param dtype: float32 or float64
-    :type dtype: :class:`np.dtype <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`_
+    :type dtype: `np.dtype <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`_
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
     :param generator: type of random number generator passed on to the stego noise simulator
