@@ -108,9 +108,9 @@ def compute_distortion(
     """Computes the distortion rho_p1 and rho_m1.
 
     :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: np.ndarray
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
-    :type quantization_table: np.ndarray
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param wet_cost: constant what the cost for wet pixel is
     :type wet_cost: float
     :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]

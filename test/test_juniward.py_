@@ -109,7 +109,7 @@ class TestJUNIWARD(unittest.TestCase):
             implementation=cl.JUNIWARD_ORIGINAL,
             wet_cost=10**10,
         )
-        (pChangeP1, pChangeM1), lbda = cl.simulate._ternary.probability(
+        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
             rho_p1=cl.tools.dct.jpeglib_to_jpegio(rho_p1),
             rho_m1=cl.tools.dct.jpeglib_to_jpegio(rho_m1),
             alpha=.4,
@@ -118,8 +118,8 @@ class TestJUNIWARD(unittest.TestCase):
 
         # compare to refernece Matlab
         mat = loadmat(probability_matlab_filepath)
-        self.assertTrue(np.allclose(pChangeP1, mat['pChangeP1']))
-        self.assertTrue(np.allclose(pChangeM1, mat['pChangeM1']))
+        self.assertTrue(np.allclose(p_p1, mat['pChangeP1']))
+        self.assertTrue(np.allclose(p_m1, mat['pChangeM1']))
 
     @parameterized.expand([[f'{i:05d}.jpg'] for i in range(1, 6)])
     def test_simulation_python_matlab_equivalence(self, filepath):
