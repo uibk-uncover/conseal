@@ -19,7 +19,19 @@ def probability(
     cover_dct_coefs: np.ndarray,
     alpha: float = 1.,
 ) -> np.ndarray:
-    """Returns nsF5 probability map for consequent simulation."""
+    """Returns nsF5 probability map for consequent simulation.
+
+    :param cover_dct_coefs:
+    :type cover_dct_coefs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param alpha:
+    :type alpha: float
+    :return:
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
+    """
 
     assert len(cover_dct_coefs.shape) == 4, "Expected DCT coefficients to have 4 dimensions"
     assert cover_dct_coefs.shape[2] == cover_dct_coefs.shape[3] == 8, "Expected blocks of size 8x8"

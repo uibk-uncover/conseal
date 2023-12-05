@@ -1,5 +1,4 @@
-"""
-Implementation of the UERD steganography method as described in
+"""Implementation of the UERD steganography method as described in
 
 L. Guo, J. Ni, W. Su, C. Tang and Y.-Q. Shi
 "Using Statistical Image Model for JPEG Steganography: Uniform Embedding Revisited"
@@ -25,9 +24,12 @@ def compute_block_energies(
 ) -> np.ndarray:
     """Compute block energy as described in Eq. 3
 
-    :param dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :param quantization_table: ndarray of shape [8, 8]
+    :param dct_coeffs: dct coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param quantization_table: quantization table of shape [8, 8]
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :return: block energies of shape [num_vertical_blocks, num_horizontal_blocks]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     """
 
     num_vertical_blocks, num_horizontal_blocks = dct_coeffs.shape[:2]
@@ -51,8 +53,15 @@ def compute_cost(
     """Compute embedding cost as described in Eq. 4
 
     :param cover_dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param quantization_table: ndarray of shape [8, 8]
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :return: embedding cost of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
     """
     # Compute block energies
     block_energies = compute_block_energies(cover_dct_coeffs, quantization_table)
@@ -101,6 +110,11 @@ def compute_distortion(
     :param wet_cost: constant what the cost for wet pixel is
     :type wet_cost: float
     :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
     """
     # Compute embedding cost rho
     rho = compute_cost(cover_dct_coeffs, quantization_table)
