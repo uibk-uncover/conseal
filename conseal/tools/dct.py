@@ -140,7 +140,7 @@ def jpegio_to_jpeglib(dct_coeffs: np.ndarray) -> np.ndarray:
     return dct_coeffs
 
 
-def compute_DCT_mat():
+def compute_DCT_mat() -> np.ndarray:
     """
     Computes the 8x8 DCT matrix
     :return: ndarray of shape [8, 8]
@@ -151,7 +151,10 @@ def compute_DCT_mat():
     return dct_mat
 
 
-def block_dct2(spatial_blocks, dct_mat=None):
+def block_dct2(
+    spatial_blocks: np.ndarray,
+    dct_mat: np.ndarray = None,
+) -> np.ndarray:
     """
     Apply 2D DCT to image blocks
     :param spatial_blocks: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
@@ -169,7 +172,10 @@ def block_dct2(spatial_blocks, dct_mat=None):
     return dct_coeffs
 
 
-def block_idct2(dct_coeffs, dct_mat=None):
+def block_idct2(
+    dct_coeffs: np.ndarray,
+    dct_mat: np.ndarray = None,
+) -> np.ndarray:
     """
     Apply 2D inverse DCT to image blocks
     :param dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]

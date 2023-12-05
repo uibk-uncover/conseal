@@ -25,11 +25,15 @@ def compute_block_energies(
     """Compute block energy as described in Eq. 3
 
     :param dct_coeffs: dct coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: quantization table of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: block energies of shape [num_vertical_blocks, num_horizontal_blocks]
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
     """
 
     num_vertical_blocks, num_horizontal_blocks = dct_coeffs.shape[:2]
@@ -49,15 +53,15 @@ def compute_block_energies(
 def compute_cost(
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
-):
+) -> np.ndarray:
     """Compute embedding cost as described in Eq. 4
 
     :param cover_dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: embedding cost of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
@@ -110,7 +114,7 @@ def compute_distortion(
     :param wet_cost: constant what the cost for wet pixel is
     :type wet_cost: float
     :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 

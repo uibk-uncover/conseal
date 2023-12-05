@@ -9,7 +9,7 @@ import numpy as np
 import tempfile
 
 
-def qf_to_qt(qf, libjpeg_version='6b'):
+def qf_to_qt(qf: np.ndarray, libjpeg_version: str = '6b') -> np.ndarray:
     """
     Obtain quantization table corresponding to a specific quality factor
     :param qf: JPEG quality factor
@@ -27,7 +27,7 @@ def qf_to_qt(qf, libjpeg_version='6b'):
         return get_qt_from_jpeglib(f.name)
 
 
-def get_qt_from_jpeglib(filepath):
+def get_qt_from_jpeglib(filepath: str) -> np.ndarray:
     """
     Loads quantization table from a JPEG image using jpeglib
     :param filepath: path to JPEG image

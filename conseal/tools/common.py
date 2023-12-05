@@ -11,7 +11,7 @@ EPS = np.finfo(np.float64).eps
 """small numerical constant"""
 
 
-def _entropy(*ps):
+def _entropy(*ps) -> float:
     """Computes n-ary entropy.
 
     Args:
@@ -30,7 +30,7 @@ def _entropy(*ps):
     return np.nansum(H)
 
 
-def entropy(p, p2=None):
+def entropy(p: np.ndarray, p2: np.ndarray = None) -> float:
     """Computes entropy with complement probability added.
 
     Args:

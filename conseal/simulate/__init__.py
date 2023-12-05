@@ -22,7 +22,7 @@ def simulate(
     """
 
     :param rho:
-    :type rho: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type rho: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param alpha:
     :type alpha: float
     :param n:
@@ -30,7 +30,7 @@ def simulate(
     :param seed:
     :type seed: int
     :return:
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
@@ -72,17 +72,17 @@ def average_payload(
     :param lbda:
     :type lbda: float
     :param rho_pm1:
-    :type rho_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type rho_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param rho_p1:
-    :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param rho_m1:
-    :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param p_pm1:
-    :type p_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type p_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param p_p1:
-    :type p_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type p_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param p_m1:
-    :type p_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type p_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param q:
     :type q: int
     :return: 2-tuple of (p_p1, p_m1), alpha_hat, where

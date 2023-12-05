@@ -41,20 +41,20 @@ def compute_cost(
     quantization_table: np.ndarray,
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
-):
+) -> np.ndarray:
     """Compute the UNIWARD distortion function for a given JPEG cover image.
 
     :param spatial: grayscale image in spatial domain
-    :type spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: quantization table of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param dtype: float32 or float64
-    :type dtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`_
+    :type dtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`__
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
     :return: cost map for embedding into the DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
@@ -190,11 +190,11 @@ def compute_distortion(
     """Computes the distortion rho_p1 and rho_m1.
 
     :param cover_spatial: decompressed DCT, array of shape [8*num_vertical_blocks, 8*num_horizontal_blocks]
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param dtype: float32 or float64
     :type dtype: np.dtype
     :param implementation: choose J-UNIWARD implementation
