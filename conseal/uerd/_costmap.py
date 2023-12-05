@@ -49,7 +49,7 @@ def compute_block_energies(
 def compute_cost(
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
-) -> np.ndarray:
+):
     """Compute embedding cost as described in Eq. 4
 
     :param cover_dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]

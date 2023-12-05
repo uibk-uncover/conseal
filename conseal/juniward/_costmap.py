@@ -41,7 +41,7 @@ def compute_cost(
     quantization_table: np.ndarray,
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
-) -> np.ndarray:
+):
     """Compute the UNIWARD distortion function for a given JPEG cover image.
 
     :param spatial: grayscale image in spatial domain
