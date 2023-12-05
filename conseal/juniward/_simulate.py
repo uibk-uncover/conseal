@@ -26,30 +26,38 @@ def simulate_single_channel(
 ) -> np.ndarray:
     """J-UNIWARD embedding
 
-    :param cover_spatial: spatial image of shape [height, width]
+    :param cover_spatial: decompressed (pixel) image of shape [height, width]
     :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param cover_dct_coeffs: corresponding quantized DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :param cover_dct_coeffs: quantized DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: quantization table of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: rate of bits to embed per nzAC coefficient
+    :param embedding_rate: embedding rate, in bits per nzAC coefficient
     :type embedding_rate: float
-    :param wet_cost: cost for unembeddable coefficients
+    :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
-    :param dtype: float32 or float64
+    :param dtype: data type to use for distortion computation,
+        float64 by default
     :type dtype: `np.dtype <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`__
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
-    :param generator: type of random number generator passed on to the stego noise simulator
+    :param generator: type of PRNG used by embedding simulator
     :type generator: `numpy.random.Generator <https://numpy.org/doc/stable/reference/random/generator.html>`__
     :param seed: random seed for embedding simulator
     :type seed: int
-    :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :return: stego DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> # TODO
+    >>> im_dct.Y = cl.juniward.simulate_single_channel(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0],  # QT
+    ...   cover_spatial=im_spatial.spatial[..., 0],  # decompressed
+    ...   embedding_rate=0.4,  # alpha
+    ...   seed=12345)  # seed
     """
     # Count number of embeddable DCT coefficients
     num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)
@@ -57,7 +65,8 @@ def simulate_single_channel(
     if num_non_zero_AC_coeffs == 0:
         raise ValueError('Expected non-zero AC coefficients')
 
-    # Compute cost for embedding into the quantized DCT coefficients, shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    # Compute cost for embedding into the quantized DCT coefficients
+    # of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     rho_p1, rho_m1 = compute_distortion(
         cover_spatial=cover_spatial,
         cover_dct_coeffs=cover_dct_coeffs,

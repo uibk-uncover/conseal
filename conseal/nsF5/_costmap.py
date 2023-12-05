@@ -16,13 +16,13 @@ from .. import tools
 
 
 def probability(
-    cover_dct_coefs: np.ndarray,
+    cover_dct_coeffs: np.ndarray,
     alpha: float = 1.,
 ) -> np.ndarray:
     """Returns nsF5 probability map for consequent simulation.
 
-    :param cover_dct_coefs:
-    :type cover_dct_coefs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param cover_dct_coeffs:
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param alpha:
     :type alpha: float
     :return:
@@ -33,31 +33,31 @@ def probability(
     >>> # TODO
     """
 
-    assert len(cover_dct_coefs.shape) == 4, "Expected DCT coefficients to have 4 dimensions"
-    assert cover_dct_coefs.shape[2] == cover_dct_coefs.shape[3] == 8, "Expected blocks of size 8x8"
+    assert len(cover_dct_coeffs.shape) == 4, "Expected DCT coefficients to have 4 dimensions"
+    assert cover_dct_coeffs.shape[2] == cover_dct_coeffs.shape[3] == 8, "Expected blocks of size 8x8"
 
     # No embedding
     if np.isclose(alpha, 0):
-        return np.zeros_like(cover_dct_coefs)
+        return np.zeros_like(cover_dct_coeffs)
 
     # Compute change rate on bound
     beta = tools.inv_entropy(alpha)
 
     # Number of nonzero AC DCT coefficients
-    nzAC = tools.dct.nzAC(cover_dct_coefs)
+    nzAC = tools.dct.nzAC(cover_dct_coeffs)
     if nzAC == 0:
         raise ValueError('There are no non-zero AC coefficients for embedding')
 
     # probability map
-    p = np.ones(cover_dct_coefs.shape, dtype='float64') * beta
+    p = np.ones(cover_dct_coeffs.shape, dtype='float64') * beta
 
     # do not change zeros or DC mode
-    p[cover_dct_coefs == 0] = 0
+    p[cover_dct_coeffs == 0] = 0
     p[:, :, 0, 0] = 0
 
     # substract absolute value
     p_p1, p_m1 = p.copy(), p.copy()
-    p_p1[cover_dct_coefs > 0] = 0
-    p_m1[cover_dct_coefs < 0] = 0
+    p_p1[cover_dct_coeffs > 0] = 0
+    p_m1[cover_dct_coeffs < 0] = 0
 
     return p_p1, p_m1
