@@ -23,11 +23,16 @@ def average_payload(
 ) -> float:
     """Estimates payload [bpnzac] embedded in the stego with nsF5.
 
-    Args:
-        cover (np.ndarray): Cover component.
-        stego (np.ndarray): Stego component.
-    Returns:
-        (float) Estimated embedding rate.
+    :param cover: Cover.
+    :type cover: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param stego: Stego.
+    :type stego: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :return: Estimated embedding rate.
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
     """
     num_changes = (cover != stego).sum()
     nzAC = tools.dct.nzAC(cover)
@@ -43,13 +48,17 @@ def simulate_single_channel(
     """Simulate embedding into a single channel.
 
     :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: np.ndarray
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param embedding_rate: embedding rate
     :type embedding_rate: float
     :param seed: random seed for STC simulator
     :type seed: int
     :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: np.ndarray
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
     """
 
     assert len(cover_dct_coeffs.shape) == 4, "Expected DCT coefficients to have 4 dimensions"

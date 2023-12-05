@@ -41,11 +41,15 @@ def simulate_single_channel(
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
     :param generator: type of random number generator passed on to the stego noise simulator
-    :type generator: :class:`numpy.random.Generator`
+    :type generator: `numpy.random.Generator <https://numpy.org/doc/stable/reference/random/generator.html>`_
     :param seed: random seed for embedding simulator
     :type seed: int
     :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: :class:`numpy.ndarray`
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
     """
     # Count number of embeddable DCT coefficients
     num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)

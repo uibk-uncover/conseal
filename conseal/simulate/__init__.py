@@ -22,7 +22,7 @@ def simulate(
     """
 
     :param rho:
-    :type rho: np.ndarray
+    :type rho: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param alpha:
     :type alpha: float
     :param n:
@@ -30,7 +30,7 @@ def simulate(
     :param seed:
     :type seed: int
     :return:
-    :rtype: np.ndarray
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
 
     :Example:
 
@@ -59,42 +59,49 @@ def simulate(
 
 def average_payload(
     lbda: float,
-    rhoPM1: np.ndarray = None,
-    rhoP1: np.ndarray = None,
-    rhoM1: np.ndarray = None,
-    pPM1: np.ndarray = None,
-    pP1: np.ndarray = None,
-    pM1: np.ndarray = None,
+    rho_pm1: np.ndarray = None,
+    rho_p1: np.ndarray = None,
+    rho_m1: np.ndarray = None,
+    p_pm1: np.ndarray = None,
+    p_p1: np.ndarray = None,
+    p_m1: np.ndarray = None,
     q: int = 3,
 ) -> float:
     """
 
     :param lbda:
     :type lbda: float
-    :param rhoPM1:
-    :type rhoPM1: np.ndarray
-    :param rhoP1:
-    :type rhoP1: np.ndarray
-    :param rhoM1:
-    :type rhoM1: np.ndarray
-    :param pPM1:
-    :type pPM1: np.ndarray
-    :param pP1:
-    :type pP1: np.ndarray
-    :param pM1:
-    :type pM1: np.ndarray
+    :param rho_pm1:
+    :type rho_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param rho_p1:
+    :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param rho_m1:
+    :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param p_pm1:
+    :type p_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param p_p1:
+    :type p_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param p_m1:
+    :type p_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param q:
     :type q: int
-    :return:
-    :rtype: float
+    :return: 2-tuple of (p_p1, p_m1), alpha_hat, where
+        p_p1 is the probability of +1 change,
+        p_m1 is the probability of -1 change, and
+        alpha_hat is the payload embedded.
+    :rtype: tuple
+
+    :Example:
+
+    >>> # TODO
     """
     if q == 3:
         return _ternary.average_payload(
             lbda=lbda,
-            rhoP1=rhoP1,
-            rhoM1=rhoM1,
-            pP1=pP1,
-            pM1=pM1,
+            rho_p1=rho_p1,
+            rho_m1=rho_m1,
+            p_p1=p_p1,
+            p_m1=p_m1,
         )
     else:
         raise NotImplementedError(f'not implemented {q}ary probability')

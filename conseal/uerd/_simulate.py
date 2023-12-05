@@ -37,6 +37,10 @@ def simulate_single_channel(
     :type seed: int
     :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: np.ndarray
+
+    :Example:
+
+    >>> #TODO
     """
 
     if np.isclose(embedding_rate, 0):
@@ -58,15 +62,15 @@ def simulate_single_channel(
         raise ValueError('There are no non-zero AC coefficients for embedding')
 
     # simulator
-    (pChangeP1, pChangeM1), lbda = _ternary.probability(
-        rhoP1=rho_p1,
-        rhoM1=rho_m1,
+    (p_p1, p_m1), lbda = _ternary.probability(
+        rho_p1=rho_p1,
+        rho_m1=rho_m1,
         alpha=embedding_rate,
         n=n,
     )
     delta_dct_coeffs = _ternary.simulate(
-        pChangeP1=pChangeP1,
-        pChangeM1=pChangeM1,
+        p_p1=p_p1,
+        p_m1=p_m1,
         seed=seed,
     )
 

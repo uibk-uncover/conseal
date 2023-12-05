@@ -30,16 +30,16 @@ class TestSimulate(unittest.TestCase):
         self._logger.info('TestSimulate.test_simulate_ternary_constant')
         # constant distortion
         n = 1000
-        rhoP1 = np.array([50]*n)
-        rhoM1 = rhoP1.copy()
+        rho_p1 = np.array([50]*n)
+        rho_m1 = rho_p1.copy()
         # compute probability
-        (pP1, pM1), lbda = cl.simulate._ternary.probability(
-            rhoP1, rhoM1,
+        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+            rho_p1, rho_m1,
             alpha,
             len(rhoP1),
         )
         # estimate average relative payload
-        _, Hp = cl.simulate.average_payload(lbda=lbda, pP1=pP1, pM1=pM1)
+        _, Hp = cl.simulate.average_payload(lbda=lbda, p_p1=p_p1, p_m1=p_m1)
         alpha_hat = Hp/n
         self.assertAlmostEqual(alpha, alpha_hat, 3)
 
@@ -49,16 +49,16 @@ class TestSimulate(unittest.TestCase):
         #
         n = int(1000)
         rng = np.random.default_rng(12345)
-        rhoP1 = rng.normal(.1, .05, n)  # 1000 samples ~ N(.1, .05)
-        rhoP1[rhoP1 < 0] = 0
-        rhoM1 = rhoP1.copy()
-        (pP1, pM1), lbda = cl.simulate._ternary.probability(
-            rhoP1, rhoM1,
+        rho_p1 = rng.normal(.1, .05, n)  # 1000 samples ~ N(.1, .05)
+        rho_p1[rho_p1 < 0] = 0
+        rho_m1 = rho_p1.copy()
+        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+            rho_p1, rho_m1,
             alpha,
-            len(rhoP1),
+            len(rho_p1),
         )
         # estimate average relative payload
-        _, Hp = cl.simulate.average_payload(lbda=lbda, pP1=pP1, pM1=pM1)
+        _, Hp = cl.simulate.average_payload(lbda=lbda, p_p1=p_p1, p_m1=p_m1)
         alpha_hat = Hp/n
         self.assertAlmostEqual(alpha, alpha_hat, 3)
 

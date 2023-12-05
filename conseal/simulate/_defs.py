@@ -22,17 +22,23 @@ def get_p(
         y_i = argmin_{z in {x_i - 1, x_i + 1}} D(X, zX_~i) is the modified value at the i-th position,
         Z is a normalization factor,
         y_i X_~i denotes the cover image whose i-th value has been modified to Y_i = y_i and all other pixels remain unchanged, and
-        lambda is a constant.
+        lambda is a parameter value.
 
     The equation is from
     Patrick Bas et al. "Break Our Steganographic System: The Ins and Outs of Organizing BOSS", IH 2011.
     Originally described in the STC paper by
     Filler et al. "Minimizing Additive Distortion in Steganography Using Syndrome-Trellis Codes", TIFS 2011.
 
-    :param rho1: distortion of specific embedding choice, e.g. embedding +1 or embedding -1
-    :param rho2: distortion of opposite embedding choice, needed for normalization
-    :param lbda: constant
+    :param rhos: distortion of embedding choices, e.g. embedding +1 or embedding -1
+    :type rhos: tuple
+    :param lbda: parameter value.
+    :type lbda: float
     :return: probability of embedding into each location, same shape as rho1
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
     """
     # denominator (forced left-associativity)
     denum = 1

@@ -8,7 +8,7 @@ This implementation builds on the Matlab implementation provided by the DDE lab.
 Copyright (c) 2013 DDE Lab, Binghamton University, NY. All Rights Reserved.
 Permission to use, copy, modify, and distribute this software for educational, research and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that this copyright notice appears in all copies. The program is supplied "as is," without any accompanying services from DDE Lab. DDE Lab does not warrant the operation of the program will be uninterrupted or error-free. The end-user understands that the program was developed for research purposes and is advised not to rely exclusively on the program for any reason. In no event shall Binghamton University or DDE Lab be liable to any party for direct, indirect, special, incidental, or consequential damages, including lost profits, arising out of the use of this software. DDE Lab disclaims any warranties, and has no obligations to provide maintenance, support, updates, enhancements or modifications.
 -------------------------------------------------------------------------
-"""
+"""  # noqa: E501
 
 import numpy as np
 import typing
@@ -20,27 +20,46 @@ from ._defs import get_p
 
 def average_payload(
     lbda: float,
-    rhoP1: np.ndarray = None,
-    rhoM1: np.ndarray = None,
-    pP1: np.ndarray = None,
-    pM1: np.ndarray = None,
+    rho_p1: np.ndarray = None,
+    rho_m1: np.ndarray = None,
+    p_p1: np.ndarray = None,
+    p_m1: np.ndarray = None,
 ) -> float:
-    assert (
-        (pP1 is not None and pM1 is not None and rhoP1 is None and rhoM1 is None) or
-        (pP1 is None and pM1 is None and rhoP1 is not None and rhoM1 is not None)
-    ), 'exactly one of (pP1, pM1) or (rhoP1, rhoM1) must be given'
+    """
 
-    if pP1 is None:
-        pP1 = get_p(lbda, rhoP1, rhoM1)
-        pM1 = get_p(lbda, rhoM1, rhoP1)
+    :param lbda:
+    :type lbda: float
+    :param rho_p1:
+    :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param rho_m1:
+    :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param p_p1:
+    :type p_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param p_m1:
+    :type p_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :return:
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
+    """
+    assert (
+        (p_p1 is not None and p_m1 is not None and rho_p1 is None and rho_m1 is None) or
+        (p_p1 is None and p_m1 is None and rho_p1 is not None and rho_m1 is not None)
+    ), 'exactly one of (p_p1, p_m1) or (rho_p1, rho_m1) must be given'
+
+    if p_p1 is None:
+        p_p1 = get_p(lbda, rho_p1, rho_m1)
+        p_m1 = get_p(lbda, rho_m1, rho_p1)
 
     # Compute ternary entropy
-    return (pP1, pM1), tools.entropy(pP1, pM1)
+    return (p_p1, p_m1), tools.entropy(p_p1, p_m1)
 
 
 def calc_lambda(
-    rhoP1: np.ndarray,
-    rhoM1: np.ndarray,
+    rho_p1: np.ndarray,
+    rho_m1: np.ndarray,
     message_length: int,
     n: int,
     objective: typing.Callable = None,
@@ -55,11 +74,20 @@ def calc_lambda(
     We simulate a payload-limited sender that embeds a fixed average payload while minimizing the average distortion.
     Optimize for the lambda that minimizes the average distortion while transferring the message.
 
-    Args:
-        rhoP1 (np.ndarray): cost for embedding +1.
-        rhoM1 (np.ndarray): cost for embedding -1.
-        message_length (int): Message length.
-        n (int): Cover size.
+    :param rho_p1: Cost for embedding +1.
+    :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param rho_m1: Cost for embedding -1.
+    :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param message_length: Message length.
+    :type message_length: int
+    :param n: Cover size.
+    :type n: int
+    :return: Parameter lambda value.
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
     """
     assert n > 0, "Expected cover size greater than 0"
 
@@ -78,7 +106,7 @@ def calc_lambda(
         l3 *= 2
 
         # Compute total entropy m3
-        _, m3 = objective(l3, rhoP1, rhoM1)  # objective function
+        _, m3 = objective(l3, rho_p1, rho_m1)  # objective function
 
         iterations += 1
 
@@ -100,7 +128,7 @@ def calc_lambda(
         lbda = l1 + (l3 - l1) / 2
 
         # Calculate entropy at the mid of the interval
-        _, m2 = objective(lbda, rhoP1, rhoM1)  # objective function
+        _, m2 = objective(lbda, rho_p1, rho_m1)  # objective function
 
         # ternary search
         if m2 < message_length:
@@ -124,38 +152,45 @@ def calc_lambda(
 
 
 def probability(
-    rhoP1: np.ndarray,
-    rhoM1: np.ndarray,
+    rho_p1: np.ndarray,
+    rho_m1: np.ndarray,
     alpha: float,
     n: int,
     objective: typing.Callable = None,
 ) -> np.ndarray:
     """Convert binary distortion to binary probability.
 
-    Args:
-        rhoP1 (np.ndarray): Distortion tensor for +1 change.
-        rhoM1 (np.ndarray): Distortion tensor for -1 change.
-        alpha (float): Embedding rate.
-        n (int): Embeddable elements.
-    Returns:
-        2-tuple (pChangeP1, pChangeM1), lbda
-            pChangeP1 is the probability of embedding +1
-            pChangeM1 is the probability of embedding -1
-            lbda is the determined lambda
+    :param rho_p1: Distortion tensor for +1 change.
+    :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param rho_m1: Distortion tensor for -1 change.
+    :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param alpha: Embedding rate.
+    :type alpha: float
+    :param n: Cover size.
+    :type n: int
+    :return: tuple ((p_p1, p_m1), lmbda), where
+        p_p1 is the probability of +1 change,
+        p_m1 is the probability of -1 change, and
+        lbda is the determined lambda.
+    :rtype: tuple
+
+    :Example:
+
+    >>> # TODO
     """
     if objective is None:
         objective = average_payload
 
     message_length = int(np.round(alpha * n))
-    lbda = calc_lambda(rhoP1, rhoM1, message_length, n, objective)
+    lbda = calc_lambda(rho_p1, rho_m1, message_length, n, objective)
     #
-    (pP1, pM1), H = objective(lbda, rhoP1, rhoM1)
-    return (pP1, pM1), lbda
+    (p_p1, p_m1), H = objective(lbda, rho_p1, rho_m1)
+    return (p_p1, p_m1), lbda
 
 
 def simulate(
-    pChangeP1: np.ndarray,
-    pChangeM1: np.ndarray,
+    p_p1: np.ndarray,
+    p_m1: np.ndarray,
     generator: str = None,
     order: str = 'C',
     seed: int = None,
@@ -163,24 +198,31 @@ def simulate(
     """
     Simulates changes using the given probability maps.
 
-    Args:
-        pChangeP1 (np.ndarray): Probability tensor for changes +1.
-        pChangeM1 (np.ndarray): Probability tensor for changes -1.
-        generator (str): Random number generator to choose. One of None (numpy default), or MT19937, used by Matlab.
-        order (str): Order of changes, C or F.
-        seed (int): Random number generator seed for reproducibility.
-    Returns:
-        (np.ndarray): Simulated ternary changes in the cover, 0 (keep), +1 or -1.
+    :param p_p1: Probability tensor for changes +1.
+    :type p_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param p_m1: Probability tensor for changes -1.
+    :type p_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param generator: Random number generator to choose. None (numpy default), or 'MT19937', used by Matlab.
+    :type generator: str
+    :param order: Order of changes, 'C' or 'F'.
+    :type order: str
+    :param seed: Random number generator seed for reproducibility.
+    :return: Simulated ternary changes in the cover, 0 (keep), +1 or -1.
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
     """
 
     # Select random number generator
     if generator is None:  # numpy default generator
         rng = np.random.default_rng(seed=seed)
-        rand_change = rng.random(pChangeP1.shape)
+        rand_change = rng.random(p_p1.shape)
 
     elif generator == 'MT19937':  # Matlab generator
         prng = np.random.RandomState(seed)
-        rand_change = prng.random_sample(pChangeP1.shape)
+        rand_change = prng.random_sample(p_p1.shape)
 
     else:
         raise NotImplementedError(f'unsupported generator {generator}')
@@ -190,44 +232,48 @@ def simulate(
         pass
 
     elif order == 'F':
-        rand_change = rand_change.reshape(-1).reshape(pChangeP1.shape, order='F')
+        rand_change = rand_change.reshape(-1).reshape(p_p1.shape, order='F')
 
     else:
         raise NotImplementedError(f'Given order {order} is not implemented')
 
     # Set up ndarray with simulated changes
-    delta = np.zeros(pChangeP1.shape, dtype='int8')
+    delta = np.zeros(p_p1.shape, dtype='int8')
 
     # rand_change < pChangeP1 => increment 1
     # rand_change < pChangeP1 + pChangeP2 => decrement 1
 
-    delta[rand_change < pChangeP1] = 1
-    delta[(rand_change >= pChangeP1) & (rand_change < pChangeP1+pChangeM1)] = -1
+    delta[rand_change < p_p1] = 1
+    delta[(rand_change >= p_p1) & (rand_change < p_p1+p_m1)] = -1
     return delta
 
 
 def ternary(
-    rhoP1: np.ndarray,
-    rhoM1: np.ndarray,
+    rho_p1: np.ndarray,
+    rho_m1: np.ndarray,
     alpha: float,
     n: int,
     **kw,
 ) -> np.ndarray:
     """Simulates ternary embedding given distortion and embedding rate.
 
-    :param rhoP1: Distortion tensor for -1.
-    :type rhoP1: np.ndarray
-    :param rhoM1: Distortion tensor for +1.
-    :type rhoM1: np.ndarray
+    :param rho_p1: Distortion tensor for -1.
+    :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+    :param rho_m1: Distortion tensor for +1.
+    :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
     :param n: Cover size.
     :type n: int
     :return: Simulated binary changes in cover, 0 (keep), 1 or -1 (change).
-    :rtype: np.ndarray
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`_
+
+    :Example:
+
+    >>> # TODO
     """
-    (pChangeP1, pChangeM1), lbda = probability(
-        rhoP1=rhoP1,
-        rhoM1=rhoM1,
+    (p_p1, p_m1), lbda = probability(
+        rho_p1=rho_p1,
+        rho_m1=rho_m1,
         alpha=alpha,
         n=n,
     )
-    return simulate(pChangeP1, pChangeM1, **kw)
+    return simulate(p_p1, p_m1, **kw)
