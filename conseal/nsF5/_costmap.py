@@ -56,8 +56,8 @@ def probability(
     p[:, :, 0, 0] = 0
 
     # substract absolute value
-    pP1, pM1 = p.copy(), p.copy()
-    pP1[cover_dct_coefs > 0] = 0
-    pM1[cover_dct_coefs < 0] = 0
+    p_p1, p_m1 = p.copy(), p.copy()
+    p_p1[cover_dct_coefs > 0] = 0
+    p_m1[cover_dct_coefs < 0] = 0
 
-    return pP1, pM1
+    return p_p1, p_m1
