@@ -25,7 +25,9 @@ The code before use a cover image, which can be loaded as follows.
 >>> im_spatial = jpeglib.read_spatial(  # for J-UNIWARD
 ...   "cover.jpeg",
 ...   jpeglib.JCS_GRAYSCALE)
->>> # here change im_dct.Y
+
+After modifying ``im_dct.Y``, write the image as follows.
+
 >>> im_dct.write_dct("stego.jpeg")
 
 .. note::
