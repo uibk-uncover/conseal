@@ -240,8 +240,8 @@ def simulate(
     # Set up ndarray with simulated changes
     delta = np.zeros(p_p1.shape, dtype='int8')
 
-    # rand_change < pChangeP1 => increment 1
-    # rand_change < pChangeP1 + pChangeP2 => decrement 1
+    # rand_change < p_p1 => increment 1
+    # rand_change < p_p1 + p_m1 => decrement 1
 
     delta[rand_change < p_p1] = 1
     delta[(rand_change >= p_p1) & (rand_change < p_p1+p_m1)] = -1
