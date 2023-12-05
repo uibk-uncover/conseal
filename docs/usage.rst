@@ -34,9 +34,13 @@ The code before use a cover image, which can be loaded as follows.
    If you use to 2D DCT representation (used by jpegio, for instance),
    you have to convert it to 4D and back as follows.
 
-   >>> dct4 = dct2.reshape(dct2.shape[0]//8, 8, -1, 8).transpose(0, 2, 1, 3)
+   >>> dct4 = (dct2  # 2D to 4D
+   ...   .reshape(dct2.shape[0]//8, 8, dct.shape[1]//8, 8)
+   ...   .transpose(0, 2, 1, 3))
 
-   >>> dct2 = dct4.transpose(0, 2, 1, 3).reshape(dct4.shape[0]*8, -1)
+   >>> dct2 = (dct4  # 4D to 2D
+   ...   .transpose(0, 2, 1, 3)
+   ...   .reshape(dct4.shape[0]*8, dct4.shape[1]*8))
 
 
 Package ``conseal`` provides several API on different levels of abstraction.
