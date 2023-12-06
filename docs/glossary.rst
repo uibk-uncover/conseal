@@ -59,3 +59,22 @@ Sublattice simulator
 ^^^^^^^^^^^^^^^^^^^^
 
 *Will be added in the future*
+
+
+Distortion
+----------
+
+Uniform Embedding Revisited Distortion (UERD)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+JPEG Universal Wavelet Relative Distortion (J-UNIWARD)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+Non-shrinkage F5 (nsF5)
+^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*

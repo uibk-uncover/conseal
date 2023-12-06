@@ -21,7 +21,12 @@ def simulate_single_channel(
     wet_cost: float = 10**13,
     seed: int = None,
 ) -> np.ndarray:
-    """Simulate embedding into a single channel.
+    """Simulates UERD embedding at an embedding rate into single-channel cover,
+    and returns stego.
+
+    UERD was introduced in
+    L. Guo, et al. Using Statistical Image Model for JPEG Steganography: Uniform Embedding Revisited.
+    IEEE TIFS, 2015.
 
     :param cover_dct_coeffs: quantized DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
