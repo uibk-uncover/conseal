@@ -202,10 +202,11 @@ def compute_distortion(
     :param cover_spatial: decompressed (pixel) image
         of shape [height, width]
     :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param cover_dct_coeffs: quantized DCT coefficients
+    :param cover_dct_coeffs: quantized cover DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: ndarray of shape [8, 8]
+    :param quantization_table: quantization table
+        of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param dtype: data type to use for distortion computation,
         float64 by default

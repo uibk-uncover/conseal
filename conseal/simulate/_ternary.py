@@ -176,7 +176,15 @@ def probability(
 
     :Example:
 
-    >>> # TODO
+    >>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+    ...   rho_p1=rho_p1,  # distortion of +1
+    ...   rho_m1=rho_m1,  # distortion of -1
+    ...   alpha=0.4,  # alpha
+    ...   n=im_dct.Y.size)  # cover size
+    >>> im_dct.Y += cl.simulate._ternary.simulate(
+    ...   p_p1=p_p1,  # probability of +1
+    ...   p_m1=p_m1,  # probability of -1
+    ...   seed=12345)  # seed
     """
     if objective is None:
         objective = average_payload
@@ -215,7 +223,15 @@ def simulate(
 
     :Example:
 
-    >>> # TODO
+    >>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+    ...   rho_p1=rho_p1,  # distortion of +1
+    ...   rho_m1=rho_m1,  # distortion of -1
+    ...   alpha=0.4,  # alpha
+    ...   n=im_dct.Y.size)  # cover size
+    >>> im_dct.Y += cl.simulate._ternary.simulate(
+    ...   p_p1=p_p1,  # probability of +1
+    ...   p_m1=p_m1,  # probability of -1
+    ...   seed=12345)  # seed
     """
 
     # Select random number generator
@@ -273,7 +289,15 @@ def ternary(
 
     :Example:
 
-    >>> # TODO
+    >>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0])  # QT
+    >>> im_dct.Y += cl.simulate.ternary(
+    ...   rho_p1=rho_p1,  # distortion of +1
+    ...   rho_m1=rho_m1,  # distortion of -1
+    ...   alpha=0.4,  # alpha
+    ...   n=im_dct.Y.size,  # cover size
+    ...   seed=12345)  # seed
     """
     (p_p1, p_m1), lbda = probability(
         rho_p1=rho_p1,
