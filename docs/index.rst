@@ -5,9 +5,13 @@ conseal
 
 
 
-.. note::
+.. warning::
 
-   This project is under active development.
+   This project is under heavy development.
+
+   .. image:: static/warning.jpeg
+      :width: 300
+      :alt: Earning
 
 Yes, we also have J-UNIWARD.
 
