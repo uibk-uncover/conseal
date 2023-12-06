@@ -15,9 +15,9 @@ High-level API
 --------------
 
 On high-level API, the embedding is a black-box.
-You pass the cover image and receive stego image.
+You pass in the cover image and obtain the stego image.
 
-Currently, there are three JPEG steganography simulators implemented: J-UNIWARD, UERD, and nsF5
+Currently, there are three JPEG steganography simulators implemented: J-UNIWARD, UERD, and nsF5.
 
 
 Simulators of JPEG Steganography
