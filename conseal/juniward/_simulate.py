@@ -73,7 +73,7 @@ def simulate_single_channel(
     rho_p1, rho_m1 = compute_distortion(
         cover_spatial=cover_spatial,
         cover_dct_coeffs=cover_dct_coeffs,
-        quant_table=quantization_table,
+        quantization_table=quantization_table,
         dtype=dtype,
         implementation=implementation,
         wet_cost=wet_cost,
