@@ -38,9 +38,14 @@ html_static_path = ['.']
 html_theme_options = {
     'logo': 'seal.png',
     'logo_name': 'conseal',
+    'logo_only': False,
+    'display_version': True,
+    'style_external_links': False,
     'description': 'Modern steganography in Python',
-    'fixed_sidebar': True,
-    'github_button': True,
+    'show_powered_by': False,
+    # 'fixed_sidebar': True,
+    # 'github_button': True,
+    # 'collapse_navigation': True,
 }
 
 # -- Options for EPUB output
