@@ -13,7 +13,7 @@ Yes, we also have J-UNIWARD.
 
 
 toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    usage
    reference
