@@ -24,7 +24,15 @@ def simulate_single_channel(
     generator: str = None,
     seed: int = None,
 ) -> np.ndarray:
-    """J-UNIWARD embedding
+    """Simulates J-UNIWARD embedding at an embedding rate into single-channel cover,
+    and returns stego.
+
+    J-UNIWARD was introduced in
+    V. Holub, et al. Universal distortion function for steganography in an arbitrary domain.
+    EURASIP JIS, 2014.
+
+    The details of the methods are described in the
+    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-universal-wavelet-relative-distortion-j-uniward>`__.
 
     :param cover_spatial: decompressed (pixel) cover image
         of shape [height, width]

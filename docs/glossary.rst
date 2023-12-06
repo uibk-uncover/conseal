@@ -6,7 +6,10 @@ The rest of documentation will refer to this page as a knowledge base.
 
 .. contents:: Table of Contents
    :local:
-   :depth: 1
+   :depth: 2
+
+Steganographic design
+---------------------
 
 Embedding simulation
 --------------------
@@ -51,11 +54,36 @@ which is also implemented in the `conseal` package,
 the equation above can be written as follows.
 
 .. math::
-   p_i^{(+1)} &= \frac{\text{exp}( - \lambda \rho_i^{(+1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \\text{rho}_i^{(-1)})} \\
-   p_i^{(-1)} &= \frac{\text{exp}( - \lambda \rho_i^{(-1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \\text{rho}_i^{(-1)})} \\
+   p_i^{(+1)} &= \frac{\text{exp}( - \lambda \rho_i^{(+1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \text{rho}_i^{(-1)})} \\
+   p_i^{(-1)} &= \frac{\text{exp}( - \lambda \rho_i^{(-1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \text{rho}_i^{(-1)})} \\
 
 
 Sublattice simulator
 ^^^^^^^^^^^^^^^^^^^^
 
 *Will be added in the future*
+
+
+Distortion functions
+--------------------
+
+Uniform Embedding Revisited Distortion (UERD)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+JPEG Universal Wavelet Relative Distortion (J-UNIWARD)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+Non-shrinkage F5 (nsF5)
+^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+
+JPEG and DCT
+------------
+
+*TODO: To be completed*

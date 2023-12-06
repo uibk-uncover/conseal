@@ -46,7 +46,15 @@ def simulate_single_channel(
     embedding_rate: float,
     seed: int = None,
 ) -> np.ndarray:
-    """Simulate embedding into a single channel.
+    """Simulates nsF5 embedding at an embedding rate into single-channel cover,
+    and returns stego.
+
+    nsF5 was introduced in
+    J. Fridrich, et al. Statistically undetectable JPEG steganography: Dead ends, challenges, and opportunities.
+    ACM MMSec, 2007.
+
+    The details of the methods are described in the
+    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#non-shrinkage-f5-nsf5>`__.
 
     :param cover_dct_coeffs: quantized cover DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]

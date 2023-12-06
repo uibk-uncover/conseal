@@ -1,9 +1,6 @@
 # Configuration file for the Sphinx documentation builder.
 
 # -- Project information
-
-import sphinx_rtd_theme
-
 project = 'conseal'
 copyright = '2023, Martin Benes & Benedikt Lorch, University of Innsbruck'
 author = 'Martin Benes, Benedikt Lorch'
@@ -14,7 +11,6 @@ version = '2023.12.a0'
 # -- General configuration
 
 extensions = [
-    'sphinx_rtd_theme',
     'sphinx.ext.duration',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
@@ -30,10 +26,17 @@ intersphinx_mapping = {
 }
 intersphinx_disabled_domains = ['std']
 
-templates_path = ['_templates']
+templates_path = ['templates']
 
 # -- Options for HTML output
-html_theme = 'alabaster'  # 'sphinx_rtd_theme'
+html_theme = 'alabaster'
+html_static_path = ['static']
+html_theme_options = {
+    'logo': 'seal.png',
+    'logo_name': 'conseal',
+    'description': 'Modern steganography in Python',
+    'show_powered_by': False,
+}
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
