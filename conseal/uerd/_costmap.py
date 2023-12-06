@@ -103,7 +103,7 @@ def compute_cost(
     return rho
 
 
-def compute_distortion(
+def compute_cost_adjusted(
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
     wet_cost: float = 10**13,
@@ -124,7 +124,7 @@ def compute_distortion(
 
     Distortion is computed as follows.
 
-    >>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+    >>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
     ...   cover_dct_coeffs=im_dct.Y,  # DCT
     ...   quantization_table=im_dct.qt[0])  # QT
     """

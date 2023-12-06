@@ -6,7 +6,7 @@ Affiliation: University of Innsbruck
 
 # costmap
 from . import _costmap
-from ._costmap import compute_distortion, Implementation
+from ._costmap import compute_cost_adjusted, Implementation
 
 # simulate
 from . import _simulate
@@ -19,7 +19,7 @@ JUNIWARD_FIX_OFF_BY_ONE = Implementation.JUNIWARD_FIX_OFF_BY_ONE
 __all__ = [
     '_costmap',
     '_simulate',
-    'compute_distortion',
+    'compute_cost_adjusted',
     'simulate_single_channel',
     'Implementation',
     'JUNIWARD_ORIGINAL',

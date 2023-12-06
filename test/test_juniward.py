@@ -17,56 +17,56 @@ class TestJUNIWARD(unittest.TestCase):
     _logger = logging.getLogger(__name__)
 
     @staticmethod
-    # def read_costmap(probability_map_filename, height, width):
-    #     """
-    #     Read binary file produced by a modified J-UNIWARD C++ implementation
-    #     :param probability_map_filename: path to binary file
-    #     :param height: of the original image
-    #     :param width: of the original image
-    #     :return: ndarray of shape [height, width, 3]
-    #         Channel 0: If the cover pixel is at the minimum -1023 already, the pixel contains the wet cost; otherwise rho.
-    #         Channel 1: Always 0.
-    #         Channel 2: If the cover pixel is at the maximum 1023 already, the pixel contains the wet cost; otherwise rho.
-    #     """
-    #     count = height * width * 3
-    #     with open(probability_map_filename, 'rb') as f:
-    #         probability_map = np.fromfile(f, dtype=np.float32, count=count, sep='')
-    #         probability_map = probability_map.reshape(height, width, 3)
-    #     return probability_map
-    #
-    # @parameterized.expand([
-    #     ("lizard_gray.jpeg", "lizard_gray.costmap"),
-    #     ("mountain_gray.jpeg", "mountain_gray.costmap"),
-    #     ("nuclear_gray.jpeg", "nuclear_gray.costmap"),
-    # ])
-    # def test_costmap_original_cpp_python_equivalence(self, cover_filename, costmap_cpp_filename):
-    #     self._logger.info(f'TestJUNIWARD.test_probability_map_original_cpp_python_equivalence({cover_filename=}, {costmap_cpp_filename=})')
-    #
-    #     cover_filepath = COVER_DIR / cover_filename
-    #     costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp-original' / costmap_cpp_filename
-    #
-    #     cover_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
-    #     img_dct = jpeglib.read_dct(cover_filepath)
-    #     cover_dct_coeffs = img_dct.Y
-    #     quantization_table = img_dct.qt[0]
-    #
-    #     # Compute cost for embedding into the quantized DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    #     rho_p1, rho_m1 = cl.juniward.compute_distortion(
-    #         cover_spatial=cover_spatial,
-    #         cover_dct_coeffs=cover_dct_coeffs,
-    #         quantization_table=quantization_table,
-    #         dtype=np.float64,
-    #         implementation=cl.juniward.JUNIWARD_FIX_OFF_BY_ONE,
-    #         wet_cost=10**13,
-    #     )
-    #
-    #     # Rearrange from 4D to 2D
-    #     rho_p1_2d = cl.tools.dct.jpeglib_to_jpegio(rho_p1)
-    #     rho_m1_2d = cl.tools.dct.jpeglib_to_jpegio(rho_m1)
-    #
-    #     costmap_cpp = self.read_costmap(costmap_cpp_filepath, 512, 512)
-    #     np.testing.assert_allclose(rho_m1_2d, costmap_cpp[:, :, 0])
-    #     np.testing.assert_allclose(rho_p1_2d, costmap_cpp[:, :, 2])
+    def read_costmap(probability_map_filename, height, width):
+        """
+        Read binary file produced by a modified J-UNIWARD C++ implementation
+        :param probability_map_filename: path to binary file
+        :param height: of the original image
+        :param width: of the original image
+        :return: ndarray of shape [height, width, 3]
+            Channel 0: If the cover pixel is at the minimum -1023 already, the pixel contains the wet cost; otherwise rho.
+            Channel 1: Always 0.
+            Channel 2: If the cover pixel is at the maximum 1023 already, the pixel contains the wet cost; otherwise rho.
+        """
+        count = height * width * 3
+        with open(probability_map_filename, 'rb') as f:
+            probability_map = np.fromfile(f, dtype=np.float32, count=count, sep='')
+            probability_map = probability_map.reshape(height, width, 3)
+        return probability_map
+
+    @parameterized.expand([
+        ("lizard_gray.jpeg", "lizard_gray.costmap"),
+        ("mountain_gray.jpeg", "mountain_gray.costmap"),
+        ("nuclear_gray.jpeg", "nuclear_gray.costmap"),
+    ])
+    def test_costmap_original_cpp_python_equivalence(self, cover_filename, costmap_cpp_filename):
+        self._logger.info(f'TestJUNIWARD.test_probability_map_original_cpp_python_equivalence({cover_filename=}, {costmap_cpp_filename=})')
+
+        cover_filepath = COVER_DIR / cover_filename
+        costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp-original' / costmap_cpp_filename
+
+        cover_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
+        img_dct = jpeglib.read_dct(cover_filepath)
+        cover_dct_coeffs = img_dct.Y
+        quantization_table = img_dct.qt[0]
+
+        # Compute cost for embedding into the quantized DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+        rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+            cover_spatial=cover_spatial,
+            cover_dct_coeffs=cover_dct_coeffs,
+            quantization_table=quantization_table,
+            dtype=np.float64,
+            implementation=cl.juniward.JUNIWARD_FIX_OFF_BY_ONE,
+            wet_cost=10**13,
+        )
+
+        # Rearrange from 4D to 2D
+        rho_p1_2d = cl.tools.dct.jpeglib_to_jpegio(rho_p1)
+        rho_m1_2d = cl.tools.dct.jpeglib_to_jpegio(rho_m1)
+
+        costmap_cpp = self.read_costmap(costmap_cpp_filepath, 512, 512)
+        np.testing.assert_allclose(rho_m1_2d, costmap_cpp[:, :, 0])
+        np.testing.assert_allclose(rho_p1_2d, costmap_cpp[:, :, 2])
 
     @parameterized.expand([
         ("lizard_gray.jpeg", "lizard_gray_costmap.mat"),
