@@ -9,13 +9,13 @@ conseal
 
 Yes, we also have J-UNIWARD.
 
-Contents
---------
+.. Contents
+.. --------
 
-.. toctree::
-   :maxdepth: 2
+.. .. toctree::
+..    :maxdepth: 2
 
-   usage
-   reference
-   glossary
-   faq
+..    usage
+..    reference
+..    glossary
+..    faq
