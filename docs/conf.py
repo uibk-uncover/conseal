@@ -38,9 +38,9 @@ html_static_path = ['static']
 html_theme_options = {
     'logo': 'seal.png',
     'logo_name': 'conseal',
-    'logo_only': False,
-    'display_version': True,
-    'style_external_links': False,
+    # 'logo_only': False,
+    # 'display_version': True,
+    # 'style_external_links': False,
     'description': 'Modern steganography in Python',
     'show_powered_by': False,
     # 'fixed_sidebar': True,
