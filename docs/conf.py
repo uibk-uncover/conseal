@@ -38,7 +38,7 @@ html_static_path = ['.']
 html_theme_options = {
     'logo': 'seal.png',
     'logo_name': 'conseal',
-    'description': 'Modern steganography in Python.',
+    'description': 'Steganography in Python',
     'fixed_sidebar': True,
     'github_button': True,
 }
