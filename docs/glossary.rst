@@ -21,7 +21,10 @@ The advantages of simulation over true message coding are
 - easier implementation, and
 - ethical code publishing.
 
-The simplest simulator assumes mutual independence (MI) between elements.
+Mutually independent (MI) simulator
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A simple simulator assumes mutual independence (MI) between elements.
 For each element of index :math:`i`, MI simulator performs two steps,
 
 - converting distortion :math:`\rho_i` into probability :math:`p_i`; and
@@ -37,6 +40,10 @@ where :math:`p_i^{(v)}` is the probability of change :math:`v`,
 :math:`\lambda` is the parameter encorporating required message size,
 and :math:`Z` is a normalization constant.
 
+
+MI simulator for ternary embedding
+""""""""""""""""""""""""""""""""""
+
 For the common case of ternary embedding with
 :math:`+1` and :math:`-1` changes, and
 :math:`\rho^{(0)}=0`,
@@ -46,3 +53,9 @@ the equation above can be written as follows.
 .. math::
    p_i^{(+1)} &= \frac{\text{exp}( - \lambda \rho_i^{(+1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \\text{rho}_i^{(-1)})} \\
    p_i^{(-1)} &= \frac{\text{exp}( - \lambda \rho_i^{(-1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \\text{rho}_i^{(-1)})} \\
+
+
+Sublattice simulator
+^^^^^^^^^^^^^^^^^^^^
+
+*Will be added in the future*
