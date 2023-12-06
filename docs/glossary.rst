@@ -18,7 +18,7 @@ Researchers can skip the coding part by simulating it.
 The advantages of simulation over true message coding are
 
 - faster runtime,
-- easier implementation,
+- easier implementation, and
 - ethical code publishing.
 
 The simplest simulator assumes mutual independence (MI) between elements.
@@ -26,7 +26,7 @@ For each element of index $i$, MI simulator performs two steps,
 
 - converting distortion :math:`\rho_i` into probability :math:`p_i`; and
 - simulating the embedding change from Bernoulli or Multinoulli distribution,
-parameterized by the probability :math:`p_i`.
+   parameterized by the probability :math:`p_i`.
 
 The probability conversion is done using Boltzmann-Gibbs distribution,
 .. The Boltzmann distribution maximizes the entropy at given energy,

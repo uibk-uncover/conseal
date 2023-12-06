@@ -46,7 +46,8 @@ Source = "https://github.com/uibk-uncover/conseal/"
 [project.optional-dependencies]
 dev = [
     "flake8",
-    "parameterized"
+    "parameterized",
+    "jpeglib"
 ]
 deploy = []
 
