@@ -1,8 +1,8 @@
 Reference
 =========
 
-The steganographic embedding in the package can be controlled on three levels of abstraction.
-This creates a threshold between breivity and flexibility.
+The steganographic embedding in the package can be accessed on three levels of abstraction.
+This creates a threshold between simplicity and flexibility.
 For more information, see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#steganographic-design>`__.
 
 .. contents:: Table of Contents
@@ -14,8 +14,17 @@ For more information, see the `glossary <https://conseal.readthedocs.io/en/lates
 High-level API
 --------------
 
+On high-level API, the embedding is a black-box.
+You pass the cover image and receive stego image.
+
+Currently, there are three JPEG steganography simulators implemented: J-UNIWARD, UERD, and nsF5
+
+
 Simulators of JPEG Steganography
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The JPEG steganography operates on DCT coefficients.
+To learn on how to acquire them, see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-and-dct>`__.
 
 J-UNIWARD simulator
 """""""""""""""""""
@@ -41,6 +50,8 @@ nsF5 simulator
 Mid-level API
 -------------
 
+On mid-level API, you separately compute the distortion (automatically adjusted for wet elements already), and run the simulator.
+
 Distortion
 ^^^^^^^^^^
 
@@ -48,7 +59,6 @@ J-UNIWARD distortion
 """"""""""""""""""""
 
 .. autofunction:: conseal.juniward.compute_distortion
-
 
 UERD distortion
 """""""""""""""
@@ -60,8 +70,8 @@ Mid-level Simulator API
 
 .. autofunction:: conseal.simulate.ternary
 
-Tools
-^^^^^
+Other utilities
+^^^^^^^^^^^^^^^
 
 .. autofunction:: conseal.tools.nzAC
 
@@ -70,6 +80,11 @@ Tools
 
 Low-level API
 -------------
+
+On the low-level API, you can access
+the raw cost (without wet-pixel adjustment),
+the probability calculation (together with the lambda parameter), and
+the simulator which takes the probabilities.
 
 Cost or probability (no wet-cost adjustement)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

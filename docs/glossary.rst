@@ -8,6 +8,9 @@ The rest of documentation will refer to this page as a knowledge base.
    :local:
    :depth: 2
 
+Steganographic design
+---------------------
+
 Embedding simulation
 --------------------
 
@@ -76,5 +79,11 @@ JPEG Universal Wavelet Relative Distortion (J-UNIWARD)
 
 Non-shrinkage F5 (nsF5)
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+
+JPEG and DCT
+------------
 
 *TODO: To be completed*
