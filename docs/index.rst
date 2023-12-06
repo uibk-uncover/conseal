@@ -9,9 +9,6 @@ conseal
 
    This project is under heavy development.
 
-   .. image:: static/warning.jpg
-      :width: 300
-      :alt: Earning
 
 Yes, we also have J-UNIWARD.
 
