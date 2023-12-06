@@ -1,5 +1,13 @@
 """
 
+The equation is from
+
+P. Bas, et al. "Break Our Steganographic System: The Ins and Outs of Organizing BOSS", IH 2011.
+
+Originally described in the STC paper by
+T. Filler, et al. "Minimizing Additive Distortion in Steganography Using Syndrome-Trellis Codes", TIFS 2011.
+
+
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
@@ -11,29 +19,17 @@ def get_p(
     lbda: float,
     *rhos: np.ndarray,
 ) -> np.ndarray:
-    """
-    Calculate probability of embedding into each DCT coefficient location.
-    This probability follows the Boltzmann distribution, also called Gibbs distribution.
+    """Converts distortions into probabilities,
+    using Boltzmann-Gibbs distribution
 
-    p_i = Pr(Y_i = y_i) = 1 / Z * exp( -lambda D(X, y_i X_~i )
-
-    where
-        x_i is the original value at the i-th position,
-        y_i = argmin_{z in {x_i - 1, x_i + 1}} D(X, zX_~i) is the modified value at the i-th position,
-        Z is a normalization factor,
-        y_i X_~i denotes the cover image whose i-th value has been modified to Y_i = y_i and all other pixels remain unchanged, and
-        lambda is a parameter value.
-
-    The equation is from
-    Patrick Bas et al. "Break Our Steganographic System: The Ins and Outs of Organizing BOSS", IH 2011.
-    Originally described in the STC paper by
-    Filler et al. "Minimizing Additive Distortion in Steganography Using Syndrome-Trellis Codes", TIFS 2011.
+    For more details, see `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#embedding-simulation>`__.
 
     :param rhos: distortion of embedding choices, e.g. embedding +1 or embedding -1
     :type rhos: tuple
-    :param lbda: parameter value.
+    :param lbda: parameter value
     :type lbda: float
-    :return: probability of embedding into each location, same shape as rho1
+    :param p_pm1: probability tensor for changes associated to rhos[0]
+        of an arbitrary shape
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:

@@ -56,7 +56,8 @@ def compute_cost(
 ) -> np.ndarray:
     """Compute embedding cost as described in Eq. 4
 
-    :param cover_dct_coeffs: ndarray of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :param cover_dct_coeffs: quantized DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -108,7 +109,8 @@ def compute_distortion(
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
     """Computes the UERD distortion, adjusted for wet costs.
 
-    :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :param cover_dct_coeffs: quantized DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -116,7 +118,7 @@ def compute_distortion(
         "bpc" (bits per DCT coefficient), which is the default setting, or
         "bpnzAC" (bits per non-zero DCT AC coefficient).
     :type payload_mode: str
-    :param wet_cost: constant what the cost for wet pixel is
+    :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
     :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__

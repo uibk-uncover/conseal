@@ -21,20 +21,27 @@ def simulate(
 ) -> typing.Union[np.ndarray, typing.Tuple[np.ndarray]]:
     """
 
-    :param rho:
+    :param rho: either
+        a distortion tensor for +-1 change, or
+        a tuple with tensors for +1 and -1 change
     :type rho: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha:
+    :param alpha: embedding rate
     :type alpha: float
-    :param n:
+    :param n: Cover size.
     :type n: int
-    :param seed:
+    :param seed: random seed for embedding simulator
     :type seed: int
     :return:
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> # TODO
+    >>> im_dct.Y += cl.simulate.ternary(
+    ...     rho_p1=rho_p1,  # distortion of +1
+    ...     rho_m1=rho_m1,  # distortion of -1
+    ...     alpha=0.4,  # alpha
+    ...     n=im_dct.Y.size,  # cover size
+    ...     seed=12345)  # seed
     """
     # multiple rhos given
     if not isinstance(rho, np.ndarray):
@@ -69,31 +76,52 @@ def average_payload(
 ) -> float:
     """
 
+    You must provide one of following:
+    - rho_pm1;
+    - rho_p1 and rho_m1;
+    - p_pm1; or
+    - p_p1 and p_m1.
+
     :param lbda:
     :type lbda: float
-    :param rho_pm1:
+    :param rho_pm1: distortion tensor for +-1 changes
+        of an arbitrary shape
     :type rho_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param rho_p1:
+    :param rho_p1: distortion tensor for +1 changes
+        of an arbitrary shape
     :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param rho_m1:
+    :param rho_m1: distortion tensor for -1 changes
+        of an arbitrary shape
     :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param p_pm1:
+    :param p_pm1: probability tensor for changes
+        of an arbitrary shape
     :type p_pm1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param p_p1:
+    :param p_p1: probability tensor for +1 changes
+        of an arbitrary shape
     :type p_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param p_m1:
+    :param p_m1: probability tensor for -1 changes
+        of an arbitrary shape
     :type p_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param q:
+    :param q: q-arity of the code,
+        3 by default
     :type q: int
     :return: 2-tuple of (p_p1, p_m1), alpha_hat, where
-        p_p1 is the probability of +1 change,
-        p_m1 is the probability of -1 change, and
+        p_p1 is the probability tensor of +1 change,
+        p_m1 is the probability tensor of -1 change, and
         alpha_hat is the payload embedded.
     :rtype: tuple
 
     :Example:
 
-    >>> # TODO
+    >>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+    ...     rho_p1=rho_p1,  # distortion of +1
+    ...     rho_m1=rho_m1,  # distortion of -1
+    ...     alpha=0.4,  # alpha
+    ...     n=im_dct.Y.size)  # cover size
+    >>> alpha_hat = cl.simulate._ternary.average_payload(
+    ...     lbda=lbda,  # lambda (optimized)
+    ...     rho_p1=rho_p1,  # distortion of +1
+    ...     rho_m1=rho_m1)  # distortion of -1
     """
     if q == 3:
         return _ternary.average_payload(

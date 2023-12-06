@@ -1,4 +1,5 @@
 """
+
 Implementation of the nsF5 steganography method as described in
 
 J. Fridrich, T. Pevny, and J. Kodovsky.
@@ -21,7 +22,8 @@ def probability(
 ) -> np.ndarray:
     """Returns nsF5 probability map for consequent simulation.
 
-    :param cover_dct_coeffs:
+    :param cover_dct_coeffs: quantized cover DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param alpha:
     :type alpha: float
