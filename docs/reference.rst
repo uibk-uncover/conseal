@@ -52,8 +52,8 @@ Mid-level API
 
 On mid-level API, you separately compute the distortion (automatically adjusted for wet elements already), and run the simulator.
 
-Distortion
-^^^^^^^^^^
+Distortion (wet-cost adjustment)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 J-UNIWARD distortion
 """"""""""""""""""""
@@ -86,8 +86,8 @@ the raw cost (without wet-pixel adjustment),
 the probability calculation (together with the lambda parameter), and
 the simulator which takes the probabilities.
 
-Cost or probability (no wet-cost adjustement)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Cost (no wet-cost adjustments)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 J-UNIWARD cost
 """"""""""""""
@@ -99,6 +99,9 @@ UERD cost
 """""""""
 
 .. autofunction:: conseal.uerd._costmap.compute_cost
+
+Probability
+^^^^^^^^^^^
 
 nsF5 probability
 """"""""""""""""
