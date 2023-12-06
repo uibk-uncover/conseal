@@ -1,8 +1,12 @@
 Reference
 =========
 
+The steganographic embedding in the package can be controlled on three levels of abstraction.
+This creates a threshold between breivity and flexibility.
+
 .. contents:: Table of Contents
    :local:
+   :maxdepth: 2
 
 
 High-level API
