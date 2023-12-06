@@ -30,7 +30,7 @@ intersphinx_mapping = {
 }
 intersphinx_disabled_domains = ['std']
 
-templates_path = ['_templates']
+templates_path = ['templates']
 
 # -- Options for HTML output
 html_theme = 'alabaster'  # 'sphinx_rtd_theme'
@@ -38,7 +38,7 @@ html_static_path = ['.']
 html_theme_options = {
     'logo': 'seal.png',
     'logo_name': 'conseal',
-    'description': 'A Python package, implementing modern image steganographic algorithms.',
+    'description': 'Modern steganography in Python.',
     'fixed_sidebar': True,
     'github_button': True,
 }
