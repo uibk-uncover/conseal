@@ -7,6 +7,8 @@ conseal
 
    This project is under active development.
 
+Yes, we also have J-UNIWARD.
+
 Contents
 --------
 
