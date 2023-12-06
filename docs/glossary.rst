@@ -61,8 +61,8 @@ Sublattice simulator
 *Will be added in the future*
 
 
-Distortion
-----------
+Distortion functions
+--------------------
 
 Uniform Embedding Revisited Distortion (UERD)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

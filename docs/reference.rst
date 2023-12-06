@@ -11,8 +11,8 @@ High-level API
 Simulators of JPEG Steganography
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-J-UNIWARD
-"""""""""
+J-UNIWARD simulator
+"""""""""""""""""""
 
 .. autofunction:: conseal.juniward.simulate_single_channel
 
@@ -20,14 +20,14 @@ J-UNIWARD
    :members: JUNIWARD_ORIGINAL, JUNIWARD_FIX_OFF_BY_ONE
 
 
-UERD
-""""
+UERD simulator
+""""""""""""""
 
 .. autofunction:: conseal.uerd.simulate_single_channel
 
 
-nsF5
-""""
+nsF5 simulator
+""""""""""""""
 
 .. autofunction:: conseal.nsF5.simulate_single_channel
 
@@ -38,14 +38,14 @@ Mid-level API
 Distortion
 ^^^^^^^^^^
 
-J-UNIWARD
-"""""""""
+J-UNIWARD distortion
+""""""""""""""""""""
 
 .. autofunction:: conseal.juniward.compute_distortion
 
 
-UERD
-""""
+UERD distortion
+"""""""""""""""
 
 .. autofunction:: conseal.uerd.compute_distortion
 
@@ -68,19 +68,19 @@ Low-level API
 Cost or probability
 ^^^^^^^^^^^^^^^^^^^
 
-J-UNIWARD
-"""""""""
+J-UNIWARD cost
+""""""""""""""
 
 .. autofunction:: conseal.juniward._costmap.compute_cost
 
 
-UERD
-""""
+UERD cost
+"""""""""
 
 .. autofunction:: conseal.uerd._costmap.compute_cost
 
-nsF5
-""""
+nsF5 cost
+"""""""""
 
 .. autofunction:: conseal.nsF5._costmap.probability
 
