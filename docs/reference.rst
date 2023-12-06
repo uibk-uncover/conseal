@@ -3,10 +3,13 @@ Reference
 
 The steganographic embedding in the package can be controlled on three levels of abstraction.
 This creates a threshold between breivity and flexibility.
+For more information on the design of steganographic embedding,
+see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#steganographic-design>`__
 
 .. contents:: Table of Contents
    :local:
-   :maxdepth: 2
+   :depth: 2
+
 
 
 High-level API
