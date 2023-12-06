@@ -11,7 +11,6 @@ version = '2023.12.a0'
 # -- General configuration
 
 extensions = [
-    'sphinx_rtd_theme',
     'sphinx.ext.duration',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
