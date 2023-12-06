@@ -11,8 +11,10 @@ conseal
 
 Yes, we also have J-UNIWARD.
 
+Contents
+--------
 
-toctree::
+.. toctree::
    :maxdepth: 2
 
    usage
