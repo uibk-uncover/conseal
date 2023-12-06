@@ -28,8 +28,6 @@ For each element of index :math:`i`, MI simulator performs two steps,
 - simulating the embedding change from Bernoulli or Multinoulli distribution, parameterized by the probability :math:`p_i`.
 
 The probability conversion is done using Boltzmann-Gibbs distribution,
-.. The Boltzmann distribution maximizes the entropy at given energy,
-.. which translates to maximal message size at given distortion in steganography
 
 .. math::
    p_i^{(v)} = 1 / Z * \text{exp}( - \lambda \rho_i^{(v)}),
