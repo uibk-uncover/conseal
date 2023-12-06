@@ -110,7 +110,7 @@ def compute_distortion(
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
     """Computes the UERD distortion, adjusted for wet costs.
 
-    :param cover_dct_coeffs: quantized DCT coefficients
+    :param cover_dct_coeffs: quantized cover DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]

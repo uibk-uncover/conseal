@@ -65,8 +65,8 @@ Tools
 Low-level API
 -------------
 
-Cost or probability
-^^^^^^^^^^^^^^^^^^^
+Cost or probability (no wet-cost adjustement)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 J-UNIWARD cost
 """"""""""""""
@@ -79,8 +79,8 @@ UERD cost
 
 .. autofunction:: conseal.uerd._costmap.compute_cost
 
-nsF5 cost
-"""""""""
+nsF5 probability
+""""""""""""""""
 
 .. autofunction:: conseal.nsF5._costmap.probability
 
