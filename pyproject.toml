@@ -6,7 +6,6 @@ build-backend = "hatchling.build"
 name = "conseal"
 version = "2023.12.a0"
 dependencies = [
-  "jpeglib ~= 1.0.0",
   "numpy",
   "scipy"
 ]

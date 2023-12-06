@@ -48,7 +48,8 @@ def compute_cost(
     :type spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: quantization table of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param dtype: float32 or float64
+    :param dtype: data type to use for distortion computation,
+        float64 by default
     :type dtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`__
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
@@ -58,7 +59,9 @@ def compute_cost(
 
     :Example:
 
-    >>> # TODO
+    >>> rho = cl.uerd._costmap.compute_cost(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0])  # QT
     """
     assert len(spatial.shape) == 2, "Expected grayscale image"
     height, width = spatial.shape
@@ -190,19 +193,26 @@ def compute_distortion(
     cover_spatial: np.ndarray,
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
+    payload_mode: str = 'bpc',
     dtype: typing.Type = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
     wet_cost: float = 10**13,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
     """Computes the distortion rho_p1 and rho_m1.
 
-    :param cover_spatial: decompressed DCT, array of shape [8*num_vertical_blocks, 8*num_horizontal_blocks]
+    :param cover_spatial: decompressed (pixel) image
+        of shape [height, width]
     :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :param cover_dct_coeffs: quantized DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param dtype: float32 or float64
+    :param payload_mode: unit used by embedding rate, either
+        "bpc" (bits per DCT coefficient), which is the default setting, or
+        "bpnzAC" (bits per non-zero DCT AC coefficient).
+    :param dtype: data type to use for distortion computation,
+        float64 by default
     :type dtype: np.dtype
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
@@ -214,7 +224,16 @@ def compute_distortion(
 
     :Example:
 
-    >>> # TODO
+    >>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0],  # QT
+    ...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+    >>> im_dct.Y += cl.simulate.ternary(
+    ...   rho_p1=rho_p1,  # distortion of +1
+    ...   rho_m1=rho_m1,  # distortion of -1
+    ...   alpha=0.4,  # alpha
+    ...   n=im_dct.Y.size,  # cover size
+    ...   seed=12345)  # seed
     """
     # Count number of embeddable DCT coefficients
     num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)
@@ -223,7 +242,7 @@ def compute_distortion(
         raise ValueError('Expected non-zero AC coefficients')
 
     # Compute costmap
-    costmap = compute_cost(
+    rho = compute_cost(
         spatial=cover_spatial,
         quantization_table=quantization_table,
         dtype=dtype,
@@ -231,17 +250,19 @@ def compute_distortion(
     )
 
     # Assign wet cost
-    costmap[
-        np.isinf(costmap) |
-        np.isnan(costmap) |
-        (costmap > wet_cost)] = wet_cost
+    rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
+
+    # Do not embed into DCT DC or zero values
+    if payload_mode == 'bpnzAC':
+        rho[cover_dct_coeffs == 0] = wet_cost
+        rho[:, :, 0, 0] = wet_cost
 
     # Do not embed +1 if the DCT coefficient has max value
-    rho_p1 = np.copy(costmap)
+    rho_p1 = np.copy(rho)
     rho_p1[cover_dct_coeffs >= 1023] = wet_cost
 
     # Do not embed -1 if the DCT coefficient has min value
-    rho_m1 = np.copy(costmap)
+    rho_m1 = np.copy(rho)
     rho_m1[cover_dct_coeffs <= -1023] = wet_cost
 
     return rho_p1, rho_m1

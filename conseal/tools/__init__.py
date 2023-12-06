@@ -10,7 +10,6 @@ from .dct import nzAC, AC
 
 # modules
 from . import dct
-from . import jpeg
 from . import spatial
 
 
@@ -22,6 +21,5 @@ __all__ = [
     'nzAC',
     'AC',
     'dct',
-    'jpeg',
     'spatial',
 ]

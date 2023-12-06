@@ -23,13 +23,13 @@ def average_payload(
 ) -> float:
     """Estimates payload [bpnzac] embedded in the stego with nsF5.
 
-    :param cover_dct_coeffs: quantized DCT coefficients of cover,
+    :param cover_dct_coeffs: quantized cover DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param stego_dct_coeffs: quantized DCT coefficients of stego,
+    :param stego_dct_coeffs: quantized stego DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type stego_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: Estimated embedding rate.
+    :return: estimated embedding rate
     :rtype: float
 
     :Example:
@@ -48,13 +48,15 @@ def simulate_single_channel(
 ) -> np.ndarray:
     """Simulate embedding into a single channel.
 
-    :param cover_dct_coeffs: array of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :param cover_dct_coeffs: quantized cover DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param embedding_rate: embedding rate
     :type embedding_rate: float
-    :param seed: random seed for STC simulator
+    :param seed: random seed for embedding simulator
     :type seed: int
-    :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :return: quantized stego DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:

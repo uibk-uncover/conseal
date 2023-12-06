@@ -160,13 +160,13 @@ def probability(
 ) -> np.ndarray:
     """Convert binary distortion to binary probability.
 
-    :param rho_p1: Distortion tensor for +1 change.
+    :param rho_p1: distortion tensor for +1 change
     :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param rho_m1: Distortion tensor for -1 change.
+    :param rho_m1: distortion tensor for -1 change
     :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: Embedding rate.
+    :param alpha: embedding rate
     :type alpha: float
-    :param n: Cover size.
+    :param n: cover size
     :type n: int
     :return: tuple ((p_p1, p_m1), lmbda), where
         p_p1 is the probability of +1 change,
@@ -195,18 +195,21 @@ def simulate(
     order: str = 'C',
     seed: int = None,
 ) -> np.ndarray:
-    """
-    Simulates changes using the given probability maps.
+    """Simulates changes using the given probability maps.
 
-    :param p_p1: Probability tensor for changes +1.
+    :param p_p1: probability tensor for +1 changes
+        of an arbitrary shape
     :type p_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param p_m1: Probability tensor for changes -1.
+    :param p_m1: probability tensor for -1 changes
+        of an arbitrary shape
     :type p_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param generator: Random number generator to choose. None (numpy default), or 'MT19937', used by Matlab.
+    :param generator: random number generator to choose,
+        None (numpy default) or 'MT19937' (used by Matlab)
     :type generator: str
-    :param order: Order of changes, 'C' or 'F'.
+    :param order: order of changes,
+        'C' (C-order, column-row) or 'F' (F-order, row-column).
     :type order: str
-    :param seed: Random number generator seed for reproducibility.
+    :param seed: random seed for embedding simulator
     :return: Simulated ternary changes in the cover, 0 (keep), +1 or -1.
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
@@ -257,13 +260,15 @@ def ternary(
 ) -> np.ndarray:
     """Simulates ternary embedding given distortion and embedding rate.
 
-    :param rho_p1: Distortion tensor for -1.
+    :param rho_p1: distortion tensor for +1 changes
+        of an arbitrary shape
     :type rho_p1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param rho_m1: Distortion tensor for +1.
+    :param rho_m1: distortion tensor for -1 changes
+        of an arbitrary shape
     :type rho_m1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param n: Cover size.
+    :param n: cover size
     :type n: int
-    :return: Simulated binary changes in cover, 0 (keep), 1 or -1 (change).
+    :return: Simulated difference image to be added to the cover, 0 (keep), 1 or -1 (change).
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:

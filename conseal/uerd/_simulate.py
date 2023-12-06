@@ -36,7 +36,7 @@ def simulate_single_channel(
     :type payload_mode: str
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
-    :param seed: random seed for STC simulator
+    :param seed: random seed for embedding simulator
     :type seed: int
     :return: stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
