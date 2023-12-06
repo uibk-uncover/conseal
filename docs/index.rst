@@ -9,7 +9,7 @@ conseal
 
    This project is under heavy development.
 
-   .. image:: static/warning.jpeg
+   .. image:: static/warning.jpg
       :width: 300
       :alt: Earning
 
