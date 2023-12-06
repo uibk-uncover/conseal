@@ -1,9 +1,6 @@
 # Configuration file for the Sphinx documentation builder.
 
 # -- Project information
-
-import sphinx_rtd_theme
-
 project = 'conseal'
 copyright = '2023, Martin Benes & Benedikt Lorch, University of Innsbruck'
 author = 'Martin Benes, Benedikt Lorch'
@@ -33,19 +30,13 @@ intersphinx_disabled_domains = ['std']
 templates_path = ['templates']
 
 # -- Options for HTML output
-html_theme = 'alabaster'  # 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 html_static_path = ['static']
 html_theme_options = {
     'logo': 'seal.png',
     'logo_name': 'conseal',
-    # 'logo_only': False,
-    # 'display_version': True,
-    # 'style_external_links': False,
     'description': 'Modern steganography in Python',
     'show_powered_by': False,
-    # 'fixed_sidebar': True,
-    # 'github_button': True,
-    # 'collapse_navigation': True,
 }
 
 # -- Options for EPUB output
