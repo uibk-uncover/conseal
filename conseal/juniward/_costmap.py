@@ -42,7 +42,7 @@ def compute_cost(
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
 ) -> np.ndarray:
-    """Compute the UNIWARD distortion function for a given JPEG cover image.
+    """Compute the UNIWARD distortion function for a given JPEG image.
 
     :param spatial: grayscale image in spatial domain
     :type spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -189,7 +189,7 @@ def compute_cost(
     return costs
 
 
-def compute_distortion(
+def compute_cost_adjusted(
     cover_spatial: np.ndarray,
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
@@ -197,7 +197,7 @@ def compute_distortion(
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
     wet_cost: float = 10**13,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
-    """Computes the distortion rho_p1 and rho_m1.
+    """Computes the costmap and prepares the costmap for ternary embedding.
 
     :param cover_spatial: decompressed (pixel) image
         of shape [height, width]
@@ -221,7 +221,7 @@ def compute_distortion(
 
     :Example:
 
-    >>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+    >>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
     ...   cover_dct_coeffs=im_dct.Y,  # DCT
     ...   quantization_table=im_dct.qt[0],  # QT
     ...   cover_spatial=im_spatial.spatial[..., 0])  # pixels

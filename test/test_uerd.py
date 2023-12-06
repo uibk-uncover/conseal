@@ -38,7 +38,7 @@ class TestUERD(unittest.TestCase):
         # To show equivalence to the Matlab implementation, we need to use the Marsenne Twister and arrange the random numbers in the same order, as shown below.
 
         # Simulate embedding
-        rho_p1, rho_m1 = cl.uerd.compute_distortion(cover_im.Y, cover_im.qt[0], wet_cost=10**13)
+        rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(cover_im.Y, cover_im.qt[0], wet_cost=10 ** 13)
 
         # Rearrange from [num_vertical_blocks, num_horizontal_blocks, 8, 8] to [num_vertical_blocks * 8, num_horizontal_blocks * 8]
         rho_p1_2d = cl.tools.dct.jpeglib_to_jpegio(rho_p1)
@@ -83,7 +83,7 @@ class TestUERD(unittest.TestCase):
         jpeg_s = jpeg_c.copy()
 
         # Simulate the stego
-        rho_p1, rho_m1 = cl.uerd.compute_distortion(jpeg_c.Y, jpeg_c.qt[0])
+        rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(jpeg_c.Y, jpeg_c.qt[0])
         (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
             rho_p1, rho_m1,
             alpha=alpha,

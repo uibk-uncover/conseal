@@ -289,7 +289,7 @@ def ternary(
 
     :Example:
 
-    >>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+    >>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
     ...   cover_dct_coeffs=im_dct.Y,  # DCT
     ...   quantization_table=im_dct.qt[0])  # QT
     >>> im_dct.Y += cl.simulate.ternary(

@@ -8,7 +8,7 @@ Affiliation: University of Innsbruck
 
 import numpy as np
 
-from ._costmap import compute_distortion
+from ._costmap import compute_cost_adjusted
 from ..simulate import _ternary
 from .. import tools
 
@@ -62,7 +62,7 @@ def simulate_single_channel(
         return cover_dct_coeffs
 
     # Compute distortion
-    rho_p1, rho_m1 = compute_distortion(
+    rho_p1, rho_m1 = compute_cost_adjusted(
         cover_dct_coeffs=cover_dct_coeffs,
         quantization_table=quantization_table,
         payload_mode=payload_mode,

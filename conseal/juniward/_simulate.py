@@ -8,7 +8,7 @@ import numpy
 import numpy as np
 import typing
 
-from ._costmap import compute_distortion, Implementation
+from ._costmap import compute_cost_adjusted, Implementation
 from .. import simulate
 from .. import tools
 
@@ -78,7 +78,7 @@ def simulate_single_channel(
 
     # Compute cost for embedding into the quantized DCT coefficients
     # of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    rho_p1, rho_m1 = compute_distortion(
+    rho_p1, rho_m1 = compute_cost_adjusted(
         cover_spatial=cover_spatial,
         cover_dct_coeffs=cover_dct_coeffs,
         quantization_table=quantization_table,

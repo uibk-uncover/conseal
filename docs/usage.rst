@@ -83,6 +83,5308 @@ At mid-level API
 Mid-level API exposes the separation principle.
 It allows user to separately calculate the distortion, and perform the simulation of coding.
 
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedcost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedcost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedcost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedcost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedcost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adj(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedcost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adj(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adj(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adj(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adj(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adj(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seedcost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
+>>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.uerd.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+Notice that unlike high-level API, mid-level and low-level API return difference tensor,
+that is to be added to the cover.
+It allows user to separately calculate the distortion, and perform the simulation of coding.
+
 >>> rho_p1, rho_m1 = cl.juniward.compute_distortion(
 ...   cover_dct_coeffs=im_dct.Y,  # DCT
 ...   quantization_table=im_dct.qt[0],  # QT
@@ -112,6 +5414,1316 @@ At low-level API
 ----------------
 
 Low-level API allows accessing the raw costs (without wet cost modification),
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seedusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adj(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
+as well as the probabilities and simulation.
+
+
+>>> rho = cl.uerd._costmap.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> # ... (sanitize rho, create rho_p1 and rho_m1)
+>>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size)  # cover size
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+Low-level API allows receiving the lambda parameter, which can be used
+to estimate the average payload embedded into the image
+
+
+>>> alpha_hat = cl.simulate._ternary.average_payload(
+...   lbda=lbda,  # lambda (optimized)
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1)  # distortion of -1
 as well as the probabilities and simulation.
 
 
