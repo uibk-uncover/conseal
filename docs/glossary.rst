@@ -17,7 +17,7 @@ Embedding simulation
 Modern steganography consists of distortion calculation,
 followed by coding, e.g., using syndrome-trellis codes (STC),
 low-density generator-matrix (LDGM), wet-paper codes, codes, Hamming codes, etc.
-Researchers can skip the coding part by simulating it.
+In research, the coding step is usually replaced by simulating the embedding changes.
 The advantages of simulation over true message coding are
 
 - faster runtime,
@@ -28,12 +28,12 @@ Mutually independent (MI) simulator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A simple simulator assumes mutual independence (MI) between elements.
-For each element of index :math:`i`, MI simulator performs two steps,
+For each element of index :math:`i`, the MI simulator performs two steps,
 
 - converting distortion :math:`\rho_i` into probability :math:`p_i`; and
 - simulating the embedding change from Bernoulli or Multinoulli distribution, parameterized by the probability :math:`p_i`.
 
-The probability conversion is done using Boltzmann-Gibbs distribution,
+The probability conversion is done using a Boltzmann-Gibbs distribution,
 
 .. math::
    p_i^{(v)} = 1 / Z * \text{exp}( - \lambda \rho_i^{(v)}),
