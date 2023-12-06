@@ -193,7 +193,6 @@ def compute_distortion(
     cover_spatial: np.ndarray,
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
-    payload_mode: str = 'bpc',
     dtype: typing.Type = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
     wet_cost: float = 10**13,
@@ -208,9 +207,6 @@ def compute_distortion(
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: ndarray of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param payload_mode: unit used by embedding rate, either
-        "bpc" (bits per DCT coefficient), which is the default setting, or
-        "bpnzAC" (bits per non-zero DCT AC coefficient).
     :param dtype: data type to use for distortion computation,
         float64 by default
     :type dtype: np.dtype
@@ -251,11 +247,6 @@ def compute_distortion(
 
     # Assign wet cost
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
-
-    # Do not embed into DCT DC or zero values
-    if payload_mode == 'bpnzAC':
-        rho[cover_dct_coeffs == 0] = wet_cost
-        rho[:, :, 0, 0] = wet_cost
 
     # Do not embed +1 if the DCT coefficient has max value
     rho_p1 = np.copy(rho)
