@@ -28,6 +28,10 @@ def simulate_single_channel(
     L. Guo, et al. Using Statistical Image Model for JPEG Steganography: Uniform Embedding Revisited.
     IEEE TIFS, 2015.
 
+    The details of the methods are described in the
+    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#uniform-embedding-revisited-distortion-uerd>`__.
+
+
     :param cover_dct_coeffs: quantized DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
