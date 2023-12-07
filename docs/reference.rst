@@ -50,10 +50,10 @@ nsF5 simulator
 Mid-level API
 -------------
 
-On mid-level API, you separately compute the distortion (automatically adjusted for wet elements already), and run the simulator.
+On mid-level API, you separately compute the cost (automatically adjusted for wet elements already), and run the simulator.
 
-Cost with adjustments
-^^^^^^^^^^^^^^^^^^^^^
+Adjusted cost
+^^^^^^^^^^^^^
 
 J-UNIWARD adjusted cost
 """""""""""""""""""""""
