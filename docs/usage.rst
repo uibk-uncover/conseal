@@ -83,7 +83,7 @@ At mid-level API
 Mid-level API exposes the separation principle.
 It allows user to separately calculate the distortion, and perform the simulation of coding.
 
->>> rho_p1, rho_m1 = cl.juniward.compute_cost(
+>>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
 ...   cover_dct_coeffs=im_dct.Y,  # DCT
 ...   quantization_table=im_dct.qt[0],  # QT
 ...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
@@ -95,14 +95,6 @@ It allows user to separately calculate the distortion, and perform the simulatio
 ...   seed=12345)  # seed
 
 >>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
-...   cover_dct_coeffs=im_dct.Y,  # DCT
-...   quantization_table=im_dct.qt[0])  # QT
->>> im_dct.Y += cl.simulate.ternary(
-...   rho_p1=rho_p1,  # distortion of +1
-...   rho_m1=rho_m1,  # distortion of -1
-...   alpha=0.4,  # alpha
-...   n=im_dct.Y.size,  # cover size
-...   seed=12345)  # seedcost_adjusted(
 ...   cover_dct_coeffs=im_dct.Y,  # DCT
 ...   quantization_table=im_dct.qt[0])  # QT
 >>> im_dct.Y += cl.simulate.ternary(
@@ -148,10 +140,9 @@ as well as the probabilities and simulation.
 
 The low-level API allows receiving the lambda parameter, which can be used
 to estimate the average payload embedded into the image
-
+as well as the probabilities and simulation.
 
 >>> alpha_hat = cl.simulate._ternary.average_payload(
 ...   lbda=lbda,  # lambda (optimized)
 ...   rho_p1=rho_p1,  # distortion of +1
 ...   rho_m1=rho_m1)  # distortion of -1
-as well as the probabilities and simulation.
