@@ -54,8 +54,8 @@ which is also implemented in the `conseal` package,
 the equation above can be written as follows.
 
 .. math::
-   p_i^{(+1)} &= \frac{\text{exp}( - \lambda \rho_i^{(+1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \text{rho}_i^{(-1)})} \\
-   p_i^{(-1)} &= \frac{\text{exp}( - \lambda \rho_i^{(-1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+exp(-\lambda \text{rho}_i^{(-1)})} \\
+   p_i^{(+1)} &= \frac{\text{exp}( - \lambda \rho_i^{(+1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+\text{exp}(-\lambda \rho_i^{(-1)})} \\
+   p_i^{(-1)} &= \frac{\text{exp}( - \lambda \rho_i^{(-1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+\text{exp}(-\lambda \rho_i^{(-1)})} \\
 
 
 Sublattice simulator
