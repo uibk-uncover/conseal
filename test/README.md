@@ -12,6 +12,26 @@ As reference, we use the [Matlab simulation](https://dde.binghamton.edu/download
 
 Because we could not find a numpy equivalent to Matlab's `randperm`, our nsF5 method converts the permutation to Matlab's column-major ordering and stores this permutation to a file, which is then loaded and used by our modified Matlab implementation. See `assets/nsF5/nsF5.m` for details.
 
+## Creating J-UNIWARD test images in C++
+
+As reference, we use the [Matlab implementation](http://dde.binghamton.edu/download/stego_algorithms/download/J-UNIWARD_matlab_v11.zip) and the [C++ implementation](http://dde.binghamton.edu/download/stego_algorithms/download/J-UNIWARD_linux_make_v11.tar.gz) provided by the DDE lab.
+
+
+```cpp
+To compare the costmap between the original C++ and our Python implementation, we modified the C++ implementation to store the adjusted costmap in a file.
+// Compute the costmap
+base_cost_model* model = (base_cost_model *)new cost_model(coverStruct, config);
+
+// Dump to costmap to a text file
+fs::path costmapPath(stegoPath.parent_path() / stegoPath.stem());
+costmapPath += ".costmap";
+
+std::ofstream cost_output;
+cost_output.open(costmapPath.c_str(), std::ios::out | std::ios::binary);
+cost_output.write(reinterpret_cast<const char*>(&model->costs[0]), sizeof(float) * 3 * model->rows * model->cols);
+cost_output.close();
+```
+
 ## Running the tests
 
 The tests should be run from the project root directory.
