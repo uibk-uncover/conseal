@@ -1,4 +1,3 @@
-
 import conseal as cl
 import jpeglib
 import logging
@@ -185,6 +184,31 @@ class TestJUNIWARD(unittest.TestCase):
             distortion = cl.juniward.evaluate_distortion(cover_spatial, stego_spatial)
 
             np.testing.assert_allclose(costmap[block_y, block_x, within_block_y, within_block_x], distortion)
+
+    @parameterized.expand([
+        ('lizard_gray_costmap_original.mat', 'lizard_gray_original.costmap'),
+        ('mountain_gray_costmap_original.mat', 'mountain_gray_original.costmap'),
+        ('nuclear_gray_costmap_original.mat', 'nuclear_gray_original.costmap'),
+        ('lizard_gray_costmap_fix.mat', 'lizard_gray_fix.costmap'),
+        ('mountain_gray_costmap_fix.mat', 'mountain_gray_fix.costmap'),
+        ('nuclear_gray_costmap_fix.mat', 'nuclear_gray_fix.costmap'),
+    ])
+    def test_compare_matlab_cpp_costmap(self, costmap_matlab_filename, costmap_cpp_filename):
+        self._logger.info(f'TestJUNIWARD.test_compare_matlab_cpp_costmap('f'{costmap_matlab_filename=}, {costmap_cpp_filename=})')
+        costmap_matlab_filepath = STEGO_DIR / 'costmap-matlab' / costmap_matlab_filename
+        costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
+
+        costmap_matlab = loadmat(costmap_matlab_filepath)['rho']
+        costmap_cpp = self.read_costmap(costmap_cpp_filepath, 512, 512)
+
+        # The cpp costmap is already adjusted for wet costs, while the Matlab costmap is not. Therefore, skip wet cost entries.
+        mask = costmap_cpp[:, :, 0] < 10 ** 13
+
+        # Set rtol and atol to the default values used by np.allclose()
+        np.testing.assert_allclose(costmap_matlab[mask], costmap_cpp[mask, 0], rtol=1e-05, atol=1e-08)
+
+        mask = costmap_cpp[:, :, 2] < 10 ** 13
+        np.testing.assert_allclose(costmap_matlab[mask], costmap_cpp[mask, 2], rtol=1e-05, atol=1e-08)
 
 
 __all__ = ['TestJUNIWARD']
