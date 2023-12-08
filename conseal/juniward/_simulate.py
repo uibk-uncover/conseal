@@ -4,9 +4,7 @@ Author: Benedikt Lorch, Martin Benes
 Affiliation: University of Innsbruck
 """
 
-import numpy
 import numpy as np
-import typing
 
 from ._costmap import compute_cost_adjusted, Implementation
 from .. import simulate
@@ -19,7 +17,7 @@ def simulate_single_channel(
     quantization_table: np.ndarray,
     embedding_rate: float,
     wet_cost: float = 10**13,
-    dtype: typing.Type = np.float64,
+    dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
     generator: str = None,
     seed: int = None,

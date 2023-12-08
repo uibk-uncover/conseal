@@ -92,7 +92,7 @@ class TestJUNIWARD(unittest.TestCase):
         qt = img_dct.qt[0]
 
         costmap = cl.juniward._costmap.compute_cost(
-            spatial=img_spatial,
+            cover_spatial=img_spatial,
             quantization_table=qt,
             implementation=implementation,
         )
@@ -160,7 +160,7 @@ class TestJUNIWARD(unittest.TestCase):
 
         # Variant 1: Compute costmap via the optimized implementation
         costmap = cl.juniward._costmap.compute_cost(
-            spatial=cover_spatial,
+            cover_spatial=cover_spatial,
             quantization_table=quantization_table,
             implementation=cl.juniward.JUNIWARD_FIX_OFF_BY_ONE,
         )

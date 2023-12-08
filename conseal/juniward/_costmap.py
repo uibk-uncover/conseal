@@ -37,15 +37,15 @@ class Implementation(enum.Enum):
 
 
 def compute_cost(
-    spatial: np.ndarray,
+    cover_spatial: np.ndarray,
     quantization_table: np.ndarray,
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
 ) -> np.ndarray:
     """Compute the UNIWARD distortion function for a given JPEG image.
 
-    :param spatial: grayscale image in spatial domain
-    :type spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param cover_spatial: grayscale image in spatial domain
+    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param quantization_table: quantization table of shape [8, 8]
     :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param dtype: data type to use for distortion computation,
@@ -63,8 +63,8 @@ def compute_cost(
     ...   cover_dct_coeffs=im_dct.Y,  # DCT
     ...   quantization_table=im_dct.qt[0])  # QT
     """
-    assert len(spatial.shape) == 2, "Expected grayscale image"
-    height, width = spatial.shape
+    assert len(cover_spatial.shape) == 2, "Expected grayscale image"
+    height, width = cover_spatial.shape
     assert height % 8 == 0, "Expected height to be a multiple of 8"
     assert width % 8 == 0, "Expected width to be a multiple of 8"
 
@@ -130,14 +130,14 @@ def compute_cost(
     # Mirror-pad the spatial image. Extend image by the length of the filter in all dimensions.
     # Example: Image [512, 512] -> [16 + 512 + 16, 16 + 512 + 16] = [544, 544]
     # "symmetric" means reflect, i.e. (d c b a | a b c d | d c b a)
-    spatial_padded = np.pad(spatial, (pad_size, pad_size), mode='symmetric')
+    cover_spatial_padded = np.pad(cover_spatial, (pad_size, pad_size), mode='symmetric')
 
     # Compute the wavelet coefficients of the cover image
     reference_covers = []
     for filter_idx in range(num_filters):
         # Compute wavelet coefficients in the (filter_idx)-th subband
         # The resulting shape is [544, 544]
-        rc = correlate2d(spatial_padded, filters[filter_idx], mode='same', boundary='fill', fillvalue=0)
+        rc = correlate2d(cover_spatial_padded, filters[filter_idx], mode='same', boundary='fill', fillvalue=0)
 
         # Crop as needed
         if implementation == Implementation.JUNIWARD_ORIGINAL:
@@ -193,7 +193,7 @@ def compute_cost_adjusted(
     cover_spatial: np.ndarray,
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
-    dtype: typing.Type = np.float64,
+    dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
     wet_cost: float = 10**13,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
@@ -240,7 +240,7 @@ def compute_cost_adjusted(
 
     # Compute costmap
     rho = compute_cost(
-        spatial=cover_spatial,
+        cover_spatial=cover_spatial,
         quantization_table=quantization_table,
         dtype=dtype,
         implementation=implementation,
