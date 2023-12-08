@@ -13,12 +13,12 @@ COVER_DIR = ASSETS_DIR / 'cover'
 
 
 class TestJUNIWARD(unittest.TestCase):
-    '''Test suite for J-UNIWARD embedding.'''
+    """Test suite for J-UNIWARD embedding."""
     _logger = logging.getLogger(__name__)
 
     @staticmethod
     def read_costmap(costmap_filename, height, width):
-        '''
+        """
         Read binary file produced by a modified J-UNIWARD C++ implementation
         :param costmap_filename: path to binary file
         :param height: of the original image
@@ -27,7 +27,7 @@ class TestJUNIWARD(unittest.TestCase):
             Channel 0: If the cover pixel is at the minimum -1023 already, the pixel contains the wet cost; otherwise rho.
             Channel 1: Always 0.
             Channel 2: If the cover pixel is at the maximum 1023 already, the pixel contains the wet cost; otherwise rho.
-        '''
+        """
         count = height * width * 3
         with open(costmap_filename, 'rb') as f:
             costmap = np.fromfile(f, dtype=np.float32, count=count, sep='')
@@ -35,15 +35,15 @@ class TestJUNIWARD(unittest.TestCase):
         return costmap
 
     @parameterized.expand([
-        # ('lizard_gray.jpeg', 'costmap-cpp-original/lizard_gray.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
-        # ('mountain_gray.jpeg', 'costmap-cpp-original/mountain_gray.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
-        # ('nuclear_gray.jpeg', 'costmap-cpp-original/nuclear_gray.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('lizard_gray.jpeg', 'lizard_gray_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('mountain_gray.jpeg', 'mountain_gray_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('nuclear_gray.jpeg', 'nuclear_gray_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
         ('lizard_gray.jpeg', 'lizard_gray_fix.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
         ('mountain_gray.jpeg', 'mountain_gray_fix.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
         ('nuclear_gray.jpeg', 'nuclear_gray_fix.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
     ])
     def test_costmap_cpp_python_equivalence(self, cover_filename, costmap_cpp_filename, implementation):
-        self._logger.info(f'TestJUNIWARD.test_costmap_fix_cpp_python_equivalence({cover_filename=}, {costmap_cpp_filename=}, {implementation=})')
+        self._logger.info(f'TestJUNIWARD.test_costmap_cpp_python_equivalence({cover_filename=}, {costmap_cpp_filename=}, {implementation=})')
 
         cover_filepath = COVER_DIR / cover_filename
         costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
