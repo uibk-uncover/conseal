@@ -80,7 +80,16 @@ JPEG Universal Wavelet Relative Distortion (J-UNIWARD)
 Non-shrinkage F5 (nsF5)
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-*TODO: To be completed*
+nsF5 is not a cost function, but a complete steganographic design.
+Published in 2007, it does not yet follow the `design of modern steganography <https://conseal.readthedocs.io/en/latest/glossary.html#steganographic-design>`,
+but performs "*permutative straddling*", when the message is spreaded across the entire cover.
+
+This is done using pseudo-random permutation over non-zero DCT AC coefficients,
+combined with wet-paper codes (the difference from F5, which solves the shrinkage problem).
+
+Because of this construction, module ``conseal.nsF5`` cannot define function
+``compute_cost_adjusted`` and ``compute_cost``, and the mid-level and low-level call sequence
+differs from the other modules implementing JPEG steganography.
 
 
 JPEG and DCT
