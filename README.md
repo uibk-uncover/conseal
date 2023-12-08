@@ -10,7 +10,7 @@
 [![PyPi license](https://badgen.net/pypi/license/pip/)](https://pypi.com/project/conseal/)
 [![Last commit](https://img.shields.io/github/last-commit/uibk-uncover/conseal)](https://GitHub.com/uibk-uncover/conseal)
 
-<img src="docs/static/seal.png" width="300pt"/>
+<img src="docs/static/seal.png" width="300" />
 
 # conseal
 
@@ -53,14 +53,16 @@ This package currently contains the three JPEG steganography methods J-UNIWARD, 
 # load cover
 im_spatial = jpeglib.read_spatial("cover.jpeg", jpeglib.JCS_GRAYSCALE)
 im_dct = jpeglib.read_dct("cover.jpeg")
+
 # embed J-UNIWARD 0.4
 im_dct.Y = cl.juniward.simulate_single_channel(
-    cover_spatial=im_spatial.spatial[..., 0],  # spatial
+    cover_spatial=im_spatial.spatial[..., 0],
     cover_dct_coeffs=im_dct.Y,
     quantization_table=im_dct.qt[0],
     embedding_rate=0.4,
     seed=12345
 )
+
 # save result as stego image
 im_dct.write_dct("stego.jpeg")
 ```
@@ -70,6 +72,7 @@ im_dct.write_dct("stego.jpeg")
 ```python
 # load cover
 im_dct = jpeglib.read_dct("cover.jpeg")
+
 # embed UERD 0.4
 im_dct.Y = cl.uerd.simulate_single_channel(
     cover_dct_coeffs=im_dct.Y,
@@ -77,6 +80,7 @@ im_dct.Y = cl.uerd.simulate_single_channel(
     embedding_rate=0.4,
     seed=12345
 )
+
 # save result as stego image
 im_dct.write_dct("stego.jpeg")
 ```
@@ -86,17 +90,18 @@ im_dct.write_dct("stego.jpeg")
 ```python
 # load cover
 im_dct = jpeglib.read_dct("cover.jpeg")
-# embed UERD 0.4
+
+# embed nsF5 0.4
 im_dct.Y = cl.nsF5.simulate_single_channel(
     cover_dct_coeffs=im_dct.Y,
     quantization_table=im_dct.qt[0],
     embedding_rate=0.4,
     seed=12345
 )
+
 # save result as stego image
 im_dct.write_dct("stego.jpeg")
 ```
-
 
 
 ## Acknowledgements and Disclaimer
