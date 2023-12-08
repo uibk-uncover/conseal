@@ -9,15 +9,16 @@ conseal
 
 Simulating steganography has never been easier!
 
->>> import jpeglib; import conseal as cl
+>>> import jpeglib
+>>> import conseal as cl
 >>> im_dct = jpeglib.read_dct("cover.jpeg")
->>> img_spatial = jpeglib.read_spatial("cover.jpeg")
+>>> im_px = jpeglib.read_spatial("cover.jpeg", jpeglib.JCS_GRAYSCALE)
 >>> im_dct.Y = cl.juniward.simulate_single_channel(
-...   cover_dct_coeffs=im_dct.Y,  # DCT
-...   quantization_table=im_dct.qt[0],  # QT
-...   cover_spatial=im_spatial.spatial[..., 0],  # decompressed
-...   embedding_rate=0.4,  # alpha
-...   seed=12345)  # seed
+...   cover_dct_coeffs=im_dct.Y,
+...   quantization_table=im_dct.qt[0],
+...   cover_spatial=im_px.spatial[..., 0]
+...   embedding_rate=0.4,
+...   seed=12345)
 >>> im_dct.write_dct("stego.jpeg")
 
 .. list-table:: Available embedding simulators.
@@ -26,12 +27,8 @@ Simulating steganography has never been easier!
 
    * - Domain
      - Algorithms
-   * - JPEG
+   * - DCT
      - J-UNIWARD, UERD, nsF5
-   * - Spatial
-     -
-   * - Side-informed
-     -
 
 Contents
 --------
