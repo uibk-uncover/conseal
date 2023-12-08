@@ -21,17 +21,17 @@ Simulating steganography has never been easier!
 >>> im_dct.write_dct("stego.jpeg")
 
 .. list-table:: Available embedding simulators.
-   :widths: 50 50
+   :widths: 25 75
    :header-rows: 1
 
+   * - Domain
+     - Algorithms
+   * - JPEG
+     - J-UNIWARD, UERD, nsF5
    * - Spatial
-     - JPEG
-   * -
-     - J-UNIWARD
-   * -
-     - UERD
-   * -
-     - nsF5
+     -
+   * - Side-informed
+     -
 
 Contents
 --------
