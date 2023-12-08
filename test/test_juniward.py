@@ -142,5 +142,49 @@ class TestJUNIWARD(unittest.TestCase):
         # Compare stego images
         np.testing.assert_allclose(stego_dct_coeffs, stego_matlab_dct_coeffs)
 
+    @parameterized.expand([
+        ('lizard_gray.jpeg', 6020),
+        ('mountain_gray.jpeg', 6020),
+        ('nuclear_gray.jpeg', 6020),
+    ])
+    def test_costmap_vs_distortion_naive(self, cover_filename, seed):
+        self._logger.info(f'TestJUNIWARD.test_costmap_vs_distortion_naive('f'{cover_filename=}, {seed=})')
+        # Load the cover image in spatial and DCT domain
+        cover_filepath = COVER_DIR / cover_filename
+        img_dct = jpeglib.read_dct(cover_filepath)
+        cover_dct_coeffs = img_dct.Y
+        num_vertical_blocks, num_horizontal_blocks = cover_dct_coeffs.shape[:2]
+        quantization_table = img_dct.qt[0]
+
+        # Decompress the cover image in the spatial domain
+        cover_spatial = cl.tools.decompress_channel(dct_coeffs=cover_dct_coeffs, quantization_table=quantization_table)
+
+        # Variant 1: Compute costmap via the optimized implementation
+        costmap = cl.juniward._costmap.compute_cost(
+            spatial=cover_spatial,
+            quantization_table=quantization_table,
+            implementation=cl.juniward.JUNIWARD_FIX_OFF_BY_ONE,
+        )
+
+        # Variant 2: Compute costmap by modifying one DCT coefficient at a time and evaluating the distortion in the Wavelet domain
+        # Randomly select 10 DCT coefficients to probe.
+        rng = np.random.default_rng(seed)
+        dct_coeffs_to_change = rng.integers(low=0, high=num_vertical_blocks * num_horizontal_blocks * 8 * 8, size=10)
+
+        # Modify one DCT coefficient at a time, evaluate the UNIWARD distortion, and compare to the optimized implementation.
+        for dct_coeff_to_change in dct_coeffs_to_change:
+            # Convert from 1D to 4D index
+            block_y, block_x, within_block_y, within_block_x = np.unravel_index(dct_coeff_to_change, shape=(num_vertical_blocks, num_horizontal_blocks, 8, 8))
+
+            # Modify a single DCT coefficient
+            stego_dct_coeffs = np.copy(cover_dct_coeffs)
+            stego_dct_coeffs[block_y, block_x, within_block_y, within_block_x] += rng.choice([-1, 1])
+
+            # Convert to spatial domain
+            stego_spatial = cl.tools.decompress_channel(dct_coeffs=stego_dct_coeffs, quantization_table=quantization_table)
+            distortion = cl.juniward.evaluate_distortion(cover_spatial, stego_spatial)
+
+            np.testing.assert_allclose(costmap[block_y, block_x, within_block_y, within_block_x], distortion)
+
 
 __all__ = ['TestJUNIWARD']
