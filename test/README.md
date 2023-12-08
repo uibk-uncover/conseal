@@ -2,7 +2,7 @@
 
 ## Creating UERD test images in Matlab
 
-As reference, we use the [Matlab simulation](https://codeocean.com/capsule/7800700/tree/v4) from Remi Cogranne.
+As reference, we use the [Matlab simulation](https://codeocean.com/capsule/7800700/tree/v4) from Rémi Cogranne.
 
 We slightly modified the code such that the user can provide a seed to the random number generator. The array of random numbers is transposed in order to match the Python implementation. You can find the updated code in `assets/uerd/uerd.m`.
 
@@ -14,11 +14,10 @@ Because we could not find a numpy equivalent to Matlab's `randperm`, our nsF5 me
 
 ## Creating J-UNIWARD test images in C++
 
-As reference, we use the [Matlab implementation](http://dde.binghamton.edu/download/stego_algorithms/download/J-UNIWARD_matlab_v11.zip) and the [C++ implementation](http://dde.binghamton.edu/download/stego_algorithms/download/J-UNIWARD_linux_make_v11.tar.gz) provided by the DDE lab.
-
+As reference, we use the [Matlab implementation](http://dde.binghamton.edu/download/stego_algorithms/download/J-UNIWARD_matlab_v11.zip) and the [C++ implementation](http://dde.binghamton.edu/download/stego_algorithms/download/J-UNIWARD_linux_make_v11.tar.gz) provided by the Binghamton DDE lab.
+To compare the costmap between the original C++ and our Python implementation, we modified the C++ implementation to store the adjusted costmap in a file.
 
 ```cpp
-To compare the costmap between the original C++ and our Python implementation, we modified the C++ implementation to store the adjusted costmap in a file.
 // Compute the costmap
 base_cost_model* model = (base_cost_model *)new cost_model(coverStruct, config);
 
