@@ -7,6 +7,7 @@ Affiliation: University of Innsbruck
 # globals
 from .common import entropy, inv_entropy, _entropy, EPS
 from .dct import nzAC, AC
+from .decompress import decompress_channel
 
 # modules
 from . import dct
