@@ -1,9 +1,10 @@
 name: Release CI/CD # workflow name
 on: # trigger
   release:
-    branches: [master]
+    branches: [main]
     types:
       - created
+
 
 jobs:
 
