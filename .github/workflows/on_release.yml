@@ -16,10 +16,11 @@ on: # trigger
 >>>>>>> Stashed changes
 =======
   release:
-    branches: [master]
+    branches: [main]
     types:
       - created
 >>>>>>> 2407511 (dev branched out)
+
 
 jobs:
 
