@@ -1,5 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/conseal.svg)](https://pypi.org/project/conseal/)
-[![Commit CI/CD](https://github.com/uibk-uncover/conseal/actions/workflows/on_commit.yml/badge.svg?branch=master)](https://github.com/uibk-uncover/conseal/actions/workflows/on_commit.yml)
+[![Commit CI/CD](https://github.com/uibk-uncover/conseal/actions/workflows/on_commit.yml/badge.svg?branch=dev)](https://github.com/uibk-uncover/conseal/actions/workflows/on_commit.yml)
 [![Release CI/CD](https://github.com/uibk-uncover/conseal/actions/workflows/on_release.yml/badge.svg)](https://github.com/uibk-uncover/conseal/actions/workflows/on_release.yml)
 [![Documentation Status](https://readthedocs.org/projects/conseal/badge/?version=latest)](https://conseal.readthedocs.io/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/conseal)](https://pypi.org/project/conseal/)
@@ -10,7 +10,7 @@
 [![PyPi license](https://badgen.net/pypi/license/pip/)](https://pypi.com/project/conseal/)
 [![Last commit](https://img.shields.io/github/last-commit/uibk-uncover/conseal)](https://GitHub.com/uibk-uncover/conseal)
 
-<img src="docs/static/seal.png" width="300" />
+<img src="https://raw.githubusercontent.com/uibk-uncover/conseal/main/docs/static/seal.png" width="300" />
 
 # conseal
 
@@ -103,11 +103,29 @@ im_dct.Y = cl.nsF5.simulate_single_channel(
 im_dct.write_dct("stego.jpeg")
 ```
 
+- EBS
+
+```python
+# load cover
+im_dct = jpeglib.read_dct("cover.jpeg")
+
+# embed nsF5 0.4
+im_dct.Y = cl.ebs.simulate_single_channel(
+    cover_dct_coeffs=im_dct.Y,
+    quantization_table=im_dct.qt[0],
+    embedding_rate=0.4,
+    seed=12345
+)
+
+# save result as stego image
+im_dct.write_dct("stego.jpeg")
+```
 
 ## Acknowledgements and Disclaimer
 
 Developed by [Martin Benes](https://github.com/martinbenes1996) and [Benedikt Lorch](https://github.com/btlorch/), University of Innsbruck, 2023.
 
-The J-UNIWARD and nsF5 implementations in this package are based on the original Matlab code provided by the Digital Data Embedding Lab at Binghamton University. We also thank Patrick Bas and Rémi Cogranne for sharing their implementations of UERD with us.
+The J-UNIWARD and nsF5 implementations in this package are based on the original Matlab code provided by the Digital Data Embedding Lab at Binghamton University.
+We also thank Patrick Bas and Rémi Cogranne for sharing their implementations of UERD and EBS with us.
 
 We have made our best effort to ensure that our implementations produce identical results as the original Matlab implementations. However, it is the user's responsibility to verify this.
