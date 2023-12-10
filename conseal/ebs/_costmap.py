@@ -14,7 +14,7 @@ class Implementation(enum.Enum):
     EBS_ORIGINAL = enum.auto()
     """Original EBS implementation by Remi Cogranne."""
     EBS_FIX_WET = enum.auto()
-    """EBS implementation by our fixes."""
+    """EBS implementation with wet-cost fixes in not-SI case."""
 
 
 def _block_entropy(b: np.ndarray) -> float:
@@ -80,7 +80,38 @@ def compute_cost_adjusted(
     implementation: Implementation = Implementation.EBS_ORIGINAL,
     wet_cost: float = 10**13,
 ) -> np.ndarray:
-    """"""
+    """Computes the costmap and prepares the costmap for ternary embedding.
+
+    :param cover_dct_coeffs: quantized cover DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param quantization_table: quantization table
+        of shape [8, 8]
+    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param precover: precover for rounding error computation,
+        of shape [num_vertical_blocks*8, num_horizontal_blocks*8]
+    :param theta: distortion parameter, 2 by default (from paper)
+    :type theta: float
+    :param implementation: choose EBS implementation
+    :type implementation: :class:`Implementation`
+    :param wet_cost: cost for unembeddable coefficients
+    :type wet_cost: float
+    :return: probability maps for +1 and -1 changes,
+        in DCT domain of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: tuple
+
+    :Example:
+
+    >>> rho_p1, rho_m1 = cl.ebs.compute_cost_adjusted(
+    ...   cover_dct_coeffs=im_dct.Y,  # DCT
+    ...   quantization_table=im_dct.qt[0])  # QT
+    >>> im_dct.Y += cl.simulate.ternary(
+    ...   rho_p1=rho_p1,  # distortion of +1
+    ...   rho_m1=rho_m1,  # distortion of -1
+    ...   alpha=0.4,  # alpha
+    ...   n=im_dct.Y.size,  # cover size
+    ...   seed=12345)  # seed
+    """
     # Compute rounding error
     if precover is not None:
         raise NotImplementedError('side-informed EBS not implemented')

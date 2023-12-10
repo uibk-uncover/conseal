@@ -34,17 +34,23 @@ J-UNIWARD simulator
 .. autoclass:: conseal.juniward.Implementation
    :members: JUNIWARD_ORIGINAL, JUNIWARD_FIX_OFF_BY_ONE
 
-
 UERD simulator
 """"""""""""""
 
 .. autofunction:: conseal.uerd.simulate_single_channel
 
-
 nsF5 simulator
 """"""""""""""
 
 .. autofunction:: conseal.nsF5.simulate_single_channel
+
+EBS simulator
+""""""""""""""
+
+.. autofunction:: conseal.ebs.simulate_single_channel
+
+.. autoclass:: conseal.ebs.Implementation
+   :members: EBS_ORIGINAL, EBS_FIX_WET
 
 
 Mid-level API
@@ -60,10 +66,16 @@ J-UNIWARD adjusted cost
 
 .. autofunction:: conseal.juniward.compute_cost_adjusted
 
-UERD distortion
-"""""""""""""""
+UERD adjusted cost
+""""""""""""""""""
 
 .. autofunction:: conseal.uerd.compute_cost_adjusted
+
+EBS adjusted cost
+"""""""""""""""""
+
+.. autofunction:: conseal.ebs.compute_cost_adjusted
+
 
 Mid-level Simulator API
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -99,6 +111,13 @@ UERD cost
 """""""""
 
 .. autofunction:: conseal.uerd._costmap.compute_cost
+
+
+EBS cost
+""""""""
+
+.. autofunction:: conseal.ebs._costmap.compute_cost
+
 
 Probability
 ^^^^^^^^^^^
