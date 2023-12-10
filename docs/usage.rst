@@ -67,6 +67,12 @@ Using the high-level API, you can obtain the stego image from a cover image with
 ...   embedding_rate=0.4,  # alpha
 ...   seed=12345)  # seed
 
+>>> im_dct.Y = cl.ebs.simulate_single_channel(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0],  # QT
+...   embedding_rate=0.4,  # alpha
+...   seed=12345)  # seed
+
 >>> im_dct.Y = cl.juniward.simulate_single_channel(
 ...   cover_dct_coeffs=im_dct.Y,  # DCT
 ...   quantization_table=im_dct.qt[0],  # QT
@@ -95,6 +101,16 @@ It allows user to separately calculate the distortion, and perform the simulatio
 ...   seed=12345)  # seed
 
 >>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   quantization_table=im_dct.qt[0])  # QT
+>>> im_dct.Y += cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   n=im_dct.Y.size,  # cover size
+...   seed=12345)  # seed
+
+>>> rho_p1, rho_m1 = cl.ebs.compute_cost_adjusted(
 ...   cover_dct_coeffs=im_dct.Y,  # DCT
 ...   quantization_table=im_dct.qt[0])  # QT
 >>> im_dct.Y += cl.simulate.ternary(
