@@ -96,7 +96,8 @@ jobs:
           pip install --find-links ./dist conseal --no-index
       - name: Run unittests
         shell: bash
-        run: python tests/test.py
+        run: |
+          python -m unittest
       - name: Print log
         shell: bash
         if: always()
