@@ -77,6 +77,13 @@ JPEG Universal Wavelet Relative Distortion (J-UNIWARD)
 
 *TODO: To be completed*
 
+Entropy Block Stego (EBS)
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+EBS was used as a benchmark against the SI-UNIWARD.
+
 Non-shrinkage F5 (nsF5)
 ^^^^^^^^^^^^^^^^^^^^^^^
 
