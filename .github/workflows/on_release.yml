@@ -4,6 +4,8 @@ on: # trigger
     branches: [main]
     types:
       - created
+  # push:
+  #   branches: [main]
 
 jobs:
   build_wheels:
