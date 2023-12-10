@@ -5,9 +5,7 @@ on: # trigger
     types:
       - created
 
-
 jobs:
-
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
