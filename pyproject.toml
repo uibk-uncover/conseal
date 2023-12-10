@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "conseal"
-version = "2023.12.a0"
+version = "2023.12"
 dependencies = [
   "numpy",
   "scipy"
