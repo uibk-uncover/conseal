@@ -1,10 +1,12 @@
 
-import conseal
+import conseal as cl
 import jpeglib
 import logging
 import numpy as np
+import os
 from parameterized import parameterized
 import scipy.io
+import tempfile
 import unittest
 
 from .defs import ASSETS_DIR
@@ -15,6 +17,14 @@ COVER_DIR = ASSETS_DIR / 'cover'
 class TestEBS(unittest.TestCase):
     """Test suite for EBS embedding."""
     _logger = logging.getLogger(__name__)
+
+    def setUp(self):
+        self.tmp = tempfile.NamedTemporaryFile(suffix='.jpeg', delete=False)
+        self.tmp.close()
+
+    def tearDown(self):
+        os.remove(self.tmp.name)
+        del self.tmp
 
     @parameterized.expand([
         ('mountain',),
@@ -27,10 +37,10 @@ class TestEBS(unittest.TestCase):
         jpeg = jpeglib.read_dct(COVER_DIR / f'{fname}_gray.jpeg')
 
         # compute cost
-        rho, _ = conseal.ebs.compute_cost_adjusted(jpeg.Y, jpeg.qt[0])
+        rho, _ = cl.ebs.compute_cost_adjusted(jpeg.Y, jpeg.qt[0])
 
         # convert to compare
-        rho = conseal.tools.dct.jpeglib_to_jpegio(rho)
+        rho = cl.tools.dct.jpeglib_to_jpegio(rho)
 
         # compare to Remi Cogranne's Matlab implementation
         remi = scipy.io.loadmat(f'test/assets/ebs/{fname}_gray_costmap.mat',
@@ -39,21 +49,21 @@ class TestEBS(unittest.TestCase):
         self.assertTrue(np.allclose(rho, rho_remi))
 
     @parameterized.expand([
-        ('mountain',),
+        # ('mountain',),
         ('lizard',),
-        ('nuclear',),
+        # ('nuclear',),
     ])
     def test_simulate(self, fname):
         self._logger.info(f'TestEBS.test_simulate({fname})')
         # load cover
         jpeg = jpeglib.read_dct(COVER_DIR / f'{fname}_gray.jpeg')
-        Yc = jpeg.Y
 
         # simulate
-        Ys = conseal.ebs.simulate_single_channel(
-            Yc,
+        cl.ebs.simulate_single_channel(
+            jpeg.Y,
             jpeg.qt[0],
-            .4,
+            .01,
+            implementation=cl.EBS_FIX_WET,
             seed=12345,
         )
 

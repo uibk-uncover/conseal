@@ -34,7 +34,7 @@ Simulating steganography has never been easier!
    * - Domain
      - Algorithms
    * - DCT
-     - J-UNIWARD, UERD, nsF5
+     - J-UNIWARD, UERD, EBS, nsF5
 
 Contents
 --------
