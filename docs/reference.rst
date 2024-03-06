@@ -26,8 +26,8 @@ Simulators of JPEG Steganography
 The JPEG steganography operates on DCT coefficients.
 To learn on how to acquire them, see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-and-dct>`__.
 
-J-UNIWARD simulator
-"""""""""""""""""""
+LSB simulator
+"""""""""""""
 
 .. autofunction:: conseal.lsb.simulate
 
