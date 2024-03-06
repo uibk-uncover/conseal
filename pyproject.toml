@@ -49,8 +49,7 @@ dev = [
     "flake8",
     "parameterized",
     "jpeglib",
-    "pillow",
-    "numba"
+    "pillow"
 ]
 deploy = []
 
