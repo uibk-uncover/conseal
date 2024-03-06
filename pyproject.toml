@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "conseal"
-version = "2023.12"
+version = "2024.03"
 dependencies = [
   "numpy",
   "scipy",
@@ -59,4 +59,4 @@ fail_under = 80
 [tool.coverage.run]
 branch = true
 include = ["conseal/*"]
-command_line = "-m unittest discover -s tests/"
+command_line = "-m unittest discover -s test/"
