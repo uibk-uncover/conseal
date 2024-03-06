@@ -2,6 +2,7 @@
 import pkg_resources
 
 # spatial
+from . import hugo
 from . import lsb  # can be also used for JPEG
 
 # JPEG
@@ -30,12 +31,18 @@ except pkg_resources.DistributionNotFound:
     __version__ = None
 
 __all__ = [
+    'hugo',
     'juniward',
+    'lsb',
     'nsF5',
     'uerd',
     'simulate',
     'tools',
     'JUNIWARD_ORIGINAL',
     'JUNIWARD_FIX_OFF_BY_ONE',
+    'EBS_ORIGINAL',
+    'EBS_FIX_WET',
+    'LSB_REPLACEMENT',
+    'LSB_MATCHING',
     '__version__',
 ]
