@@ -1,7 +1,12 @@
 
 import pkg_resources
 
+#
+from . import simulate
+from . import tools
+
 # spatial
+from . import hill
 from . import hugo
 from . import lsb  # can be also used for JPEG
 
@@ -10,11 +15,6 @@ from . import ebs
 from . import juniward
 from . import nsF5
 from . import uerd
-
-
-#
-from . import simulate
-from . import tools
 
 # abbreviations of enum
 JUNIWARD_ORIGINAL = juniward.Implementation.JUNIWARD_ORIGINAL
@@ -31,6 +31,7 @@ except pkg_resources.DistributionNotFound:
     __version__ = None
 
 __all__ = [
+    'hill',
     'hugo',
     'juniward',
     'lsb',

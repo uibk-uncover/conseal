@@ -27,7 +27,6 @@ class TestHUGO(unittest.TestCase):
         os.remove(self.tmp.name)
         del self.tmp
 
-    # @parameterized.expand([['00001'], ['00002'], ['00003'], ['00004'], ['00005']])
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
     def test_hugo_costmap(self, fname: str):
         self._logger.info(f'TestHUGO.test_compare_hugo_matlab({fname})')

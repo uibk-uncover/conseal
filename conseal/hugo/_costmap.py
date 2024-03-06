@@ -16,8 +16,8 @@ import typing
 
 @jit(nopython=True, fastmath=True, nogil=False, cache=True, parallel=False)
 def GetLocalPotential(
-    c_res,
-    s_res,
+    c_res: np.ndarray,
+    s_res: np.ndarray,
     sigma: float,
     gamma: float,
 ) -> float:
@@ -29,25 +29,25 @@ def GetLocalPotential(
 
 @jit(nopython=True, fastmath=True, nogil=False, cache=True, parallel=False)
 def GetLocalDistortion(
-    C_resVect,
-    S_resVect,
+    c_res: np.ndarray,
+    s_res: np.ndarray,
     sigma: float,
     gamma: float,
 ) -> float:
     D = 0.
-    assert len(C_resVect) == 6, 'invalid C_resVect size'
-    assert len(S_resVect) == 6, 'invalid S_resVect size'
-    D += GetLocalPotential(C_resVect[0:3], S_resVect[0:3], sigma, gamma)
-    D += GetLocalPotential(C_resVect[1:4], S_resVect[1:4], sigma, gamma)
-    D += GetLocalPotential(C_resVect[2:5], S_resVect[2:5], sigma, gamma)
-    D += GetLocalPotential(C_resVect[3:6], S_resVect[3:6], sigma, gamma)
+    assert len(c_res) == 6, 'invalid c_res size'
+    assert len(s_res) == 6, 'invalid S_resVect size'
+    D += GetLocalPotential(c_res[0:3], s_res[0:3], sigma, gamma)
+    D += GetLocalPotential(c_res[1:4], s_res[1:4], sigma, gamma)
+    D += GetLocalPotential(c_res[2:5], s_res[2:5], sigma, gamma)
+    D += GetLocalPotential(c_res[3:6], s_res[3:6], sigma, gamma)
     return D
 
 
 @jit(nopython=True, fastmath=True, nogil=False, cache=True, parallel=False)
 def compute_cost(
-    cover: np.ndarray,
-    coverPadded: np.ndarray,
+    cover_spatial: np.ndarray,
+    cover_spatial_padded: np.ndarray,
     sigma: float = 1,
     gamma: float = 1,
 ) -> typing.Tuple[np.ndarray]:
@@ -55,25 +55,36 @@ def compute_cost(
 
     Unlike most other distortions, HUGO is truly directional.
 
+    :param cover_spatial: uncompressed (pixel) cover image
+        of shape [height, width]
+    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param cover_spatial_padded:
+    :type cover_spatial_padded: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param sigma:
+    :type sigma: float
+    :param gamma:
+    :type gamma: float
 
+    :Example:
+    >>> # TODO
     """
 
     # embedding costs initialization
     responseP1 = np.array([0, 0, -1, +1, 0, 0])
 
     # declare costs
-    rhoM1 = np.zeros(cover.shape, dtype='double')
-    rhoP1 = np.zeros(cover.shape, dtype='double')
+    rho_p1 = np.zeros(cover_spatial.shape, dtype='double')
+    rho_m1 = np.zeros(cover_spatial.shape, dtype='double')
 
     # create residual
-    C_Rez_H = coverPadded[:, :-1] - coverPadded[:, 1:]
-    C_Rez_V = coverPadded[:-1, :] - coverPadded[1:, :]
-    C_Rez_Diag = coverPadded[:-1, :-1] - coverPadded[1:, 1:]
-    C_Rez_MDiag = coverPadded[:-1, 1:] - coverPadded[1:, :-1]
+    C_Rez_H = cover_spatial_padded[:, :-1] - cover_spatial_padded[:, 1:]
+    C_Rez_V = cover_spatial_padded[:-1, :] - cover_spatial_padded[1:, :]
+    C_Rez_Diag = cover_spatial_padded[:-1, :-1] - cover_spatial_padded[1:, 1:]
+    C_Rez_MDiag = cover_spatial_padded[:-1, 1:] - cover_spatial_padded[1:, :-1]
 
     # iterate over elements in the sublattice
-    for row in prange(cover.shape[0]):
-        for col in prange(cover.shape[1]):
+    for row in prange(cover_spatial.shape[0]):
+        for col in prange(cover_spatial.shape[1]):
 
             D_P1, D_M1 = 0., 0.
 
@@ -98,32 +109,55 @@ def compute_cost(
             D_P1 += GetLocalDistortion(cover_sub, cover_sub+responseP1, sigma, gamma)
 
             #
-            rhoM1[row, col] = D_M1
-            rhoP1[row, col] = D_P1
+            rho_p1[row, col] = D_P1
+            rho_m1[row, col] = D_M1
 
-    return rhoP1, rhoM1
+    #
+    return rho_p1, rho_m1
 
 
 def compute_cost_adjusted(
-    cover: np.ndarray,
+    cover_spatial: np.ndarray,
     *,
     sigma: float = 1,
     gamma: float = 1,
     wet_cost: float = 1e8,
 ):
+    """
+
+    :param cover_spatial: uncompressed (pixel) cover image
+        of shape [height, width]
+    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param sigma:
+    :type sigma: float
+    :param gamma:
+    :type gamma: float
+    :param wet_cost: wet cost for unembeddable coefficients
+    :type wet_cost: float
+
+    :Example:
+    >>> # TODO
+    """
     # cover to double
-    cover = cover.astype('double')
+    cover_spatial = cover_spatial.astype('double')
 
     # create mirror padded cover image
-    coverPadded = np.pad(cover, [[3]*2, [3]*2], 'symmetric')
+    cover_spatial_padded = np.pad(cover_spatial, [[3]*2, [3]*2], 'symmetric')
 
-    # call
-    rho_p1, rho_m1 = compute_cost(cover, coverPadded, sigma, gamma)
+    # Compute costmap
+    rho_p1, rho_m1 = compute_cost(
+        cover_spatial=cover_spatial,
+        cover_spatial_padded=cover_spatial_padded,
+        sigma=sigma,
+        gamma=gamma,
+    )
 
-    # adjust embedding costs
-    rho_m1[rho_m1 > wet_cost] = wet_cost  # truncate
-    rho_p1[rho_p1 > wet_cost] = wet_cost
-    rho_p1[cover == 255] = wet_cost  # do not embed +1, if the pixel has max value
-    rho_m1[cover == 0] = wet_cost  # do not embed -1, if the pixel has min value
+    # Assign wet cost
+    rho_p1[np.isinf(rho_p1) | np.isnan(rho_p1) | (rho_p1 > wet_cost)] = wet_cost
+    rho_m1[np.isinf(rho_m1) | np.isnan(rho_m1) | (rho_m1 > wet_cost)] = wet_cost
+
+    # Do not embed +-1 if the pixel has min/max value
+    rho_p1[cover_spatial >= 255] = wet_cost
+    rho_m1[cover_spatial <= 0] = wet_cost
 
     return rho_p1, rho_m1
