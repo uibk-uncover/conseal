@@ -4,8 +4,8 @@ on: # trigger
     branches: [main]
     types:
       - created
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   build_wheels:
@@ -94,7 +94,7 @@ jobs:
           path: dist
       - name: Install wheel
         run: |
-          pip install jpeglib numpy scipy parameterized numba
+          pip install jpeglib numpy scipy parameterized numba pillow
           pip install --find-links ./dist conseal --no-index
       - name: Run unittests
         shell: bash

@@ -53,7 +53,7 @@ Simulating steganography has never been easier!
    * - DCT
      - J-UNIWARD, UERD, EBS, nsF5, LSB
    * - Spatial
-     - LSB
+     - LSB, HUGO
 
 Contents
 --------

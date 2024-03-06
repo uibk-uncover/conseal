@@ -17,14 +17,19 @@ High-level API
 On high-level API, the embedding is a black-box.
 You pass in the cover image and obtain the stego image.
 
-Currently, there are five steganography simulators implemented: LSB, J-UNIWARD, UERD, nsF5 and EBS.
+Currently, there are six steganography simulators implemented: LSB, HUGO, J-UNIWARD, UERD, nsF5 and EBS.
 
 
-Simulators of JPEG Steganography
+Simulators of Spatial Steganography
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The JPEG steganography operates on DCT coefficients.
-To learn on how to acquire them, see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-and-dct>`__.
+*to be written
+
+HUGO simulator
+"""""""""""""
+
+.. autofunction:: conseal.hug.simulate_single_channel
+
 
 LSB simulator
 """""""""""""
@@ -33,6 +38,14 @@ LSB simulator
 
 .. autoclass:: conseal.lsb.Change
    :members: LSB_REPLACEMENT, LSB_MATCHING
+
+
+Simulators of JPEG Steganography
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The JPEG steganography operates on DCT coefficients.
+To learn on how to acquire them, see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-and-dct>`__.
+
 
 J-UNIWARD simulator
 """""""""""""""""""
@@ -69,6 +82,17 @@ On mid-level API, you separately compute the cost (automatically adjusted for we
 Adjusted cost
 ^^^^^^^^^^^^^
 
+
+LSB adjusted cost
+"""""""""""""""""
+
+.. autofunction:: conseal.lsb.compute_cost_adjusted
+
+HUGO adjusted cost
+"""""""""""""""""""
+
+.. autofunction:: conseal.hugo.compute_cost_adjusted
+
 J-UNIWARD adjusted cost
 """""""""""""""""""""""
 
@@ -83,11 +107,6 @@ EBS adjusted cost
 """""""""""""""""
 
 .. autofunction:: conseal.ebs.compute_cost_adjusted
-
-LSB adjusted cost
-"""""""""""""""""
-
-.. autofunction:: conseal.lsb.compute_cost_adjusted
 
 
 Mid-level Simulator API
@@ -136,6 +155,10 @@ LSB cost
 
 .. autofunction:: conseal.lsb._costmap.compute_cost
 
+HUGO cost
+"""""""""
+
+.. autofunction:: conseal.hugo._costmap.compute_cost
 
 Probability
 ^^^^^^^^^^^
