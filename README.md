@@ -36,6 +36,13 @@ cd conseal
 pip3 install .
 ```
 
+## Contents
+
+| Steganography method | Domain | Reference |
+| --- | --- | --- |
+| nsF5: no-shrinkage F5 | JPEG | [Original F5 algorithm](https://doi.org/10.1007/3-540-45496-9_21) [no-shrinkage extension](https://doi.org/10.1145/1288869.1288872) |
+| UERD: uniform embedding revisited distortion | JPEG | [Reference](https://doi.org/10.1109/TIFS.2015.2473815) |
+| J-UNIWARD: JPEG-domain universal wavelet relative distortion | JPEG | [Reference](https://doi.org/10.1186/1687-417X-2014-1) |
 
 ## Usage
 
