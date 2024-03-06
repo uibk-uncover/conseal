@@ -9,7 +9,7 @@ import scipy.io
 import tempfile
 import unittest
 
-import defs
+from . import defs
 STEGO_DIR = defs.ASSETS_DIR / 'ebs'
 
 

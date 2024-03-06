@@ -11,7 +11,7 @@ import tempfile
 import time
 import unittest
 
-import defs
+from . import defs
 STEGO_DIR = defs.ASSETS_DIR / 'lsb'
 
 

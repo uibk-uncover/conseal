@@ -218,6 +218,7 @@ def simulate(
         'C' (C-order, column-row) or 'F' (F-order, row-column).
     :type order: str
     :param seed: random seed for embedding simulator
+    :type seed: int
     :return: Simulated ternary changes in the cover, 0 (keep), +1 or -1.
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
