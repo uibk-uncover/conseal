@@ -58,10 +58,4 @@ class TestHILL(unittest.TestCase):
         d = x.astype('int16') - y.astype('int16')
         self.assertLessEqual(d.max(), 1)
         self.assertGreaterEqual(d.min(), -1)
-        # e = alpha / cl.tools.inv_entropy(alpha)
-        # alpha_hat = cl.tools.entropy((d > 0).mean(), (d < 0).mean())
-        # alpha_lb = (d != 0).mean() * e
-        # self.assertGreater(alpha_hat, alpha)
-        # self.assertGreater(alpha_hat, alpha_lb)
-        # # TODO: upper bound
 
