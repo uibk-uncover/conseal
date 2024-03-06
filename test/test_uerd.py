@@ -11,8 +11,9 @@ import numpy as np
 from parameterized import parameterized
 import unittest
 
-from .defs import ASSETS_DIR, COVER_DIR
-STEGO_DIR = ASSETS_DIR / 'uerd'
+import defs
+# from .defs import ASSETS_DIR, COVER_DIR
+STEGO_DIR = defs.ASSETS_DIR / 'uerd'
 
 
 class TestUERD(unittest.TestCase):
@@ -31,7 +32,7 @@ class TestUERD(unittest.TestCase):
         )
 
         # Read cover image
-        cover_im = jpeglib.read_dct(COVER_DIR / cover_filepath)
+        cover_im = jpeglib.read_dct(defs.COVER_DIR / cover_filepath)
         cover_dct_coeffs = cover_im.Y
 
         # cl.uerd.simulate_single_channel differs from the Matlab implementation, because it uses another random number generator and the random numbers are arranged differently.
@@ -77,7 +78,7 @@ class TestUERD(unittest.TestCase):
         self._logger.info(f'TestUERD.test_simulate_uerd_grayscale({alpha=})')
 
         # Load cover
-        jpeg_c = jpeglib.read_dct(COVER_DIR / 'lizard_gray.jpeg')
+        jpeg_c = jpeglib.read_dct(defs.COVER_DIR / 'lizard_gray.jpeg')
 
         # Initialize stego
         jpeg_s = jpeg_c.copy()

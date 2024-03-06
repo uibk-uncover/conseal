@@ -6,9 +6,9 @@ import unittest
 import numpy as np
 from scipy.io import loadmat
 
-from .defs import ASSETS_DIR
-STEGO_DIR = ASSETS_DIR / 'juniward'
-COVER_DIR = ASSETS_DIR / 'cover'
+import defs
+# from .defs import ASSETS_DIR
+STEGO_DIR = defs.ASSETS_DIR / 'juniward'
 
 
 class TestJUNIWARD(unittest.TestCase):
@@ -44,7 +44,7 @@ class TestJUNIWARD(unittest.TestCase):
     def test_costmap_cpp_python_equivalence(self, cover_filename, costmap_cpp_filename, implementation):
         self._logger.info(f'TestJUNIWARD.test_costmap_cpp_python_equivalence({cover_filename=}, {costmap_cpp_filename=}, {implementation=})')
 
-        cover_filepath = COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_DIR / cover_filename
         costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
 
         cover_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
@@ -84,7 +84,7 @@ class TestJUNIWARD(unittest.TestCase):
     def test_costmap_matlab_python_equivalence(self, cover_filename, costmap_matlab_filename, implementation):
         self._logger.info(f'TestJUNIWARD.test_costmap_matlab_python_equivalence({cover_filename=}, {costmap_matlab_filename=}, {implementation=})')
 
-        cover_filepath = COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_DIR / cover_filename
         costmap_matlab_filepath = STEGO_DIR / 'costmap-matlab' / costmap_matlab_filename
 
         img_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
@@ -112,7 +112,7 @@ class TestJUNIWARD(unittest.TestCase):
     def test_simulation_python_matlab_equivalence(self, cover_filename, stego_filename, embedding_rate, seed):
         self._logger.info(f'TestJUNIWARD.test_simulation_python_matlab_equivalence('f'{cover_filename=}, {embedding_rate=}, {seed=})')
 
-        cover_filepath = COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_DIR / cover_filename
         stego_matlab_filepath = STEGO_DIR / 'stego-matlab' / stego_filename
 
         # Read grayscale image
@@ -149,7 +149,7 @@ class TestJUNIWARD(unittest.TestCase):
     def test_costmap_vs_distortion_naive(self, cover_filename, seed):
         self._logger.info(f'TestJUNIWARD.test_costmap_vs_distortion_naive('f'{cover_filename=}, {seed=})')
         # Load the cover image in spatial and DCT domain
-        cover_filepath = COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_DIR / cover_filename
         img_dct = jpeglib.read_dct(cover_filepath)
         cover_dct_coeffs = img_dct.Y
         num_vertical_blocks, num_horizontal_blocks = cover_dct_coeffs.shape[:2]

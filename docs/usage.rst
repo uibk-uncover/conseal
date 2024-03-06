@@ -18,7 +18,17 @@ Import the package with
 
 >>> import conseal as cl
 
-The code before use a cover image, which can be loaded as follows.
+For steganography on pixels, load the cover image using `pillow` and `numpy`.
+
+>>> import numpy as np
+>>> from PIL import Image
+>>> spatial_cover = np.array(Image.open("cover.png"))
+
+After modification, save the stego image
+
+>>> Image.fromarray(spatial_stego).save("stego.png")
+
+For JPEG steganography, load the DCT coefficients using our sister project `jpeglib`.
 
 >>> import jpeglib
 >>> im_dct = jpeglib.read_dct("cover.jpeg")
@@ -29,6 +39,7 @@ The code before use a cover image, which can be loaded as follows.
 After modifying ``im_dct.Y``, write the image as follows.
 
 >>> im_dct.write_dct("stego.jpeg")
+
 
 .. note::
 
@@ -80,7 +91,13 @@ Using the high-level API, you can obtain the stego image from a cover image with
 ...   embedding_rate=0.4,  # alpha
 ...   seed=12345)  # seed
 
+
 J-UNIWARD requires the decompressed image for computing the distortion. Hence, the decompressed image must be provided alongside the DCT coefficients.
+
+>>> stego_spatial = cl.lsb.simulate(
+...   cover=spatial_cover,  # pixels
+...   embedding_rate=0.4,  # alpha
+...   seed=12345)  # seed
 
 
 At mid-level API
@@ -120,6 +137,15 @@ It allows user to separately calculate the distortion, and perform the simulatio
 ...   n=im_dct.Y.size,  # cover size
 ...   seed=12345)  # seed
 
+>>> rho_p1, rho_m1 = cl.lsb.compute_cost_adjusted(
+...   cover=cover_spatial,  # pixels
+...   modfy=cl.LSB_MATCHING)  # LSB matching
+>>> stego_spatial = cover_spatial + cl.simulate.ternary(
+...   rho_p1=rho_p1,  # distortion of +1
+...   rho_m1=rho_m1,  # distortion of -1
+...   alpha=0.4,  # alpha
+...   seed=12345)  # seed
+
 Notice that unlike the high-level API, the mid-level and low-level API return only the steganography noise, which is to be added to the cover.
 
 At low-level API
@@ -129,18 +155,6 @@ The low-level API allows accessing the raw costs (without wet cost modification)
 as well as the probabilities and simulation.
 
 >>> rho = cl.uerd._costmap.compute_cost(
-...   cover_dct_coeffs=im_dct.Y,  # DCT
-...   quantization_table=im_dct.qt[0])  # QT
->>> # ... (sanitize rho, create rho_p1 and rho_m1)
->>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
-...   rho_p1=rho_p1,  # distortion of +1
-...   rho_m1=rho_m1,  # distortion of -1
-...   alpha=0.4,  # alpha
-...   n=im_dct.Y.size)  # cover size
->>> im_dct.Y += cl.simulate._ternary.simulate(
-...   p_p1=p_p1,  # probability of +1
-...   p_m1=p_m1,  # probability of -1
-...   seed=12345)  # seed(
 ...   cover_dct_coeffs=im_dct.Y,  # DCT
 ...   quantization_table=im_dct.qt[0])  # QT
 >>> # ... (sanitize rho, create rho_p1 and rho_m1)
@@ -162,3 +176,21 @@ as well as the probabilities and simulation.
 ...   lbda=lbda,  # lambda (optimized)
 ...   rho_p1=rho_p1,  # distortion of +1
 ...   rho_m1=rho_m1)  # distortion of -1
+
+Embedding methods such as nsF5 and LSB have a low-level interface to get probabilities directly
+
+>>> (p_p1, p_m1), lbda = cl.nsF5._costmap.probability(
+...   cover_dct_coeffs=im_dct.Y,  # DCT
+...   alpha=0.4)  # alpha
+>>> im_dct.Y += cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed
+
+>>> (p_p1, p_m1), lbda = cl.lsb._costmap.probability(
+...   cover=cover_spatial,  # pixels
+...   alpha=0.4)  # alpha
+>>> stego_spatial = cover_spatial + cl.simulate._ternary.simulate(
+...   p_p1=p_p1,  # probability of +1
+...   p_m1=p_m1,  # probability of -1
+...   seed=12345)  # seed

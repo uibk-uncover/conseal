@@ -9,9 +9,8 @@ import scipy.io
 import tempfile
 import unittest
 
-from .defs import ASSETS_DIR
-STEGO_DIR = ASSETS_DIR / 'ebs'
-COVER_DIR = ASSETS_DIR / 'cover'
+import defs
+STEGO_DIR = defs.ASSETS_DIR / 'ebs'
 
 
 class TestEBS(unittest.TestCase):
@@ -34,7 +33,7 @@ class TestEBS(unittest.TestCase):
     def test_compute_cost(self, fname):
         self._logger.info(f'TestEBS.test_compute_cost({fname})')
         # load cover
-        jpeg = jpeglib.read_dct(COVER_DIR / f'{fname}_gray.jpeg')
+        jpeg = jpeglib.read_dct(defs.COVER_DIR / f'{fname}_gray.jpeg')
 
         # compute cost
         rho, _ = cl.ebs.compute_cost_adjusted(jpeg.Y, jpeg.qt[0])
@@ -56,7 +55,7 @@ class TestEBS(unittest.TestCase):
     def test_simulate(self, fname):
         self._logger.info(f'TestEBS.test_simulate({fname})')
         # load cover
-        jpeg = jpeglib.read_dct(COVER_DIR / f'{fname}_gray.jpeg')
+        jpeg = jpeglib.read_dct(defs.COVER_DIR / f'{fname}_gray.jpeg')
 
         # simulate
         cl.ebs.simulate_single_channel(

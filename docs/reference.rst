@@ -17,7 +17,7 @@ High-level API
 On high-level API, the embedding is a black-box.
 You pass in the cover image and obtain the stego image.
 
-Currently, there are three JPEG steganography simulators implemented: J-UNIWARD, UERD, and nsF5.
+Currently, there are five steganography simulators implemented: LSB, J-UNIWARD, UERD, nsF5 and EBS.
 
 
 Simulators of JPEG Steganography
@@ -25,6 +25,14 @@ Simulators of JPEG Steganography
 
 The JPEG steganography operates on DCT coefficients.
 To learn on how to acquire them, see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-and-dct>`__.
+
+J-UNIWARD simulator
+"""""""""""""""""""
+
+.. autofunction:: conseal.lsb.simulate
+
+.. autoclass:: conseal.lsb.Change
+   :members: LSB_REPLACEMENT, LSB_MATCHING
 
 J-UNIWARD simulator
 """""""""""""""""""
@@ -76,6 +84,11 @@ EBS adjusted cost
 
 .. autofunction:: conseal.ebs.compute_cost_adjusted
 
+LSB adjusted cost
+"""""""""""""""""
+
+.. autofunction:: conseal.lsb.compute_cost_adjusted
+
 
 Mid-level Simulator API
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -118,6 +131,11 @@ EBS cost
 
 .. autofunction:: conseal.ebs._costmap.compute_cost
 
+LSB cost
+""""""""
+
+.. autofunction:: conseal.lsb._costmap.compute_cost
+
 
 Probability
 ^^^^^^^^^^^
@@ -126,6 +144,12 @@ nsF5 probability
 """"""""""""""""
 
 .. autofunction:: conseal.nsF5._costmap.probability
+
+LSB probability
+""""""""""""""""
+
+.. autofunction:: conseal.lsb._costmap.probability
+
 
 Low-level Simulator API
 ^^^^^^^^^^^^^^^^^^^^^^^

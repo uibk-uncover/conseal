@@ -12,8 +12,9 @@ from parameterized import parameterized
 import tempfile
 import unittest
 
-from .defs import ASSETS_DIR, COVER_DIR
-STEGO_DIR = ASSETS_DIR / 'nsF5'
+import defs
+# from .defs import ASSETS_DIR, COVER_DIR
+STEGO_DIR = defs.ASSETS_DIR / 'nsF5'
 
 
 class TestnsF5(unittest.TestCase):
@@ -65,7 +66,7 @@ class TestnsF5(unittest.TestCase):
     ])
     def test_matlab_equivalence(self, cover_filepath, matlab_stego_filepath, embedding_rate, seed):
         with tempfile.NamedTemporaryFile(suffix=".jpg") as f:
-            cover_img = jpeglib.read_dct(COVER_DIR / cover_filepath)
+            cover_img = jpeglib.read_dct(defs.COVER_DIR / cover_filepath)
 
             stego_Y = cl.nsF5.simulate_single_channel(
                 cover_dct_coeffs=cover_img.Y,
