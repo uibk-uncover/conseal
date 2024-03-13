@@ -99,10 +99,9 @@ im_dct.write_dct("stego.jpeg")
 # load cover
 im_dct = jpeglib.read_dct("cover.jpeg")
 
-# embed nsF5 0.4
+# embed nsF5 0.4 bpnzAC
 im_dct.Y = cl.nsF5.simulate_single_channel(
     cover_dct_coeffs=im_dct.Y,
-    quantization_table=im_dct.qt[0],
     embedding_rate=0.4,
     seed=12345
 )
@@ -117,7 +116,7 @@ im_dct.write_dct("stego.jpeg")
 # load cover
 im_dct = jpeglib.read_dct("cover.jpeg")
 
-# embed nsF5 0.4
+# embed EBS 0.4 bpnzAC
 im_dct.Y = cl.ebs.simulate_single_channel(
     cover_dct_coeffs=im_dct.Y,
     quantization_table=im_dct.qt[0],

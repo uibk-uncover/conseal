@@ -17,7 +17,7 @@ def simulate_single_channel(
     cover_dct_coeffs: np.ndarray,
     quantization_table: np.ndarray,
     embedding_rate: float,
-    payload_mode: str,
+    payload_mode: str = "bpnzAC",
     wet_cost: float = 10**13,
     seed: int = None,
 ) -> np.ndarray:
@@ -65,7 +65,6 @@ def simulate_single_channel(
     rho_p1, rho_m1 = compute_cost_adjusted(
         cover_dct_coeffs=cover_dct_coeffs,
         quantization_table=quantization_table,
-        payload_mode=payload_mode,
         wet_cost=wet_cost,
     )
 
@@ -88,6 +87,7 @@ def simulate_single_channel(
         alpha=embedding_rate,
         n=n,
     )
+
     delta_dct_coeffs = _ternary.simulate(
         p_p1=p_p1,
         p_m1=p_m1,
