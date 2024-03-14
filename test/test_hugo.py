@@ -1,4 +1,3 @@
-
 import conseal as cl
 import logging
 import numpy as np
@@ -6,13 +5,13 @@ import os
 from parameterized import parameterized
 from PIL import Image
 import scipy.io
-import sys
 import tempfile
 import unittest
-
 from . import defs
-COST_DIR = defs.ASSETS_DIR / 'costmap_matlab' / 'hugo'
-STEGO_DIR = defs.ASSETS_DIR / 'stego_matlab' / 'hugo'
+
+
+COST_DIR = defs.ASSETS_DIR / 'hugo' / 'costmap_matlab'
+STEGO_DIR = defs.ASSETS_DIR / 'hugo' / 'stego_matlab'
 
 
 class TestHUGO(unittest.TestCase):
