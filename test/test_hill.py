@@ -28,7 +28,7 @@ class TestHILL(unittest.TestCase):
     def test_distortion_hill(self, fname: str):
         self._logger.info(f'TestHILL.test_simulate_hill({fname})')
         # load cover
-        x = np.array(Image.open(defs.COVER_UG_DIR / f'{fname}.png'))
+        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
         # simulate the stego
         alpha = .4
         rho_p1, rho_m1 = cl.hill.compute_cost_adjusted(x)
@@ -46,7 +46,7 @@ class TestHILL(unittest.TestCase):
     def test_simulate_hill(self, fname: str):
         self._logger.info(f'TestHILL.test_simulate_hill({fname})')
         # load cover
-        x = np.array(Image.open(defs.COVER_UG_DIR / f'{fname}.png'))
+        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
 
         # simulate the stego
         alpha = .4

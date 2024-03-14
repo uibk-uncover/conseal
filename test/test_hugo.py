@@ -30,7 +30,7 @@ class TestHUGO(unittest.TestCase):
     def test_hugo_costmap(self, fname: str):
         self._logger.info(f'TestHUGO.test_compare_hugo_matlab({fname})')
         # load cover
-        x = np.array(Image.open(defs.COVER_UG_DIR / f'{fname}.png'))
+        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
         # simulate the stego
         # import time
         # start = time.perf_counter()
@@ -49,7 +49,7 @@ class TestHUGO(unittest.TestCase):
     def test_hugo_stego(self, fname: str):
         self._logger.info(f'TestHUGO.test_hugo_stego({fname})')
         # load cover
-        x = np.array(Image.open(defs.COVER_UG_DIR / f'{fname}.png'))
+        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
 
         # simulate the stego
         rho_p1, rho_m1 = cl.hugo.compute_cost_adjusted(x)

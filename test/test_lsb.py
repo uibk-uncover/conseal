@@ -36,7 +36,7 @@ class TestLSB(unittest.TestCase):
     def test_simulate_LSB(self, alpha: float, modify: str, permute: bool):
         self._logger.info(f"TestLSB.test_simulate_LSB({alpha}, {modify}, {permute})")
         # load cover
-        cover_spatial = np.array(Image.open(defs.COVER_UG_DIR / 'seal1.png'))
+        cover_spatial = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / 'seal1.png'))
         # simulate the stego
         stego_spatial = cl.lsb.simulate(
             cover_spatial, alpha,
@@ -57,7 +57,7 @@ class TestLSB(unittest.TestCase):
     def test_simulate_LSB_time(self, modify, permute):
         self._logger.info('TestLSB.test_simulate_LSB_time')
         # load cover
-        cover_spatial = np.array(Image.open(defs.COVER_UG_DIR / 'seal1.png'))
+        cover_spatial = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / 'seal1.png'))
         # time the simulation
         start = time.perf_counter()
         cl.lsb.simulate(
@@ -81,7 +81,7 @@ class TestLSB(unittest.TestCase):
     def test_simulate_LSB_color(self, alpha: float, modify: str, permute: bool):
         self._logger.info(f"TestLSB.test_simulate_LSB_color({alpha}, {modify}, {permute})")
         # load cover
-        cover_spatial = np.array(Image.open(defs.COVER_UC_DIR / 'seal1.png'))
+        cover_spatial = np.array(Image.open(defs.COVER_UNCOMPRESSED_COLOR_DIR / 'seal1.png'))
         # simulate the stego
         stego_spatial = cl.lsb.simulate(
             cover_spatial, alpha,
@@ -103,7 +103,7 @@ class TestLSB(unittest.TestCase):
     def test_simulate_LSB_dct(self, alpha: float, modify: str, permute: bool):
         self._logger.info('TestLSB.test_simulate_LSB_dct')
         # load cover
-        dct_c = jpeglib.read_dct(defs.COVER_CG_DIR / 'seal1.jpg').Y
+        dct_c = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / 'seal1.jpg').Y
         # simulate the stego
         dct_s = cl.lsb.simulate(
             dct_c, alpha,

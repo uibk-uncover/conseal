@@ -10,7 +10,9 @@ We slightly modified the code such that the user can provide a seed to the rando
 
 As reference, we use the [Matlab simulation](https://dde.binghamton.edu/download/nsf5simulator/) provided by the Binghamton DDE lab.
 
-Because we could not find a numpy equivalent to Matlab's `randperm`, our nsF5 method converts the permutation to Matlab's column-major ordering and stores this permutation to a file, which is then loaded and used by our modified Matlab implementation. See `assets/nsF5/nsF5.m` for details.
+Because we could not find a numpy equivalent to Matlab's `randperm`, our nsF5 method converts the permutation to Matlab's column-major ordering and stores this permutation to a file.
+In *conseal/nsF5/_simulate.py*, set `store_permutation = True` to store the permutation to a temporary file. 
+This permutation is then loaded and used by our modified Matlab implementation, see *assets/nsF5/nsF5.m*.
 
 ## Creating J-UNIWARD test images in C++
 

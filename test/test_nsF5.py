@@ -11,9 +11,9 @@ import numpy as np
 from parameterized import parameterized
 import tempfile
 import unittest
-
 from . import defs
-# from .defs import ASSETS_DIR, COVER_DIR
+
+
 STEGO_DIR = defs.ASSETS_DIR / 'nsF5'
 
 
@@ -45,28 +45,18 @@ class TestnsF5(unittest.TestCase):
             self.assertTrue(np.allclose(img_a.Cr, img_b.Cr))
 
     @parameterized.expand([
-        (
-            "lizard_gray.jpeg",
-            "lizard_gray_matlab_alpha_0.4_seed_6789.jpg",
-            0.4,
-            6789,
-        ),
-        (
-            "mountain_gray.jpeg",
-            "mountain_gray_matlab_alpha_0.2_seed_6020.jpg",
-            0.2,
-            6020,
-        ),
-        (
-            "nuclear_gray.jpeg",
-            "nuclear_gray_matlab_alpha_0.1_seed_91058.jpg",
-            0.1,
-            91058,
-        ),
+        ("seal1.jpg", "seal1_alpha_0.4_seed_1.jpg", 0.4, 1),
+        ("seal2.jpg", "seal2_alpha_0.4_seed_2.jpg", 0.4, 2),
+        ("seal3.jpg", "seal3_alpha_0.4_seed_3.jpg", 0.4, 3),
+        ("seal4.jpg", "seal4_alpha_0.4_seed_4.jpg", 0.4, 4),
+        ("seal5.jpg", "seal5_alpha_0.4_seed_5.jpg", 0.4, 5),
+        ("seal6.jpg", "seal6_alpha_0.4_seed_6.jpg", 0.4, 6),
+        ("seal7.jpg", "seal7_alpha_0.4_seed_7.jpg", 0.4, 7),
+        ("seal8.jpg", "seal8_alpha_0.4_seed_8.jpg", 0.4, 8),
     ])
     def test_matlab_equivalence(self, cover_filepath, matlab_stego_filepath, embedding_rate, seed):
         with tempfile.NamedTemporaryFile(suffix=".jpg") as f:
-            cover_img = jpeglib.read_dct(defs.COVER_DIR / cover_filepath)
+            cover_img = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / cover_filepath)
 
             stego_Y = cl.nsF5.simulate_single_channel(
                 cover_dct_coeffs=cover_img.Y,
