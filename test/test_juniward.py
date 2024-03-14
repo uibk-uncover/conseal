@@ -34,17 +34,27 @@ class TestJUNIWARD(unittest.TestCase):
         return costmap
 
     @parameterized.expand([
-        ('lizard_gray.jpeg', 'lizard_gray_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
-        ('mountain_gray.jpeg', 'mountain_gray_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
-        ('nuclear_gray.jpeg', 'nuclear_gray_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
-        ('lizard_gray.jpeg', 'lizard_gray_fix.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
-        ('mountain_gray.jpeg', 'mountain_gray_fix.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
-        ('nuclear_gray.jpeg', 'nuclear_gray_fix.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal1.jpg', 'seal1_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal2.jpg', 'seal2_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal3.jpg', 'seal3_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal4.jpg', 'seal4_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal5.jpg', 'seal5_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal6.jpg', 'seal6_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal7.jpg', 'seal7_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal8.jpg', 'seal8_original.costmap', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal1.jpg', 'seal1_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal2.jpg', 'seal2_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal3.jpg', 'seal3_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal4.jpg', 'seal4_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal5.jpg', 'seal5_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal6.jpg', 'seal6_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal7.jpg', 'seal7_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal8.jpg', 'seal8_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
     ])
     def test_costmap_cpp_python_equivalence(self, cover_filename, costmap_cpp_filename, implementation):
         self._logger.info(f'TestJUNIWARD.test_costmap_cpp_python_equivalence({cover_filename=}, {costmap_cpp_filename=}, {implementation=})')
 
-        cover_filepath = defs.COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
 
         cover_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
@@ -74,17 +84,27 @@ class TestJUNIWARD(unittest.TestCase):
         np.testing.assert_allclose(rho_p1_2d, costmap_cpp[:, :, 2], rtol=1e-05, atol=1e-08)
 
     @parameterized.expand([
-        ('lizard_gray.jpeg', 'lizard_gray_costmap_original.mat', cl.JUNIWARD_ORIGINAL),
-        ('mountain_gray.jpeg', 'mountain_gray_costmap_original.mat', cl.JUNIWARD_ORIGINAL),
-        ('nuclear_gray.jpeg', 'nuclear_gray_costmap_original.mat', cl.JUNIWARD_ORIGINAL),
-        ('lizard_gray.jpeg', 'lizard_gray_costmap_fix.mat', cl.JUNIWARD_FIX_OFF_BY_ONE),
-        ('mountain_gray.jpeg', 'mountain_gray_costmap_fix.mat', cl.JUNIWARD_FIX_OFF_BY_ONE),
-        ('nuclear_gray.jpeg', 'nuclear_gray_costmap_fix.mat', cl.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal1.jpg', 'seal1_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal2.jpg', 'seal2_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal3.jpg', 'seal3_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal4.jpg', 'seal4_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal5.jpg', 'seal5_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal6.jpg', 'seal6_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal7.jpg', 'seal7_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal8.jpg', 'seal8_costmap_original.mat', cl.juniward.Implementation.JUNIWARD_ORIGINAL),
+        ('seal1.jpg', 'seal1_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal2.jpg', 'seal2_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal3.jpg', 'seal3_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal4.jpg', 'seal4_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal5.jpg', 'seal5_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal6.jpg', 'seal6_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal7.jpg', 'seal7_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
+        ('seal8.jpg', 'seal8_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
     ])
     def test_costmap_matlab_python_equivalence(self, cover_filename, costmap_matlab_filename, implementation):
         self._logger.info(f'TestJUNIWARD.test_costmap_matlab_python_equivalence({cover_filename=}, {costmap_matlab_filename=}, {implementation=})')
 
-        cover_filepath = defs.COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_matlab_filepath = STEGO_DIR / 'costmap-matlab' / costmap_matlab_filename
 
         img_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
@@ -105,14 +125,19 @@ class TestJUNIWARD(unittest.TestCase):
         np.testing.assert_allclose(costmap, costmap_matlab)
 
     @parameterized.expand([
-        ('lizard_gray.jpeg', 'lizard_gray_matlab_alpha_0.4_seed_6020.jpeg', 0.4, 6020),
-        ('mountain_gray.jpeg', 'mountain_gray_matlab_alpha_0.4_seed_6020.jpeg', 0.4, 6020),
-        ('nuclear_gray.jpeg', 'nuclear_gray_matlab_alpha_0.4_seed_6020.jpeg', 0.4, 6020),
+        ('seal1.jpg', 'seal1_alpha_0.4_seed_1.jpg', 0.4, 1),
+        ('seal2.jpg', 'seal2_alpha_0.4_seed_2.jpg', 0.4, 2),
+        ('seal3.jpg', 'seal3_alpha_0.4_seed_3.jpg', 0.4, 3),
+        ('seal4.jpg', 'seal4_alpha_0.4_seed_4.jpg', 0.4, 4),
+        ('seal5.jpg', 'seal5_alpha_0.4_seed_5.jpg', 0.4, 5),
+        ('seal6.jpg', 'seal6_alpha_0.4_seed_6.jpg', 0.4, 6),
+        ('seal7.jpg', 'seal7_alpha_0.4_seed_7.jpg', 0.4, 7),
+        ('seal8.jpg', 'seal8_alpha_0.4_seed_8.jpg', 0.4, 8),
     ])
     def test_simulation_python_matlab_equivalence(self, cover_filename, stego_filename, embedding_rate, seed):
         self._logger.info(f'TestJUNIWARD.test_simulation_python_matlab_equivalence('f'{cover_filename=}, {embedding_rate=}, {seed=})')
 
-        cover_filepath = defs.COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         stego_matlab_filepath = STEGO_DIR / 'stego-matlab' / stego_filename
 
         # Read grayscale image
@@ -142,14 +167,14 @@ class TestJUNIWARD(unittest.TestCase):
         np.testing.assert_allclose(stego_dct_coeffs, stego_matlab_dct_coeffs)
 
     @parameterized.expand([
-        ('lizard_gray.jpeg', 6020),
-        ('mountain_gray.jpeg', 6020),
-        ('nuclear_gray.jpeg', 6020),
+        ('seal1.jpg', 6020),
+        ('seal2.jpg', 6020),
+        ('seal3.jpg', 6020),
     ])
     def test_costmap_vs_distortion_naive(self, cover_filename, seed):
         self._logger.info(f'TestJUNIWARD.test_costmap_vs_distortion_naive('f'{cover_filename=}, {seed=})')
         # Load the cover image in spatial and DCT domain
-        cover_filepath = defs.COVER_DIR / cover_filename
+        cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         img_dct = jpeglib.read_dct(cover_filepath)
         cover_dct_coeffs = img_dct.Y
         num_vertical_blocks, num_horizontal_blocks = cover_dct_coeffs.shape[:2]
@@ -186,17 +211,27 @@ class TestJUNIWARD(unittest.TestCase):
             np.testing.assert_allclose(costmap[block_y, block_x, within_block_y, within_block_x], distortion)
 
     @parameterized.expand([
-        ('lizard_gray_costmap_original.mat', 'lizard_gray_original.costmap'),
-        ('mountain_gray_costmap_original.mat', 'mountain_gray_original.costmap'),
-        ('nuclear_gray_costmap_original.mat', 'nuclear_gray_original.costmap'),
-        ('lizard_gray_costmap_fix.mat', 'lizard_gray_fix.costmap'),
-        ('mountain_gray_costmap_fix.mat', 'mountain_gray_fix.costmap'),
-        ('nuclear_gray_costmap_fix.mat', 'nuclear_gray_fix.costmap'),
+        ('costmap-matlab/seal1_costmap_original.mat', 'costmap-cpp/seal1_original.costmap'),
+        ('costmap-matlab/seal2_costmap_original.mat', 'costmap-cpp/seal2_original.costmap'),
+        ('costmap-matlab/seal3_costmap_original.mat', 'costmap-cpp/seal3_original.costmap'),
+        ('costmap-matlab/seal4_costmap_original.mat', 'costmap-cpp/seal4_original.costmap'),
+        ('costmap-matlab/seal5_costmap_original.mat', 'costmap-cpp/seal5_original.costmap'),
+        ('costmap-matlab/seal6_costmap_original.mat', 'costmap-cpp/seal6_original.costmap'),
+        ('costmap-matlab/seal7_costmap_original.mat', 'costmap-cpp/seal7_original.costmap'),
+        ('costmap-matlab/seal8_costmap_original.mat', 'costmap-cpp/seal8_original.costmap'),
+        ('costmap-matlab/seal1_costmap_fix_off_by_one.mat', 'costmap-cpp/seal1_fix_off_by_one.costmap'),
+        ('costmap-matlab/seal2_costmap_fix_off_by_one.mat', 'costmap-cpp/seal2_fix_off_by_one.costmap'),
+        ('costmap-matlab/seal3_costmap_fix_off_by_one.mat', 'costmap-cpp/seal3_fix_off_by_one.costmap'),
+        ('costmap-matlab/seal4_costmap_fix_off_by_one.mat', 'costmap-cpp/seal4_fix_off_by_one.costmap'),
+        ('costmap-matlab/seal5_costmap_fix_off_by_one.mat', 'costmap-cpp/seal5_fix_off_by_one.costmap'),
+        ('costmap-matlab/seal6_costmap_fix_off_by_one.mat', 'costmap-cpp/seal6_fix_off_by_one.costmap'),
+        ('costmap-matlab/seal7_costmap_fix_off_by_one.mat', 'costmap-cpp/seal7_fix_off_by_one.costmap'),
+        ('costmap-matlab/seal8_costmap_fix_off_by_one.mat', 'costmap-cpp/seal8_fix_off_by_one.costmap'),
     ])
-    def test_compare_matlab_cpp_costmap(self, costmap_matlab_filename, costmap_cpp_filename):
-        self._logger.info(f'TestJUNIWARD.test_compare_matlab_cpp_costmap('f'{costmap_matlab_filename=}, {costmap_cpp_filename=})')
-        costmap_matlab_filepath = STEGO_DIR / 'costmap-matlab' / costmap_matlab_filename
-        costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
+    def test_compare_matlab_cpp_costmap(self, costmap_matlab_filepath, costmap_cpp_filepath):
+        self._logger.info(f'TestJUNIWARD.test_compare_matlab_cpp_costmap('f'{costmap_matlab_filepath=}, {costmap_cpp_filepath=})')
+        costmap_matlab_filepath = STEGO_DIR / costmap_matlab_filepath
+        costmap_cpp_filepath = STEGO_DIR / costmap_cpp_filepath
 
         costmap_matlab = loadmat(costmap_matlab_filepath)['rho']
         costmap_cpp = self.read_costmap(costmap_cpp_filepath, 512, 512)
