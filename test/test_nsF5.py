@@ -45,16 +45,16 @@ class TestnsF5(unittest.TestCase):
             self.assertTrue(np.allclose(img_a.Cr, img_b.Cr))
 
     @parameterized.expand([
-        ("seal1.jpg", "seal1_alpha_0.4_seed_1.jpg", 0.4, 1),
-        ("seal2.jpg", "seal2_alpha_0.4_seed_2.jpg", 0.4, 2),
-        ("seal3.jpg", "seal3_alpha_0.4_seed_3.jpg", 0.4, 3),
-        ("seal4.jpg", "seal4_alpha_0.4_seed_4.jpg", 0.4, 4),
-        ("seal5.jpg", "seal5_alpha_0.4_seed_5.jpg", 0.4, 5),
-        ("seal6.jpg", "seal6_alpha_0.4_seed_6.jpg", 0.4, 6),
-        ("seal7.jpg", "seal7_alpha_0.4_seed_7.jpg", 0.4, 7),
-        ("seal8.jpg", "seal8_alpha_0.4_seed_8.jpg", 0.4, 8),
+        ("seal1.jpg", 0.4, 1, "seal1_alpha_0.4_seed_1.jpg"),
+        ("seal2.jpg", 0.4, 2, "seal2_alpha_0.4_seed_2.jpg"),
+        ("seal3.jpg", 0.4, 3, "seal3_alpha_0.4_seed_3.jpg"),
+        ("seal4.jpg", 0.4, 4, "seal4_alpha_0.4_seed_4.jpg"),
+        ("seal5.jpg", 0.4, 5, "seal5_alpha_0.4_seed_5.jpg"),
+        ("seal6.jpg", 0.4, 6, "seal6_alpha_0.4_seed_6.jpg"),
+        ("seal7.jpg", 0.4, 7, "seal7_alpha_0.4_seed_7.jpg"),
+        ("seal8.jpg", 0.4, 8, "seal8_alpha_0.4_seed_8.jpg"),
     ])
-    def test_matlab_equivalence(self, cover_filepath, matlab_stego_filepath, embedding_rate, seed):
+    def test_matlab_equivalence(self, cover_filepath, embedding_rate, seed, matlab_stego_filepath):
         with tempfile.NamedTemporaryFile(suffix=".jpg") as f:
             cover_img = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / cover_filepath)
 

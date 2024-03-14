@@ -3,16 +3,15 @@
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
-
 import conseal as cl
 import jpeglib
 import logging
 import numpy as np
 from parameterized import parameterized
 import unittest
-
 from . import defs
-# from .defs import ASSETS_DIR, COVER_DIR
+
+
 STEGO_DIR = defs.ASSETS_DIR / 'uerd'
 
 
@@ -21,18 +20,23 @@ class TestUERD(unittest.TestCase):
     _logger = logging.getLogger(__name__)
 
     @parameterized.expand([
-        ("lizard_gray.jpeg", "lizard_gray_matlab_alpha_0.4_seed_6789.jpg", 0.4, 6789),
-        ("mountain_gray.jpeg", "mountain_gray_matlab_alpha_0.2_seed_6020.jpg", 0.2, 6020),
-        ("nuclear_gray.jpeg", "nuclear_gray_matlab_alpha_0.1_seed_91058.jpg", 0.1, 91058),
+        ("seal1.jpg", 0.4, 1, "seal1_alpha_0.4_seed_1.jpg"),
+        ("seal2.jpg", 0.4, 2, "seal2_alpha_0.4_seed_2.jpg"),
+        ("seal3.jpg", 0.4, 3, "seal3_alpha_0.4_seed_3.jpg"),
+        ("seal4.jpg", 0.4, 4, "seal4_alpha_0.4_seed_4.jpg"),
+        ("seal5.jpg", 0.4, 5, "seal5_alpha_0.4_seed_5.jpg"),
+        ("seal6.jpg", 0.4, 6, "seal6_alpha_0.4_seed_6.jpg"),
+        ("seal7.jpg", 0.4, 7, "seal7_alpha_0.4_seed_7.jpg"),
+        ("seal8.jpg", 0.4, 8, "seal8_alpha_0.4_seed_8.jpg"),
     ])
-    def test_matlab_equivalence(self, cover_filepath, stego_filepath, embedding_rate, seed):
+    def test_matlab_equivalence(self, cover_filepath, embedding_rate, seed, stego_filepath):
         self._logger.info(
             f'TestUERD.test_matlab_equivalence('
             f'{cover_filepath=}, {stego_filepath=}, {embedding_rate=}, {seed=})'
         )
 
         # Read cover image
-        cover_im = jpeglib.read_dct(defs.COVER_DIR / cover_filepath)
+        cover_im = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / cover_filepath)
         cover_dct_coeffs = cover_im.Y
 
         # cl.uerd.simulate_single_channel differs from the Matlab implementation, because it uses another random number generator and the random numbers are arranged differently.
@@ -78,7 +82,7 @@ class TestUERD(unittest.TestCase):
         self._logger.info(f'TestUERD.test_simulate_uerd_grayscale({alpha=})')
 
         # Load cover
-        jpeg_c = jpeglib.read_dct(defs.COVER_DIR / 'lizard_gray.jpeg')
+        jpeg_c = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / 'seal6.jpg')
 
         # Initialize stego
         jpeg_s = jpeg_c.copy()
