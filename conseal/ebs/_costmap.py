@@ -151,6 +151,11 @@ def compute_cost_adjusted(
     else:
         raise NotImplementedError(f'unknown implementation {implementation}')
 
+    # # Do not embed +-1 if the DCT coefficient has extreme value
+    # rho[cover_dct_coeffs >= 1023] = wet_cost
+    # rho[cover_dct_coeffs <= -1023] = wet_cost
+    # return rho
+
     # Do not embed +1 if the DCT coefficient has max value
     rho_p1 = np.copy(rho)
     rho_p1[cover_dct_coeffs >= 1023] = wet_cost

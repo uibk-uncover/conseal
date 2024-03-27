@@ -17,7 +17,8 @@ def simulate_single_channel(
     embedding_rate: float,
     wet_cost: float = 10**13,
     implementation: Implementation = Implementation.EBS_ORIGINAL,
-    generator: str = None,
+    generator: str = 'MT19937',
+    order: str = 'C',
     seed: int = None,
 ) -> np.ndarray:
     """Simulates EBS embedding at an embedding rate into single-channel cover,
@@ -78,14 +79,18 @@ def simulate_single_channel(
     )
 
     # STC simulation
+    rho_p1 = tools.dct.jpeglib_to_jpegio(rho_p1)
+    rho_m1 = tools.dct.jpeglib_to_jpegio(rho_m1)
     stego_noise_dct = simulate.ternary(
         rho_p1=rho_p1,
         rho_m1=rho_m1,
         alpha=embedding_rate,
         n=num_DCT_coeffs,
         generator=generator,
+        order=order,
         seed=seed,
     )
+    stego_noise_dct = tools.dct.jpegio_to_jpeglib(stego_noise_dct)
 
     # stego = cover + stego noise
     stego_dct_coeffs = cover_dct_coeffs + stego_noise_dct
