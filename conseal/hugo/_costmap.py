@@ -68,6 +68,7 @@ def compute_cost(
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
+
     >>> # TODO
     """
 
@@ -140,6 +141,7 @@ def compute_cost_adjusted(
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
+
     >>> # TODO
     """
     # cover to double
