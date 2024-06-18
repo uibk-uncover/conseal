@@ -26,6 +26,7 @@ def compute_cost(
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
+
     >>> # TODO
     """
     # high-pass filter
@@ -72,6 +73,7 @@ def compute_cost_adjusted(
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
+
     >>> # TODO
     """
     # process input
