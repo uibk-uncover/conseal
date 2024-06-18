@@ -5,8 +5,8 @@ project = 'conseal'
 copyright = '2023, Martin Benes & Benedikt Lorch, University of Innsbruck'
 author = 'Martin Benes, Benedikt Lorch'
 
-release = '2023.12'
-version = '2023.12.a0'
+release = '2024.06'
+version = '2023.06'
 
 # -- General configuration
 
