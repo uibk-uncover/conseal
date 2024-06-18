@@ -23,7 +23,7 @@ def compute_cost(
     :param cover_spatial: uncompressed (pixel) cover image
         of shape [height, width]
     :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return:
+    :return: cost of the same shape as cover
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
@@ -70,7 +70,7 @@ def compute_cost_adjusted(
     :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
-    :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :return: 2-tuple (rho_p1, rho_m1), each of which is of the same shape as cover
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:

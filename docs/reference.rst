@@ -21,7 +21,7 @@ Currently, there are seven steganography simulators implemented: EBS, LSB, HUGO,
 
 
 Simulators of Spatial Steganography
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The spatial steganography operates on pixels.
 
@@ -31,7 +31,7 @@ HILL simulator
 .. autofunction:: conseal.hill.simulate_single_channel
 
 HUGO simulator
-"""""""""""""
+""""""""""""""
 
 .. autofunction:: conseal.hugo.simulate_single_channel
 
@@ -53,7 +53,7 @@ To learn on how to acquire them, see the `glossary <https://conseal.readthedocs.
 
 
 EBS simulator
-""""""""""""""
+"""""""""""""
 
 .. autofunction:: conseal.ebs.simulate_single_channel
 
@@ -94,12 +94,12 @@ EBS adjusted cost
 .. autofunction:: conseal.ebs.compute_cost_adjusted
 
 HILL adjusted cost
-"""""""""""""""""""
+""""""""""""""""""
 
 .. autofunction:: conseal.hill.compute_cost_adjusted
 
 HUGO adjusted cost
-"""""""""""""""""""
+""""""""""""""""""
 
 .. autofunction:: conseal.hugo.compute_cost_adjusted
 

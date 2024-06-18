@@ -1,6 +1,8 @@
 """
 Implementation of HILL steganographic embedding as described in:
-TODO
+
+Author: Martin Benes, Benedikt Lorch
+Affiliation: University of Innsbruck
 """
 
 import numpy as np
