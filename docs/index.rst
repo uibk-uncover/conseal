@@ -34,8 +34,8 @@ Simulating steganography has never been easier!
 >>>
 >>> # simulate spatial steganography
 >>> import conseal as cl
->>> stego_spatial = cl.lsb.simulate(
-...   cover=cover_spatial,
+>>> stego_spatial = cl.hill.simulate_single_channel(
+...   cover_spatial=cover_spatial,
 ...   embedding_rate=0.4,
 ...   seed=12345)
 ...
@@ -51,9 +51,9 @@ Simulating steganography has never been easier!
    * - Domain
      - Algorithms
    * - DCT
-     - J-UNIWARD, UERD, EBS, nsF5, LSB
+     - EBS, J-UNIWARD, LSB, nsF5, UERD
    * - Spatial
-     - LSB, HUGO
+     - HILL, HUGO, LSB
 
 Contents
 --------

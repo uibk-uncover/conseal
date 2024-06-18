@@ -17,18 +17,23 @@ High-level API
 On high-level API, the embedding is a black-box.
 You pass in the cover image and obtain the stego image.
 
-Currently, there are six steganography simulators implemented: LSB, HUGO, J-UNIWARD, UERD, nsF5 and EBS.
+Currently, there are seven steganography simulators implemented: EBS, LSB, HUGO, HILL, J-UNIWARD, nsF5 and UERD.
 
 
 Simulators of Spatial Steganography
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*to be written
+The spatial steganography operates on pixels.
+
+HILL simulator
+"""""""""""""""
+
+.. autofunction:: conseal.hill.simulate_single_channel
 
 HUGO simulator
 """""""""""""
 
-.. autofunction:: conseal.hug.simulate_single_channel
+.. autofunction:: conseal.hugo.simulate_single_channel
 
 
 LSB simulator
@@ -47,6 +52,14 @@ The JPEG steganography operates on DCT coefficients.
 To learn on how to acquire them, see the `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-and-dct>`__.
 
 
+EBS simulator
+""""""""""""""
+
+.. autofunction:: conseal.ebs.simulate_single_channel
+
+.. autoclass:: conseal.ebs.Implementation
+   :members: EBS_ORIGINAL, EBS_FIX_WET
+
 J-UNIWARD simulator
 """""""""""""""""""
 
@@ -55,23 +68,15 @@ J-UNIWARD simulator
 .. autoclass:: conseal.juniward.Implementation
    :members: JUNIWARD_ORIGINAL, JUNIWARD_FIX_OFF_BY_ONE
 
-UERD simulator
-""""""""""""""
-
-.. autofunction:: conseal.uerd.simulate_single_channel
-
 nsF5 simulator
 """"""""""""""
 
 .. autofunction:: conseal.nsF5.simulate_single_channel
 
-EBS simulator
+UERD simulator
 """"""""""""""
 
-.. autofunction:: conseal.ebs.simulate_single_channel
-
-.. autoclass:: conseal.ebs.Implementation
-   :members: EBS_ORIGINAL, EBS_FIX_WET
+.. autofunction:: conseal.uerd.simulate_single_channel
 
 
 Mid-level API
@@ -83,10 +88,15 @@ Adjusted cost
 ^^^^^^^^^^^^^
 
 
-LSB adjusted cost
+EBS adjusted cost
 """""""""""""""""
 
-.. autofunction:: conseal.lsb.compute_cost_adjusted
+.. autofunction:: conseal.ebs.compute_cost_adjusted
+
+HILL adjusted cost
+"""""""""""""""""""
+
+.. autofunction:: conseal.hill.compute_cost_adjusted
 
 HUGO adjusted cost
 """""""""""""""""""
@@ -98,15 +108,16 @@ J-UNIWARD adjusted cost
 
 .. autofunction:: conseal.juniward.compute_cost_adjusted
 
+LSB adjusted cost
+"""""""""""""""""
+
+.. autofunction:: conseal.lsb.compute_cost_adjusted
+
 UERD adjusted cost
 """"""""""""""""""
 
 .. autofunction:: conseal.uerd.compute_cost_adjusted
 
-EBS adjusted cost
-"""""""""""""""""
-
-.. autofunction:: conseal.ebs.compute_cost_adjusted
 
 
 Mid-level Simulator API
@@ -133,32 +144,37 @@ the simulator which takes the probabilities.
 Raw cost
 ^^^^^^^^
 
-J-UNIWARD cost
-""""""""""""""
-
-.. autofunction:: conseal.juniward._costmap.compute_cost
-
-
-UERD cost
-"""""""""
-
-.. autofunction:: conseal.uerd._costmap.compute_cost
-
 
 EBS cost
 """"""""
 
 .. autofunction:: conseal.ebs._costmap.compute_cost
 
-LSB cost
-""""""""
+HILL cost
+"""""""""
 
-.. autofunction:: conseal.lsb._costmap.compute_cost
+.. autofunction:: conseal.hill._costmap.compute_cost
 
 HUGO cost
 """""""""
 
 .. autofunction:: conseal.hugo._costmap.compute_cost
+
+J-UNIWARD cost
+""""""""""""""
+
+.. autofunction:: conseal.juniward._costmap.compute_cost
+
+LSB cost
+""""""""
+
+.. autofunction:: conseal.lsb._costmap.compute_cost
+
+UERD cost
+"""""""""
+
+.. autofunction:: conseal.uerd._costmap.compute_cost
+
 
 Probability
 ^^^^^^^^^^^

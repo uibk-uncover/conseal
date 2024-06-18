@@ -128,6 +128,38 @@ im_dct.Y = cl.ebs.simulate_single_channel(
 im_dct.write_dct("stego.jpeg")
 ```
 
+- HUGO
+
+```python
+# load cover
+cover_spatial = np.array(Image.open("cover.png"))
+
+# embed HUGO 0.4 bpnzAC
+stego_spatial = cl.hugo.simulate_single_channel(
+    cover_spatial=cover_spatial,
+    embedding_rate=0.4,
+    seed=12345)
+
+# save result as stego image
+Image.fromarray(stego_spatial).save("stego.png")
+```
+
+- HILL
+
+```python
+# load cover
+cover_spatial = np.array(Image.open("cover.png"))
+
+# embed HUGO 0.4 bpnzAC
+stego_spatial = cl.hill.simulate_single_channel(
+    cover_spatial=cover_spatial,
+    embedding_rate=0.4,
+    seed=12345)
+
+# save result as stego image
+Image.fromarray(stego_spatial).save("stego.png")
+```
+
 ## Acknowledgements and Disclaimer
 
 Developed by [Martin Benes](https://github.com/martinbenes1996) and [Benedikt Lorch](https://github.com/btlorch/), University of Innsbruck, 2023.
