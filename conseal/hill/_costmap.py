@@ -20,8 +20,7 @@ def compute_cost(
 ) -> np.ndarray:
     """Computes HILL cost.
 
-    :param cover_spatial: uncompressed (pixel) cover image
-        of shape [height, width]
+    :param cover_spatial: uncompressed (pixel) cover image of shape [height, width]
     :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: cost of the same shape as cover
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -65,8 +64,7 @@ def compute_cost_adjusted(
 ) -> typing.Tuple[np.ndarray]:
     """Computes HILL cost with wet-cost adjustments.
 
-    :param cover_spatial: uncompressed (pixel) cover image
-        of shape [height, width]
+    :param cover_spatial: uncompressed (pixel) cover image of shape [height, width]
     :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
