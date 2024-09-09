@@ -1,10 +1,7 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 [project]
 name = "conseal"
-version = "2024.06"
+version = "2024.09"
 dependencies = [
   "numpy",
   "scipy",
