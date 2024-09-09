@@ -51,7 +51,7 @@ dev = [
 deploy = []
 
 [tool.setuptools.packages.find]
-where = ["."]
+include = ["conseal*"]
 exclude = ["wheelhouse*"]
 namespaces = false
 
