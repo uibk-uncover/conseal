@@ -50,6 +50,11 @@ dev = [
 ]
 deploy = []
 
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["wheelhouse*"]
+namespaces = false
+
 [tool.coverage.report]
 fail_under = 80
 
