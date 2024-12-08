@@ -179,7 +179,7 @@ Hamming codes
 Wet-paper codes
 """""""""""""""
 
-.. autofunction:: conseal.coding.hamming.generate_H
+.. autofunction:: conseal.coding.wpc.generate_H
 
 
 Other utilities
