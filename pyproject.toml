@@ -1,11 +1,13 @@
 
 [project]
 name = "conseal"
-version = "2024.09"
+version = "2024.12"
 dependencies = [
-  "numpy",
-  "scipy",
-  "numba"
+    "numpy < 2.0.0",
+    "jpeglib >= 1.0.0",
+    "scipy",
+    "numba",
+    "setuptools"
 ]
 requires-python = ">= 3.8"
 authors = [
@@ -45,7 +47,6 @@ Source = "https://github.com/uibk-uncover/conseal/"
 dev = [
     "flake8",
     "parameterized",
-    "jpeglib",
     "pillow"
 ]
 deploy = []

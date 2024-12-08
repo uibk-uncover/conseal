@@ -18,7 +18,8 @@ Permission to use, copy, modify, and distribute this software for educational, r
 
 import enum
 import numpy as np
-from scipy.signal import correlate2d
+import scipy.signal
+# from scipy.signal import correlate2d
 import typing
 
 from .. import tools
@@ -37,65 +38,47 @@ class Implementation(enum.Enum):
 
 
 def compute_cost(
-    cover_spatial: np.ndarray,
-    quantization_table: np.ndarray,
+    x0: np.ndarray,
+    qt: np.ndarray,
+    *,
+    sigma: float = 2**-6,
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
 ) -> np.ndarray:
-    """Compute the UNIWARD distortion function for a given JPEG image.
+    """Compute the J-UNIWARD cost.
 
-    :param cover_spatial: grayscale image in spatial domain
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: quantization table of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param dtype: data type to use for distortion computation,
-        float64 by default
+    :param x0: decompressed (pixel) image,
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
+        of shape [8, 8]
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param sigma: parameter controlling the content sensitivity, avoids division by zero but also controls the sensitivity to content.
+    :type sigma: float
+    :param dtype: data type to use for distortion computation, float64 by default
     :type dtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`__
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
-    :return: cost map for embedding into the DCT coefficients,
+    :return: embedding cost,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> rho = cl.uerd._costmap.compute_cost(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0])  # QT
-    """
-    assert len(cover_spatial.shape) == 2, "Expected grayscale image"
-    height, width = cover_spatial.shape
+    >>> im0 = jpeglib.read_spatial('cover.jpeg')
+    >>> jpeg0 = jpeglib.read_dct('cover.jpeg')
+    >>> rho = cl.juniward._costmap.compute_cost(
+    ...   x0=im0.spatial,  # decompressed spatial
+    ...   qt=jpeg0.qt[0])  # QT
+    """  # noqa: E501
+    assert len(x0.shape) == 2, "Expected grayscale image"
+    height, width = x0.shape
     assert height % 8 == 0, "Expected height to be a multiple of 8"
     assert width % 8 == 0, "Expected width to be a multiple of 8"
 
-    # Sigma avoids division by zero but also controls the content sensitivity.
-    # Very small sigmas make the embedding very sensitive to the image content.
-    # Large sigmas smooth out the embedding change probabilities.
-    sigma = 2 ** (-6)
-
     # Get 2D wavelet filters - Daubechies 8
-    # 1D high-pass decomposition filter
-    # In the paper, the high-pass filter is denoted as g.
-    high_pass_decomposition_filter = np.array([
-        -.0544158422, .3128715909, -.6756307363, .5853546837,
-        .0158291053, -.2840155430, -.0004724846, .1287474266,
-        .0173693010, -.0440882539, -.0139810279, .0087460940,
-        .0048703530, -.0003917404, -.0006754494, -.0001174768])
+    (high_pass_decomposition_filter, low_pass_decomposition_filter), filters = tools.spatial.daubechies8()
     wavelet_filter_size = len(high_pass_decomposition_filter)
-
-    # 1D low-pass decomposition filter
-    # In the paper, the low-pass filter is denotes as h.
-    low_pass_decomposition_filter = np.power(-1, np.arange(len(high_pass_decomposition_filter))) * np.flip(high_pass_decomposition_filter)
-
-    # Stack filter kernels to shape [3, 16, 16]
-    # K^1 = h * g.T
-    # K^2 = g * h.T
-    # K^3 = g * g.T
-    filters = np.stack([
-        low_pass_decomposition_filter[:, None] * high_pass_decomposition_filter[None, :],
-        high_pass_decomposition_filter[:, None] * low_pass_decomposition_filter[None, :],
-        high_pass_decomposition_filter[:, None] * high_pass_decomposition_filter[None, :],
-    ], axis=0)
     num_filters = len(filters)
 
     # Pre-compute impact in spatial domain when a JPEG coefficient is changed by 1
@@ -103,9 +86,9 @@ def compute_cost(
     for j in range(8):
         for i in range(8):
             # Simulate a single pixel change in the DCT domain
-            test_coeffs = np.zeros((8, 8), dtype=dtype)
-            test_coeffs[j, i] = 1
-            spatial_impact[j, i] = tools.dct.idct2(test_coeffs) * quantization_table[j, i]
+            y = np.zeros((8, 8), dtype=dtype)
+            y[j, i] = 1
+            spatial_impact[j, i] = tools.dct.idct2(y) * qt[j, i]
 
     # Pre-compute impact on wavelet coefficients when a JPEG coefficients is changed by 1
     # Changing one pixel will affect s x s wavelet coefficients, where s is the size of the 2D wavelet support.
@@ -117,7 +100,10 @@ def compute_cost(
         for j in range(8):
             for i in range(8):
                 # Output length of mode='full': N + M - 1
-                wavelet_impact[filter_idx, j, i, :, :] = correlate2d(spatial_impact[j, i], filters[filter_idx], mode='full', boundary='fill', fillvalue=0)
+                wavelet_impact[filter_idx, j, i, :, :] = scipy.signal.correlate2d(
+                    spatial_impact[j, i],
+                    filters[filter_idx],
+                    mode='full', boundary='fill', fillvalue=0)
 
     # Take absolute value, needed for later
     wavelet_impact = np.abs(wavelet_impact)
@@ -130,14 +116,18 @@ def compute_cost(
     # Mirror-pad the spatial image. Extend image by the length of the filter in all dimensions.
     # Example: Image [512, 512] -> [16 + 512 + 16, 16 + 512 + 16] = [544, 544]
     # "symmetric" means reflect, i.e. (d c b a | a b c d | d c b a)
-    cover_spatial_padded = np.pad(cover_spatial, (pad_size, pad_size), mode='symmetric')
+    x0_padded = np.pad(x0, (pad_size, pad_size), mode='symmetric')
 
     # Compute the wavelet coefficients of the cover image
     reference_covers = []
     for filter_idx in range(num_filters):
         # Compute wavelet coefficients in the (filter_idx)-th subband
         # The resulting shape is [544, 544]
-        rc = correlate2d(cover_spatial_padded, filters[filter_idx], mode='same', boundary='fill', fillvalue=0)
+        rc = scipy.signal.correlate2d(
+            x0_padded,
+            filters[filter_idx],
+            mode='same', boundary='fill', fillvalue=0,
+        )
 
         # Crop as needed
         if implementation == Implementation.JUNIWARD_ORIGINAL:
@@ -190,131 +180,148 @@ def compute_cost(
 
 
 def compute_cost_adjusted(
-    cover_spatial: np.ndarray,
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
+    x0: np.ndarray,
+    y0: np.ndarray,
+    qt: np.ndarray,
+    *,
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
     wet_cost: float = 10**13,
+    avoid_saturated: bool = False,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
-    """Computes the costmap and prepares the costmap for ternary embedding.
+    """Compute the adjusted J-UNIWARD cost for a ternary embedding.
 
-    :param cover_spatial: decompressed (pixel) image
+    :param x0: decompressed (pixel) image,
         of shape [height, width]
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param cover_dct_coeffs: quantized cover DCT coefficients
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param y0: quantized cover DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: quantization table
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
         of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param dtype: data type to use for distortion computation,
-        float64 by default
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param dtype: data type to use for distortion computation, float64 by default
     :type dtype: np.dtype
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
     :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
-    :return: probability maps for +1 and -1 changes,
-        in DCT domain of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: tuple
+    :param avoid_saturated: hard-sets blocks with saturated pixels to wet
+    :type avoid_saturated: bool
+    :return: embedding costs of +1 and -1 changes,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0],  # QT
-    ...   cover_spatial=im_spatial.spatial[..., 0])  # pixels
+    >>> rho_p1, rho_m1 = cl.juniward._costmap.compute_cost_adjusted(
+    ...     y0=jpeg0.Y,      # DCT
+    ...     qt=jpeg0.qt[0],  # QT
+    ...     x0=im0.spatial)  # decompressed spatial
     >>> im_dct.Y += cl.simulate.ternary(
-    ...   rho_p1=rho_p1,  # distortion of +1
-    ...   rho_m1=rho_m1,  # distortion of -1
-    ...   alpha=0.4,  # alpha
-    ...   n=im_dct.Y.size,  # cover size
-    ...   seed=12345)  # seed
-    """
+    ...     rhos=(rho_p1, rho_m1),  # distortion of +1 and -1 change
+    ...     alpha=0.4,              # alpha
+    ...     n=im_dct.Y.size,        # cover size
+    ...     seed=12345)             # seed
+    """  # noqa: E501
     # Count number of embeddable DCT coefficients
-    num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)
-
-    if num_non_zero_AC_coeffs == 0:
-        raise ValueError('Expected non-zero AC coefficients')
+    assert tools.dct.nzAC(y0) > 0, 'Expected non-zero AC coefficients'
+    # num_non_zero_AC_coeffs = tools.dct.nzAC(y0)
+    # if num_non_zero_AC_coeffs == 0:
+    #     raise ValueError('Expected non-zero AC coefficients')
 
     # Compute costmap
     rho = compute_cost(
-        cover_spatial=cover_spatial,
-        quantization_table=quantization_table,
+        x0=x0,
+        qt=qt,
         dtype=dtype,
         implementation=implementation,
     )
 
     # Assign wet cost
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
+    if avoid_saturated:
+        rho[(tools.jpegio_to_jpeglib(x0) == 0).any(axis=(2, 3))] = wet_cost
+        rho[(tools.jpegio_to_jpeglib(x0) == 255).any(axis=(2, 3))] = wet_cost
 
     # Do not embed +1 if the DCT coefficient has max value
     rho_p1 = np.copy(rho)
-    rho_p1[cover_dct_coeffs >= 1023] = wet_cost
+    rho_p1[y0 >= 1023] = wet_cost
 
     # Do not embed -1 if the DCT coefficient has min value
     rho_m1 = np.copy(rho)
-    rho_m1[cover_dct_coeffs <= -1023] = wet_cost
+    rho_m1[y0 <= -1023] = wet_cost
 
     return rho_p1, rho_m1
 
 
-def evaluate_distortion(X, Y):
-    """
-    Evaluate the UNIWARD distortion function between two 2-D images X and Y.
+def evaluate_cost(
+    x0: np.ndarray,
+    x1: np.ndarray,
+    sigma: float = 2**-6,
+) -> float:
+    """Compute the J-UNIWARD cost between x0 and x1.
 
     The UNIWARD distortion function is the sum of relative changes of all wavelet coefficients with respect to the cover image.
 
     Note that both images are padded symmetrically with the cover image margins.
     This is necessary to match the Matlab implementation.
 
-    :param X: cover image of shape [height, width]
-    :param Y: stego image of shape [height, width]
+    :param x0: cover image of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param x1: stego image of shape [height, width]
+    :type x1: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: distortion as scalar value
+    :rtype: float
     """
-    sigma = 2 ** (-6)
+    # # Get 2D wavelet filters - Daubechies 8
+    # # 1D high-pass decomposition filter
+    # # In the paper, the high-pass filter is denoted as g.
+    # high_pass_decomposition_filter = np.array([
+    #     -0.0544158422, 0.3128715909, -0.6756307363, 0.5853546837,
+    #     0.0158291053, -0.2840155430, -0.0004724846, 0.1287474266,
+    #     0.0173693010, -0.0440882539, -0.0139810279, 0.0087460940,
+    #     0.0048703530, -0.0003917404, -0.0006754494, -0.0001174768,
+    # ])
 
-    # Get 2D wavelet filters - Daubechies 8
-    # 1D high-pass decomposition filter
-    # In the paper, the high-pass filter is denoted as g.
-    high_pass_decomposition_filter = np.array([
-        -0.0544158422, 0.3128715909, -0.6756307363, 0.5853546837,
-        0.0158291053, -0.2840155430, -0.0004724846, 0.1287474266,
-        0.0173693010, -0.0440882539, -0.0139810279, 0.0087460940,
-        0.0048703530, -0.0003917404, -0.0006754494, -0.0001174768,
-    ])
+    # # 1D low-pass decomposition filter
+    # # In the paper, the low-pass filter is denotes as h.
+    # low_pass_decomposition_filter = np.power(-1, np.arange(len(high_pass_decomposition_filter))) * np.flip(high_pass_decomposition_filter)
 
-    # 1D low-pass decomposition filter
-    # In the paper, the low-pass filter is denotes as h.
-    low_pass_decomposition_filter = np.power(-1, np.arange(len(high_pass_decomposition_filter))) * np.flip(high_pass_decomposition_filter)
+    # # Stack filter kernels to shape [3, 16, 16]
+    # # K^1 = h * g.T
+    # # K^2 = g * h.T
+    # # K^3 = g * g.T
+    # filters = np.stack([
+    #     low_pass_decomposition_filter[:, None] * high_pass_decomposition_filter[None, :],
+    #     high_pass_decomposition_filter[:, None] * low_pass_decomposition_filter[None, :],
+    #     high_pass_decomposition_filter[:, None] * high_pass_decomposition_filter[None, :],
+    # ], axis=0)
 
-    # Stack filter kernels to shape [3, 16, 16]
-    # K^1 = h * g.T
-    # K^2 = g * h.T
-    # K^3 = g * g.T
-    filters = np.stack([
-        low_pass_decomposition_filter[:, None] * high_pass_decomposition_filter[None, :],
-        high_pass_decomposition_filter[:, None] * low_pass_decomposition_filter[None, :],
-        high_pass_decomposition_filter[:, None] * high_pass_decomposition_filter[None, :],
-    ], axis=0)
+    (high_pass_decomposition_filter, low_pass_decomposition_filter), filters = tools.spatial.daubechies8()
     num_filters = len(filters)
 
     # Pad X and Y by 16 pixels in all directions
     pad_size = len(high_pass_decomposition_filter)
-    X_padded = np.pad(X, (pad_size, pad_size), mode='symmetric')
+    x0_padded = np.pad(x0, (pad_size, pad_size), mode='symmetric')
 
     # Pad Y with the same pixels as X.
     # Otherwise, changes between Y and X would be also be present the padded region.
-    Y_padded = np.pad(X, (pad_size, pad_size), mode='symmetric')
-    Y_padded[pad_size:-pad_size, pad_size:-pad_size] = Y
+    x1_padded = np.pad(x0, (pad_size, pad_size), mode='symmetric')
+    x1_padded[pad_size:-pad_size, pad_size:-pad_size] = x1
 
-    W_X = []
-    W_Y = []
+    w0 = []
+    w1 = []
     for filter_idx in range(num_filters):
         # Compute wavelet coefficients in the (filter_idx)-th subband
-        W_X_k = correlate2d(X_padded, filters[filter_idx], mode='same', boundary='fill', fillvalue=0)
-        W_Y_k = correlate2d(Y_padded, filters[filter_idx], mode='same', boundary='fill', fillvalue=0)
+        w0_k = scipy.signal.correlate2d(
+            x0_padded,
+            filters[filter_idx],
+            mode='same', boundary='fill', fillvalue=0)
+        w1_k = scipy.signal.correlate2d(
+            x1_padded,
+            filters[filter_idx],
+            mode='same', boundary='fill', fillvalue=0)
 
         # For completeness, this is identical to
         # assert np.allclose(
@@ -325,16 +332,16 @@ def evaluate_distortion(X, Y):
 
         # To comply with Eq. 3, we would have to crop the padding.
         # However, the padding needs to be retained to match the Matlab implementation.
-        W_X.append(W_X_k)
-        W_Y.append(W_Y_k)
+        w0.append(w0_k)
+        w1.append(w1_k)
 
     # Stack filtered images.
     # The resulting shape is [num_filters, 16 + height + 16 , 16 + width + 16].
-    W_X = np.stack(W_X, axis=0)
-    W_Y = np.stack(W_Y, axis=0)
+    w0 = np.stack(w0, axis=0)
+    w1 = np.stack(w1, axis=0)
 
     # Fraction in Eq. 3
-    per_pixel_distortion = np.abs(W_X - W_Y) / (np.abs(W_X) + sigma)
+    per_pixel_distortion = np.abs(w0 - w1) / (np.abs(w0) + sigma)
 
     # Eq. 3: Sum over filters, height, and width
     distortion = np.sum(per_pixel_distortion)

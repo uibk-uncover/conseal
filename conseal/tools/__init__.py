@@ -5,9 +5,10 @@ Affiliation: University of Innsbruck
 """
 
 # globals
-from .common import entropy, inv_entropy, _entropy, EPS
-from .dct import nzAC, AC
+from .common import entropy, inv_entropy, _entropy, EPS, matlab_round
+from .dct import nzAC, AC, jpegio_to_jpeglib, jpeglib_to_jpegio
 from .decompress import decompress_channel
+from .permute import blocks, iterate_ac, iterate, password_to_seed
 
 # modules
 from . import dct

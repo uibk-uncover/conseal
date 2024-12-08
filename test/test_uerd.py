@@ -36,83 +36,79 @@ class TestUERD(unittest.TestCase):
         )
 
         # Read cover image
-        cover_im = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / cover_filepath)
-        cover_dct_coeffs = cover_im.Y
+        im0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / cover_filepath)
+        y0 = im0.Y
 
         # cl.uerd.simulate_single_channel differs from the Matlab implementation, because it uses another random number generator and the random numbers are arranged differently.
         # To show equivalence to the Matlab implementation, we need to use the Marsenne Twister and arrange the random numbers in the same order, as shown below.
 
         # Simulate embedding
-        rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(cover_im.Y, cover_im.qt[0], wet_cost=10 ** 13)
+        rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(y0, im0.qt[0], wet_cost=10 ** 13)
 
         # Rearrange from [num_vertical_blocks, num_horizontal_blocks, 8, 8] to [num_vertical_blocks * 8, num_horizontal_blocks * 8]
         rho_p1_2d = cl.tools.dct.jpeglib_to_jpegio(rho_p1)
         rho_m1_2d = cl.tools.dct.jpeglib_to_jpegio(rho_m1)
-        cover_dct_coeffs_2d = cl.tools.dct.jpeglib_to_jpegio(cover_dct_coeffs)
+        y0_2d = cl.tools.dct.jpeglib_to_jpegio(y0)
 
         # Transform costmaps into embedding probability maps
-        n = cl.tools.dct.nzAC(cover_dct_coeffs)
-        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
-            rho_p1=rho_p1_2d,
-            rho_m1=rho_m1_2d,
+        n = cl.tools.dct.nzAC(y0)
+        ps, lbda = cl.simulate._ternary.probability(
+            rhos=(rho_p1_2d, rho_m1_2d),
             alpha=embedding_rate,
             n=n,
         )
 
         # Simulate embedding
-        delta_dct_coeffs_2d = cl.simulate._ternary.simulate(
-            p_p1=p_p1,
-            p_m1=p_m1,
+        delta_2d = cl.simulate._ternary.simulate(
+            ps=ps,
             generator='MT19937',
             seed=seed,
         )
 
         # Add embedding changes onto the cover DCT coefficients
-        stego_dct_coeffs_2d = cover_dct_coeffs_2d + delta_dct_coeffs_2d
-        stego_dct_coeffs = cl.tools.dct.jpegio_to_jpeglib(stego_dct_coeffs_2d)
+        y1_2d = y0_2d + delta_2d
+        y1 = cl.tools.dct.jpegio_to_jpeglib(y1_2d)
 
         # Read stego image created using the Matlab implementation
         matlab_stego_im = jpeglib.read_dct(STEGO_DIR / stego_filepath)
 
         # Compare Matlab stego to our stego DCT coefficients
-        np.testing.assert_array_equal(stego_dct_coeffs, matlab_stego_im.Y)
+        np.testing.assert_array_equal(y1, matlab_stego_im.Y)
 
     @parameterized.expand([[.05], [.1], [.2], [.4]])
     def test_simulate_uerd_grayscale(self, alpha: float):
         self._logger.info(f'TestUERD.test_simulate_uerd_grayscale({alpha=})')
 
         # Load cover
-        jpeg_c = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / 'seal6.jpg')
+        jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / 'seal6.jpg')
 
         # Initialize stego
-        jpeg_s = jpeg_c.copy()
+        jpeg1 = jpeg0.copy()
 
         # Simulate the stego
-        rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(jpeg_c.Y, jpeg_c.qt[0])
-        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
-            rho_p1, rho_m1,
+        rhos = cl.uerd.compute_cost_adjusted(jpeg0.Y, jpeg0.qt[0])
+        ps, lbda = cl.simulate._ternary.probability(
+            rhos=rhos,
             alpha=alpha,
-            n=jpeg_c.Y.size,
+            n=jpeg0.Y.size,
         )
-        jpeg_s.Y += cl.simulate._ternary.simulate(
-            p_p1,
-            p_m1,
+        jpeg1.Y += cl.simulate._ternary.simulate(
+            ps=ps,
             seed=12345,
         )
 
         # Estimate average relative payload
         _, Hx = cl.simulate.average_payload(
             lbda=lbda,
-            p_p1=p_p1,
-            p_m1=p_m1,
+            ps=ps,
             q=3
         )
 
-        alpha_hat = Hx / jpeg_s.Y.size
+        alpha_hat = Hx / jpeg0.Y.size
         self.assertAlmostEqual(alpha, alpha_hat, 3)
 
         # Compute embedding rate bound
-        alpha_bound = cl.tools.dct.embedding_rate(jpeg_c.Y, jpeg_s.Y, q=3)
+        alpha_bound = cl.tools.dct.embedding_rate(jpeg0.Y, jpeg1.Y, q=3)
         self.assertLess(alpha, alpha_bound)
 
 

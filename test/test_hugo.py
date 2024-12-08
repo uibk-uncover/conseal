@@ -7,11 +7,12 @@ from PIL import Image
 import scipy.io
 import tempfile
 import unittest
+
 from . import defs
 
 
-COST_DIR = defs.ASSETS_DIR / 'hugo' / 'costmap_matlab'
-STEGO_DIR = defs.ASSETS_DIR / 'hugo' / 'stego_matlab'
+STEGO_DIR = defs.ASSETS_DIR / 'hugo'
+COST_DIR = STEGO_DIR / 'costmap-matlab'
 
 
 class TestHUGO(unittest.TestCase):
@@ -27,43 +28,32 @@ class TestHUGO(unittest.TestCase):
         del self.tmp
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_hugo_costmap(self, fname: str):
-        self._logger.info(f'TestHUGO.test_compare_hugo_matlab({fname})')
+    def test_hugo_costmap(self, f: str):
+        self._logger.info(f'TestHUGO.test_compare_hugo_matlab({f})')
         # load cover
-        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
-        # simulate the stego
-        # import time
-        # start = time.perf_counter()
+        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
+        # embed steganography
         rho_p1, rho_m1 = cl.hugo.compute_cost_adjusted(x)
-        # end = time.perf_counter()
-        # print(fname, end-start)
-
-        # load matlab reference
-        mat = scipy.io.loadmat(COST_DIR / f'{fname}.mat')
-
+        # compare to matlab reference
+        mat = scipy.io.loadmat(COST_DIR / f'{f}.mat')
         np.testing.assert_allclose(rho_p1, mat['rhoP1'])
         np.testing.assert_allclose(rho_m1, mat['rhoM1'])
 
-    # @parameterized.expand([['00001'], ['00002'], ['00003'], ['00004'], ['00005']])
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_hugo_stego(self, fname: str):
-        self._logger.info(f'TestHUGO.test_hugo_stego({fname})')
+    def test_hugo_stego(self, f: str):
+        self._logger.info(f'TestHUGO.test_hugo_stego({f})')
         # load cover
-        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
-
-        # simulate the stego
-        rho_p1, rho_m1 = cl.hugo.compute_cost_adjusted(x)
+        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
+        # embed steganography
+        rhos = cl.hugo.compute_cost_adjusted(x)
         y = x + cl.simulate.ternary(
-            rho_p1=rho_p1,
-            rho_m1=rho_m1,
-            # rhos=(rhoP1, rhoM1),
+            rhos=rhos,
             alpha=.4,
             n=x.size,
             order='F',
             generator='MT19937',
             seed=139187,
         )
-
-        # load matlab reference
-        y_ref = np.array(Image.open(STEGO_DIR / f'{fname}.png'))
+        # compare to matlab reference
+        y_ref = np.array(Image.open(STEGO_DIR / f'{f}.png'))
         np.testing.assert_allclose(y, y_ref)

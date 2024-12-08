@@ -16,13 +16,15 @@ from .. import tools
 
 
 def compute_cost(
-    cover_spatial: np.ndarray,
+    x0: np.ndarray,
 ) -> np.ndarray:
     """Computes HILL cost.
 
-    :param cover_spatial: uncompressed (pixel) cover image of shape [height, width]
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: cost of the same shape as cover
+    :param x0: uncompressed (pixel) cover image,
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: cost for +-1 change,
+        of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
@@ -36,7 +38,7 @@ def compute_cost(
         [-1,  2, -1]
     ], dtype='float32')
     I1 = scipy.signal.convolve2d(
-        cover_spatial, H_KB,
+        x0, H_KB,
         mode='same', boundary='symm',
     )
 
@@ -60,40 +62,41 @@ def compute_cost(
 
 
 def compute_cost_adjusted(
-    cover_spatial: np.ndarray,
+    x0: np.ndarray,
     wet_cost: float = 1e10,
 ) -> typing.Tuple[np.ndarray]:
     """Computes HILL cost with wet-cost adjustments.
 
-    :param cover_spatial: uncompressed (pixel) cover image of shape [height, width]
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param x0: uncompressed (pixel) cover image,
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
-    :return: 2-tuple (rho_p1, rho_m1), each of which is of the same shape as cover
+    :return: costs for +1 and -1 changes,
+        of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
     >>> # TODO
     """
+    assert len(x0.shape) == 2, 'single channel expected'
     # process input
-    cover_spatial = cover_spatial.astype('float32')
+    x0 = x0.astype('float32')
 
     # Compute costmap
-    rho = compute_cost(
-        cover_spatial=cover_spatial
-    )
+    rho = compute_cost(x0=x0)
 
     # Assign wet cost
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
 
     # Do not embed +1 if the pixel has max value
     rho_p1 = np.copy(rho)
-    rho_p1[cover_spatial >= 255] = wet_cost
+    rho_p1[x0 >= 255] = wet_cost
 
     # Do not embed -1 if the pixel has min value
     rho_m1 = np.copy(rho)
-    rho_m1[cover_spatial <= 0] = wet_cost
+    rho_m1[x0 <= 0] = wet_cost
 
     # return costs
     return rho_p1, rho_m1

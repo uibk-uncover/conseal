@@ -57,17 +57,17 @@ class TestJUNIWARD(unittest.TestCase):
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
 
-        cover_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
-        img_dct = jpeglib.read_dct(cover_filepath)
-        cover_dct_coeffs = img_dct.Y
-        quantization_table = img_dct.qt[0]
+        x0 = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
+        jpeg0 = jpeglib.read_dct(cover_filepath)
+        y0 = jpeg0.Y
+        qt = jpeg0.qt[0]
 
         # Compute cost for embedding into the quantized DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
         wet_cost = 10 ** 13
         rho_p1, rho_m1 = cl.juniward.compute_cost_adjusted(
-            cover_spatial=cover_spatial,
-            cover_dct_coeffs=cover_dct_coeffs,
-            quantization_table=quantization_table,
+            x0=x0,
+            y0=y0,
+            qt=qt,
             dtype=np.float64,
             implementation=implementation,
             wet_cost=wet_cost,
@@ -107,13 +107,13 @@ class TestJUNIWARD(unittest.TestCase):
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_matlab_filepath = STEGO_DIR / 'costmap-matlab' / costmap_matlab_filename
 
-        img_spatial = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
-        img_dct = jpeglib.read_dct(cover_filepath)
-        qt = img_dct.qt[0]
+        x0 = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
+        jpeg0 = jpeglib.read_dct(cover_filepath)
+        qt = jpeg0.qt[0]
 
         costmap = cl.juniward._costmap.compute_cost(
-            cover_spatial=img_spatial,
-            quantization_table=qt,
+            x0=x0,
+            qt=qt,
             implementation=implementation,
         )
 
@@ -134,34 +134,34 @@ class TestJUNIWARD(unittest.TestCase):
         ('seal7.jpg', 'seal7_alpha_0.4_seed_7.jpg', 0.4, 7),
         ('seal8.jpg', 'seal8_alpha_0.4_seed_8.jpg', 0.4, 8),
     ])
-    def test_simulation_python_matlab_equivalence(self, cover_filename, stego_filename, embedding_rate, seed):
-        self._logger.info(f'TestJUNIWARD.test_simulation_python_matlab_equivalence('f'{cover_filename=}, {embedding_rate=}, {seed=})')
+    def test_simulation_python_matlab_equivalence(self, cover_filename, stego_filename, alpha, seed):
+        self._logger.info(f'TestJUNIWARD.test_simulation_python_matlab_equivalence('f'{cover_filename=}, {alpha=}, {seed=})')
 
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         stego_matlab_filepath = STEGO_DIR / 'stego-matlab' / stego_filename
 
         # Read grayscale image
-        cover_spatial = jpeglib.read_spatial(cover_filepath).spatial[:, :, 0]
-        cover_spatial = cover_spatial.astype(np.float64)
+        x0 = jpeglib.read_spatial(cover_filepath).spatial[:, :, 0]
+        x0 = x0.astype(np.float64)
 
         # Read DCT coefficients and quantization table
-        img_dct = jpeglib.read_dct(cover_filepath)
-        cover_dct_coeffs = img_dct.Y
-        qt = img_dct.qt[0]
+        jpeg0 = jpeglib.read_dct(cover_filepath)
+        y0 = jpeg0.Y
+        qt = jpeg0.qt[0]
 
         # Simulate stego embedding using fixed seed and generator
         stego_dct_coeffs = cl.juniward.simulate_single_channel(
-            cover_spatial=cover_spatial,
-            cover_dct_coeffs=cover_dct_coeffs,
-            quantization_table=qt,
-            embedding_rate=embedding_rate,
+            x0=x0,
+            y0=y0,
+            qt=qt,
+            alpha=alpha,
             implementation=cl.JUNIWARD_ORIGINAL,
             generator='MT19937',
             seed=seed)
 
         # Read stego images created using Matlab
-        stego_matlab_im = jpeglib.read_dct(stego_matlab_filepath)
-        stego_matlab_dct_coeffs = stego_matlab_im.Y
+        jpeg1 = jpeglib.read_dct(stego_matlab_filepath)
+        stego_matlab_dct_coeffs = jpeg1.Y
 
         # Compare stego images
         np.testing.assert_allclose(stego_dct_coeffs, stego_matlab_dct_coeffs)
@@ -176,17 +176,17 @@ class TestJUNIWARD(unittest.TestCase):
         # Load the cover image in spatial and DCT domain
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         img_dct = jpeglib.read_dct(cover_filepath)
-        cover_dct_coeffs = img_dct.Y
-        num_vertical_blocks, num_horizontal_blocks = cover_dct_coeffs.shape[:2]
-        quantization_table = img_dct.qt[0]
+        y0 = img_dct.Y
+        num_vertical_blocks, num_horizontal_blocks = y0.shape[:2]
+        qt = img_dct.qt[0]
 
         # Decompress the cover image in the spatial domain
-        cover_spatial = cl.tools.decompress_channel(dct_coeffs=cover_dct_coeffs, quantization_table=quantization_table)
+        x0 = cl.tools.decompress_channel(y=y0, qt=qt)
 
         # Variant 1: Compute costmap via the optimized implementation
         costmap = cl.juniward._costmap.compute_cost(
-            cover_spatial=cover_spatial,
-            quantization_table=quantization_table,
+            x0=x0,
+            qt=qt,
             implementation=cl.juniward.JUNIWARD_FIX_OFF_BY_ONE,
         )
 
@@ -201,12 +201,12 @@ class TestJUNIWARD(unittest.TestCase):
             block_y, block_x, within_block_y, within_block_x = np.unravel_index(dct_coeff_to_change, shape=(num_vertical_blocks, num_horizontal_blocks, 8, 8))
 
             # Modify a single DCT coefficient
-            stego_dct_coeffs = np.copy(cover_dct_coeffs)
-            stego_dct_coeffs[block_y, block_x, within_block_y, within_block_x] += rng.choice([-1, 1])
+            y1 = np.copy(y0)
+            y1[block_y, block_x, within_block_y, within_block_x] += rng.choice([-1, 1])
 
             # Convert to spatial domain
-            stego_spatial = cl.tools.decompress_channel(dct_coeffs=stego_dct_coeffs, quantization_table=quantization_table)
-            distortion = cl.juniward.evaluate_distortion(cover_spatial, stego_spatial)
+            x1 = cl.tools.decompress_channel(y=y1, qt=qt)
+            distortion = cl.juniward.evaluate_cost(x0, x1)
 
             np.testing.assert_allclose(costmap[block_y, block_x, within_block_y, within_block_x], distortion)
 

@@ -1,61 +1,57 @@
 """
-Implementation of HILL steganographic embedding as described in:
+High-level interface of simulated HILL embedding.
+
 
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
 
 import numpy as np
-from scipy.signal import convolve2d
 
 from . import _costmap
 from ..simulate import _ternary
-from .. import tools
 
 
 def simulate_single_channel(
-    cover_spatial: np.ndarray,
-    embedding_rate: float,
+    x0: np.ndarray,
+    alpha: float,
+    *,
     wet_cost: float = 10**10,
-    seed: int = None,
+    **kw,
 ) -> np.ndarray:
-    """Simulate embedding into a single channel.
+    """Simulate HILL embedding into a single channel.
 
-    :param cover_spatial: uncompressed (pixel) cover image
+    :param x0: uncompressed (pixel) cover image,
         of shape [height, width]
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: embedding rate in bits per pixel
-    :type embedding_rate: float
-    :param wet_cost: constant what the cost for wet pixel is
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param alpha: embedding rate,
+        in bits per pixel
+    :type alpha: float
+    :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
-    :param seed: random seed for STC simulator
-    :type seed: int
-    :return: stego pixels of shape [height, width, channels]
-    :rtype: np.ndarray
+    :return: stego pixels,
+        of shape [height, width, channels]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
     """
-    if embedding_rate == 0:
-        return cover_spatial
+    if alpha == 0:
+        return x0
 
     # Compute distortion
-    rho_p1, rho_m1 = _costmap.compute_cost_adjusted(
-        cover_spatial,
-        wet_cost,
+    rhos = _costmap.compute_cost_adjusted(
+        x0=x0,
+        wet_cost=wet_cost,
     )
-
-    # compute cover size
-    n = cover_spatial.size
 
     # simulator
-    (p_p1, p_m1), _ = _ternary.probability(
-        rho_p1=rho_p1,
-        rho_m1=rho_m1,
-        alpha=embedding_rate,
-        n=n,
+    ps, _ = _ternary.probability(
+        rhos=rhos,
+        alpha=alpha,
+        n=x0.size,
     )
-    delta = _ternary.simulate(
-        p_p1=p_p1,
-        p_m1=p_m1,
-        seed=seed,
-    )
+    delta = _ternary.simulate(ps=ps, **kw)
 
-    return cover_spatial + delta.astype('uint8')
+    return x0 + delta.astype('uint8')

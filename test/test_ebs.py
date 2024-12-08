@@ -10,7 +10,9 @@ import tempfile
 import unittest
 
 from . import defs
-# STEGO_DIR = defs.ASSETS_DIR / 'ebs'
+
+STEGO_DIR = defs.ASSETS_DIR / 'ebs'
+COST_DIR = STEGO_DIR / 'costmap-matlab'
 
 
 class TestEBS(unittest.TestCase):
@@ -26,22 +28,25 @@ class TestEBS(unittest.TestCase):
         del self.tmp
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_compute_cost(self, fname):
-        self._logger.info(f'TestEBS.test_compute_cost({fname})')
+    def test_compute_cost(self, f):
+        self._logger.info(f'TestEBS.test_compute_cost({f})')
         # load cover
-        jpeg = jpeglib.read_dct(defs.COVER_DIR / 'jpeg_75_gray' / f'{fname}.jpg')
+        jpeg = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{f}.jpg')
 
         # compute cost
-        rho, _ = cl.ebs.compute_cost_adjusted(jpeg.Y, jpeg.qt[0])
+        rho, _ = cl.ebs.compute_cost_adjusted(jpeg.Y, jpeg.qt[0], implementation=cl.EBS_ORIGINAL)
 
         # convert to compare
         rho = cl.tools.dct.jpeglib_to_jpegio(rho)
 
         # compare to Remi Cogranne's Matlab implementation
-        remi = scipy.io.loadmat(f'test/assets/costmap_matlab/ebs/{fname}.mat',
-                                simplify_cells=True)
-        rho_remi = remi[f'rhos']
-        self.assertTrue(np.allclose(rho, rho_remi))
+        rho_ref = scipy.io.loadmat(COST_DIR / f'{f}.mat', simplify_cells=True)['rhos']
+        self.assertTrue(np.allclose(rho, rho_ref))
+
+    # simulator for vanilla EBS not available
+    # def test_simulate(self, fname):
+    #     self._logger.info(f'TestEBS.test_simulate({fname})')
+    #     raise NotImplementedError
 
     # # @parameterized.expand([[f] for f in defs.TEST_IMAGES])
     # @parameterized.expand([['seal1']])

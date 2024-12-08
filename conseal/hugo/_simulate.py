@@ -21,8 +21,8 @@ import numpy as np
 
 
 def simulate_single_channel(
-    spatial_cover: np.ndarray,
-    embedding_rate: float,
+    x0: np.ndarray,
+    alpha: float,
     *,
     sigma: float = 1,
     gamma: float = 1,
@@ -39,26 +39,25 @@ def simulate_single_channel(
     The details of the methods are described in the
     `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#highly-undetectable-stego>`__.
 
-    :param cover_spatial: uncompressed (pixel) cover image
+    :param x0: uncompressed (pixel) cover image,
         of shape [height, width]
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: embedding rate,
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param alpha: embedding rate,
         in bits per pixel
-    :type embedding_rate: float
-
+    :type alpha: float
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
     :param kw: remaining keyword parameters are passed to simulator
     :type kw: dict
-    :return: modified stego image
+    :return: modified stego image,
         of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> stego_spatial = cl.hugo.simulate_single_channel(
-    ...   spatial_cover=spatial_cover,  # pixels
-    ...   embedding_rate=0.4,  # alpha
+    >>> x1 = cl.hugo.simulate_single_channel(
+    ...   x0=x0,       # pixels
+    ...   alpha=0.4,   # alpha
     ...   seed=12345)  # seed
     """
     raise NotImplementedError

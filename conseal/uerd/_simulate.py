@@ -14,9 +14,10 @@ from .. import tools
 
 
 def simulate_single_channel(
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
-    embedding_rate: float,
+    y0: np.ndarray,
+    qt: np.ndarray,
+    alpha: float,
+    *,
     payload_mode: str = "bpnzAC",
     wet_cost: float = 10**13,
     seed: int = None,
@@ -31,14 +32,13 @@ def simulate_single_channel(
     The details of the methods are described in the
     `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#uniform-embedding-revisited-distortion-uerd>`__.
 
-
-    :param cover_dct_coeffs: quantized DCT coefficients
+    :param y0: quantized DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: quantized table of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: embedding rate, in unit specified by payload_mode
-    :type embedding_rate: float
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantized table of shape [8, 8]
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param alpha: embedding rate, in unit specified by payload_mode
+    :type alpha: float
     :param payload_mode: unit used by embedding rate, either
         "bpc" (bits per DCT coefficient), or
         "bpnzAC" (bits per non-zero DCT AC coefficient).
@@ -53,26 +53,26 @@ def simulate_single_channel(
     :Example:
 
     >>> im_dct.Y = cl.uerd.simulate_single_channel(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0],  # QT
-    ...   embedding_rate=0.4,  # alpha
+    ...   y0=im_dct.Y,  # DCT
+    ...   qt=im_dct.qt[0],  # QT
+    ...   alha=0.4,  # alpha
     ...   seed=12345)  # seed
     """
-    if np.isclose(embedding_rate, 0):
-        return cover_dct_coeffs
+    if np.isclose(alpha, 0):
+        return y0
 
     # Compute distortion
-    rho_p1, rho_m1 = compute_cost_adjusted(
-        cover_dct_coeffs=cover_dct_coeffs,
-        quantization_table=quantization_table,
+    rhos = compute_cost_adjusted(
+        y0=y0,
+        qt=qt,
         wet_cost=wet_cost,
     )
 
     # Determine number of available coefficients
     if "bpc" == payload_mode:
-        n = cover_dct_coeffs.size
+        n = y0.size
     elif "bpnzAC" == payload_mode:
-        n = tools.dct.nzAC(cover_dct_coeffs)
+        n = tools.dct.nzAC(y0)
     else:
         raise ValueError("Unknown payload mode")
 
@@ -81,17 +81,15 @@ def simulate_single_channel(
         raise ValueError('There are no non-zero AC coefficients for embedding')
 
     # simulator
-    (p_p1, p_m1), lbda = _ternary.probability(
-        rho_p1=rho_p1,
-        rho_m1=rho_m1,
-        alpha=embedding_rate,
+    ps, lbda = _ternary.probability(
+        rhos=rhos,
+        alpha=alpha,
         n=n,
     )
 
-    delta_dct_coeffs = _ternary.simulate(
-        p_p1=p_p1,
-        p_m1=p_m1,
+    delta = _ternary.simulate(
+        ps=ps,
         seed=seed,
     )
 
-    return cover_dct_coeffs + delta_dct_coeffs
+    return y0 + delta

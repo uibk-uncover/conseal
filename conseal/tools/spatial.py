@@ -10,67 +10,67 @@ import typing
 from .common import entropy
 
 
-def embeddable_pixels(
-    x: np.ndarray = None,
-    wet: typing.Tuple = tuple()
-) -> int:
-    """Get number of embeddable pixels."""
-    # wet elements
-    excluded = sum([(x == w).sum() for w in tuple(wet)])
-    # embeddable elements
-    embeddable = np.prod(x.shape) - excluded
-    return embeddable
+# def embeddable_pixels(
+#     x: np.ndarray = None,
+#     wet: typing.Tuple = tuple()
+# ) -> int:
+#     """Get number of embeddable pixels."""
+#     # wet elements
+#     excluded = sum([(x == w).sum() for w in tuple(wet)])
+#     # embeddable elements
+#     embeddable = np.prod(x.shape) - excluded
+#     return embeddable
 
 
-def change_rate(
-    x_c: np.ndarray,
-    x_s: np.ndarray,
-    q: int = 3
-) -> float:
-    """Estimate change rate in spatial domain"""
-    # no changes
-    if (x_c == x_s).all():
-        return 0.
-    # embeddable elements
-    embeddable = embeddable_pixels(x_c)
-    # binary bound
-    if q == 2:
-        # number of changes
-        changes = (x_c != x_s).sum()
-        # change rate
-        betas = [changes/embeddable]
-    # ternary bound
-    elif q == 3:
-        # number o
-        # number of changes
-        changesP1 = (x_c < x_s).sum()
-        changesM1 = (x_c > x_s).sum()
-        # change rate
-        betas = [
-            changesP1/embeddable,
-            changesM1/embeddable,
-        ]
+# def change_rate(
+#     x_c: np.ndarray,
+#     x_s: np.ndarray,
+#     q: int = 3
+# ) -> float:
+#     """Estimate change rate in spatial domain"""
+#     # no changes
+#     if (x_c == x_s).all():
+#         return 0.
+#     # embeddable elements
+#     embeddable = embeddable_pixels(x_c)
+#     # binary bound
+#     if q == 2:
+#         # number of changes
+#         changes = (x_c != x_s).sum()
+#         # change rate
+#         betas = [changes/embeddable]
+#     # ternary bound
+#     elif q == 3:
+#         # number o
+#         # number of changes
+#         changesP1 = (x_c < x_s).sum()
+#         changesM1 = (x_c > x_s).sum()
+#         # change rate
+#         betas = [
+#             changesP1/embeddable,
+#             changesM1/embeddable,
+#         ]
 
-    else:
-        raise NotImplementedError(f'{q}-ary code not implemented')
+#     else:
+#         raise NotImplementedError(f'{q}-ary code not implemented')
 
-    return betas
+#     return betas
 
 
-def embedding_rate(
-    x_c: np.ndarray,
-    x_s: np.ndarray,
-    q: int = 3
-) -> float:
-    """Estimate embedding rate in spatial domain"""
-    # no changes
-    if (x_c == x_s).all():
-        return 0.
-    # change rates
-    betas = change_rate(x_c, x_s, q=q)
-    # embedding rate
-    alpha = entropy(*betas)
-    return alpha
+# def embedding_rate(
+#     x_c: np.ndarray,
+#     x_s: np.ndarray,
+#     q: int = 3
+# ) -> float:
+#     """Estimate embedding rate in spatial domain"""
+#     # no changes
+#     if (x_c == x_s).all():
+#         return 0.
+#     # change rates
+#     betas = change_rate(x_c, x_s, q=q)
+#     # embedding rate
+#     alpha = entropy(*betas)
+#     return alpha
 
 
 def daubechies8(

@@ -53,12 +53,12 @@ def compute_cost(
     rho_m1 = np.ones(cover.shape)
 
     # LSB replacement
-    if modify.lower() == Change.LSB_REPLACEMENT:
+    if modify == Change.LSB_REPLACEMENT:
         rho_p1[cover % 2 != 0] = wet_cost
         rho_m1[cover % 2 == 0] = wet_cost
 
     # LSB matching
-    elif modify.lower() == Change.LSB_MATCHING:
+    elif modify == Change.LSB_MATCHING:
         pass
 
     else:
@@ -103,7 +103,7 @@ def compute_cost_adjusted(
     )
 
     # sanitize range for LSB matching
-    if modify.lower() == Change.LSB_MATCHING:
+    if modify == Change.LSB_MATCHING:
         cover_min, cover_max = cover_range
         where_min = cover == cover_min
         where_max = cover == cover_max
@@ -115,29 +115,34 @@ def compute_cost_adjusted(
 
 def probability(
     cover: np.ndarray,
-    embedding_rate: float,
+    alpha: float,
     *,
     modify: Change = Change.LSB_REPLACEMENT,
     permute: bool = True,
     cover_range: typing.Tuple[int] = (0, 255),
-    cover_size: int = None,
+    n: int = None,
+    e: float = 2,
     wet_cost: float = 10**10,
 ) -> np.ndarray:
     """Returns LSB probability map for consequent simulation.
 
-    :param cover: cover image, in pixel or DCT domain, of arbitrary shape
+    :param cover: cover image, in pixel or DCT domain,
+        of arbitrary shape
     :type cover: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: embedding rate,
+    :param alpha: embedding rate,
         in bits per pixel
-    :type embedding_rate: float
+    :type alpha: float
     :param modify: modification strategy, replacement by default
     :type modify: :class:`Change`
     :param permute: Permute the changes, otherwise sequential
     :type permute: bool
     :param cover_range: Range of cover values, (0,255) by default.
     :type cover_range: tuple
-    :param cover_size: cover size, used for DCT cover, number of elements by default
-    :type cover_size: int
+    :param n: cover size, used for DCT cover, number of elements by default
+    :type n: int
+    :param e: embedding efficiency,
+        in bits per change
+    :type e: float
     :param wet_cost: wet cost for unembeddable elements
     :type wet_cost: float
     :return: probability map of the same shape as cover
@@ -147,17 +152,16 @@ def probability(
 
     >>> # TODO
     """
-    e = 2  # embedding efficiency
-    if cover_size is None:
-        cover_size = cover.size
+    if n is None:
+        n = cover.size
 
     p_p1 = np.zeros(cover.shape, dtype='double')
     p_m1 = np.zeros(cover.shape, dtype='double')
-    if embedding_rate > 0:
+    if alpha > 0:
         # number of changes
-        involved_elements = int(np.ceil(embedding_rate * cover_size))
+        involved_elements = int(np.ceil(alpha * n))
         changes = int(np.ceil(involved_elements / e))
-        change_rate = changes / cover_size
+        change_rate = changes / n
 
         # permutative straddling
         if permute:
@@ -165,7 +169,7 @@ def probability(
         # sequential embedding
         else:
             p = np.reshape(
-                [1/e]*involved_elements + [0]*(cover_size - involved_elements),
+                [1/e]*involved_elements + [0]*(n - involved_elements),
                 cover.shape
             )
 
@@ -190,7 +194,7 @@ def probability(
                 f'no modify strategy {modify}'
             )
 
-    return p_p1, p_m1
+    return (p_p1, p_m1), None
 
 
 def average_payload(*args, **kw):

@@ -1,4 +1,5 @@
-"""Implementation of the UERD steganography method as described in
+"""
+Implementation of the UERD steganography method as described in
 
 L. Guo, J. Ni, W. Su, C. Tang and Y.-Q. Shi
 "Using Statistical Image Model for JPEG Steganography: Uniform Embedding Revisited"
@@ -11,67 +12,78 @@ The uniform embedding revisited distortion (UERD) incorporates the complexity of
 
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
-"""
+"""  # noqa: E501
 
 import numpy as np
 from scipy.signal import convolve2d
 import typing
 
+from .. import tools
+
 
 def compute_block_energies(
-    dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
+    y: np.ndarray,
+    qt: np.ndarray,
 ) -> np.ndarray:
     """Compute block energy as described in Eq. 3
 
-    :param dct_coeffs: dct coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: quantization table of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: block energies of shape [num_vertical_blocks, num_horizontal_blocks]
+    :param y: quantized DCT coefficients,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type y: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
+        of shape [8, 8]
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: block energies,
+        of shape [num_vertical_blocks, num_horizontal_blocks]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> # TODO
+    >>> rho = cl.uerd._costmap.compute_block_energies(
+    ...   y0=jpeg0.Y,  # DCT
+    ...   qt=jpeg0.qt[0])  # QT
     """
 
-    num_vertical_blocks, num_horizontal_blocks = dct_coeffs.shape[:2]
+    num_vertical_blocks, num_horizontal_blocks = y.shape[:2]
 
     # Dequantize DCT coefficients
-    dequantized_dct_coeffs = dct_coeffs * quantization_table[None, None, :, :]
+    y_deq = y * qt[None, None, :, :]
 
     # Flatten last dimension
-    dequantized_dct_coeffs = dequantized_dct_coeffs.reshape(num_vertical_blocks, num_horizontal_blocks, -1)
+    y_deq = y_deq.reshape(num_vertical_blocks, num_horizontal_blocks, -1)
 
     # Calculate block energies, excluding the DC coefficient
-    block_energies = np.sum(np.abs(dequantized_dct_coeffs)[:, :, 1:], axis=2)
+    block_energies = np.sum(np.abs(y_deq)[:, :, 1:], axis=2)
 
     return block_energies
 
 
 def compute_cost(
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
+    y0: np.ndarray,
+    qt: np.ndarray,
 ) -> np.ndarray:
-    """Compute embedding cost as described in Eq. 4
+    """Compute the UERD cost.
 
-    :param cover_dct_coeffs: quantized DCT coefficients
+    Check Eq. 4 of the paper.
+
+    :param y0: quantized cover DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: ndarray of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: embedding cost of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
+        of shape [8, 8]
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: embedding cost,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
     >>> rho = cl.uerd._costmap.compute_cost(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0])  # QT
+    ...     y0=jpeg0.Y,  # DCT
+    ...     qt=jpeg0.qt[0])  # QT
     """
     # Compute block energies
-    block_energies = compute_block_energies(cover_dct_coeffs, quantization_table)
+    block_energies = compute_block_energies(y0, qt)
     num_vertical_blocks, num_horizontal_blocks = block_energies.shape
 
     # Compute energy in 8-neighborhood using a convolution
@@ -85,9 +97,9 @@ def compute_cost(
     # Mode rho of shape [64]
     mode_rho = np.zeros(64, dtype=float)
     # DC
-    mode_rho[0] = 0.5 * (quantization_table[0, 1] + quantization_table[1, 0])
+    mode_rho[0] = 0.5 * (qt[0, 1] + qt[1, 0])
     # AC
-    mode_rho[1:] = quantization_table.flatten()[1:]
+    mode_rho[1:] = qt.flatten()[1:]
 
     # Combine block and mode rho
     # Division by zero should result in inf cost
@@ -104,42 +116,50 @@ def compute_cost(
 
 
 def compute_cost_adjusted(
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
+    y0: np.ndarray,
+    qt: np.ndarray,
+    *,
     wet_cost: float = 10**13,
+    avoid_saturated: bool = False,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
-    """Computes the UERD distortion, adjusted for wet costs.
+    """Compute the adjusted J-UNIWARD cost for ternary embedding.
 
-    :param cover_dct_coeffs: quantized cover DCT coefficients
+    :param y0: quantized cover DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: ndarray of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param wet_cost: wet cost for unembeddable coefficients
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
+        of shape [8, 8]
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
-    :return: 2-tuple (rho_p1, rho_m1), each of which is of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param avoid_saturated: hard-sets blocks with saturated pixels to wet
+    :type avoid_saturated: bool
+    :return: embedding costs of +1 and -1 changes,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    Distortion is computed as follows.
-
     >>> rho_p1, rho_m1 = cl.uerd.compute_cost_adjusted(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0])  # QT
+    ...   y0=jpeg0.Y,      # DCT
+    ...   qt=jpeg0.qt[0])  # QT
     """
     # Compute embedding cost rho
-    rho = compute_cost(cover_dct_coeffs, quantization_table)
+    rho = compute_cost(y0, qt)
 
     # Adjust embedding costs
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
+    if avoid_saturated:
+        x0 = tools.decompress_channel(y0)  # decompress DCT
+        rho[(tools.jpegio_to_jpeglib(x0) == 0).any(axis=(2, 3))] = wet_cost
+        rho[(tools.jpegio_to_jpeglib(x0) == 255).any(axis=(2, 3))] = wet_cost
 
     # Do not embed +1 if the DCT coefficient has maximum value
     rho_p1 = np.copy(rho)
-    rho_p1[cover_dct_coeffs >= 1023] = wet_cost
+    rho_p1[y0 >= 1023] = wet_cost
 
     # Do not embed -1 if the DCT coefficient has minimum value
     rho_m1 = np.copy(rho)
-    rho_m1[cover_dct_coeffs <= -1023] = wet_cost
+    rho_m1[y0 <= -1023] = wet_cost
 
     return rho_p1, rho_m1

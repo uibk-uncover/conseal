@@ -1,6 +1,6 @@
 """
 
-Author:Martin Benes, Benedikt Lorch
+Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
 
@@ -12,9 +12,10 @@ from .. import tools
 
 
 def simulate_single_channel(
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
-    embedding_rate: float,
+    y0: np.ndarray,
+    qt: np.ndarray,
+    alpha: float,
+    *,
     wet_cost: float = 10**13,
     implementation: Implementation = Implementation.EBS_ORIGINAL,
     generator: str = 'MT19937',
@@ -31,15 +32,15 @@ def simulate_single_channel(
     The details of the methods are described in the
     `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#entropy-block-stego>`__.
 
-    :param cover_dct_coeffs: quantized cover DCT coefficients
+    :param y0: quantized cover DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: quantization table
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
         of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: embedding rate,
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param alpha: embedding rate,
         in bits per nzAC coefficient
-    :type embedding_rate: float
+    :type alpha: float
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
     :param implementation: choose EBS implementation
@@ -48,32 +49,31 @@ def simulate_single_channel(
     :type generator: `numpy.random.Generator <https://numpy.org/doc/stable/reference/random/generator.html>`__
     :param seed: random seed for embedding simulator
     :type seed: int
-    :return: quantized stego DCT coefficients
-        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :return: quantized stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
     >>> im_dct.Y = cl.ebs.simulate_single_channel(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0],  # QT
-    ...   embedding_rate=0.4,  # alpha
-    ...   seed=12345)  # seed
+    ...   y0=im_dct.Y,      # DCT
+    ...   qt=im_dct.qt[0],  # QT
+    ...   alpha=0.4,        # alpha
+    ...   seed=12345)       # seed
     """
     # Count number of embeddable DCT coefficients
-    N, M, _, _ = cover_dct_coeffs.shape
+    N, M, _, _ = y0.shape
     if implementation == Implementation.EBS_ORIGINAL:
-        num_DCT_coeffs = cover_dct_coeffs.size - 4*N*M
+        num_DCT_coeffs = y0.size - 4*N*M
     elif implementation == Implementation.EBS_FIX_WET:
-        num_DCT_coeffs = cover_dct_coeffs.size
+        num_DCT_coeffs = y0.size
     else:
         raise NotImplementedError(f'unknown implementation {implementation}')
 
     # Compute cost for embedding into the quantized DCT coefficients
     # of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     rho_p1, rho_m1 = compute_cost_adjusted(
-        cover_dct_coeffs=cover_dct_coeffs,
-        quantization_table=quantization_table,
+        y0=y0,
+        qt=qt,
         implementation=implementation,
         wet_cost=wet_cost,
     )
@@ -81,18 +81,16 @@ def simulate_single_channel(
     # STC simulation
     rho_p1 = tools.dct.jpeglib_to_jpegio(rho_p1)
     rho_m1 = tools.dct.jpeglib_to_jpegio(rho_m1)
-    stego_noise_dct = simulate.ternary(
+    delta = simulate.ternary(
         rho_p1=rho_p1,
         rho_m1=rho_m1,
-        alpha=embedding_rate,
+        alpha=alpha,
         n=num_DCT_coeffs,
         generator=generator,
         order=order,
         seed=seed,
     )
-    stego_noise_dct = tools.dct.jpegio_to_jpeglib(stego_noise_dct)
+    delta = tools.dct.jpegio_to_jpeglib(delta)
 
-    # stego = cover + stego noise
-    stego_dct_coeffs = cover_dct_coeffs + stego_noise_dct
-
-    return stego_dct_coeffs
+    #
+    return y0 + delta

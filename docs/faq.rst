@@ -12,4 +12,5 @@ A: Absolutely. You are highly encouraged to contribute implementations of stegan
 
 Q: Can your library be used to embed and extract real messages?
 
-A: No. In fact, it is non-trivial to turn conseal codebase into secure stego-system. We do not plan to do this, because publishing such tool is ethically questionable.
+A: No. In fact, it is non-trivial to turn conseal codebase into secure stego-system.
+We do not plan to do this, because publishing such tool is ethically questionable.

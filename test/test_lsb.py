@@ -33,90 +33,75 @@ class TestLSB(unittest.TestCase):
         for modify in [cl.LSB_REPLACEMENT, cl.LSB_MATCHING]
         for permute in [True, False]
     ])
-    def test_simulate_LSB(self, alpha: float, modify: str, permute: bool):
-        self._logger.info(f"TestLSB.test_simulate_LSB({alpha}, {modify}, {permute})")
+    def test_simulate(self, alpha: float, modify: str, permute: bool):
+        self._logger.info(f"TestLSB.test_simulate({alpha}, {permute})")
         # load cover
-        cover_spatial = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / 'seal1.png'))
-        # simulate the stego
-        stego_spatial = cl.lsb.simulate(
-            cover_spatial, alpha,
-            modify=modify,
-            permute=permute,
-            seed=12345,
-        )
-        # check change rate
-        beta_hat = (cover_spatial != stego_spatial).mean()
-        alpha_hat = beta_hat * 2
-        self.assertAlmostEqual(alpha, alpha_hat, 2)
-
-    @parameterized.expand([
-        [modify, permute]
-        for modify in [cl.LSB_REPLACEMENT, cl.LSB_MATCHING]
-        for permute in [True, False]
-    ])
-    def test_simulate_LSB_time(self, modify, permute):
-        self._logger.info('TestLSB.test_simulate_LSB_time')
-        # load cover
-        cover_spatial = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / 'seal1.png'))
-        # time the simulation
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / 'seal1.png'))
+        # embed steganography
         start = time.perf_counter()
-        cl.lsb.simulate(
-            cover_spatial, .4,
+        x1 = cl.lsb.simulate(
+            x0, alpha,
             modify=modify,
             permute=permute,
             seed=12345,
         )
         end = time.perf_counter()
+        # test range
+        self.assertLessEqual((x1 - x0.astype('int32')).max(), 1)
+        self.assertLessEqual((x1 - x0.astype('int32')).min(), -1)
+        # test changes
+        if modify == cl.LSB_REPLACEMENT:
+            self.assertTrue((x0[x0 < x1] % 2 == 0).all())
+            self.assertTrue((x0[x0 > x1] % 2 == 1).all())
+        # test change rate
+        beta_hat = (x0 != x1).mean()
+        alpha_hat = beta_hat * 2
+        self.assertAlmostEqual(alpha, alpha_hat, 2)
         # test speed
         delta = end - start
         self.assertLess(delta, .10)  # faster than 100ms
         self._logger.info(f'LSB {modify} embedding [{permute=}, {modify=}] 0.4bpnzAC in 512x512: {delta*1000:.02f} ms')
 
-    @parameterized.expand([
-        [alpha, modify, permute]
-        for alpha in [.05, .1, .2, .4]
-        for modify in [cl.LSB_REPLACEMENT, cl.LSB_MATCHING]
-        for permute in [True, False]
-    ])
-    def test_simulate_LSB_color(self, alpha: float, modify: str, permute: bool):
-        self._logger.info(f"TestLSB.test_simulate_LSB_color({alpha}, {modify}, {permute})")
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_cost(self, f):
+        self._logger.info(f'TestLSB.test_cost({f=})')
         # load cover
-        cover_spatial = np.array(Image.open(defs.COVER_UNCOMPRESSED_COLOR_DIR / 'seal1.png'))
-        # simulate the stego
-        stego_spatial = cl.lsb.simulate(
-            cover_spatial, alpha,
-            modify=modify,
-            permute=permute,
-            seed=12345,
-        )
-        # check change rate
-        beta_hat = (cover_spatial != stego_spatial).mean()
-        alpha_hat = beta_hat * 2
-        self.assertAlmostEqual(alpha, alpha_hat, 2)
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
+        # embed steganography
+        rhos = cl.lsb.compute_cost_adjusted(x0)
+        seed = cl.tools.password_to_seed(f)
+        delta = cl.simulate.ternary(rhos=rhos, alpha=.4, n=x0.size, e=2, seed=seed)
+        # test change rate
+        self.assertAlmostEqual(.4/2, (delta != 0).mean(), 2)
 
-    @parameterized.expand([
-        [alpha, modify, permute]
-        for alpha in [.05, .1, .2, .4]
-        for modify in [cl.LSB_REPLACEMENT, cl.LSB_MATCHING]
-        for permute in [True, False]
-    ])
-    def test_simulate_LSB_dct(self, alpha: float, modify: str, permute: bool):
-        self._logger.info('TestLSB.test_simulate_LSB_dct')
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_probability(self, f):
+        self._logger.info(f'TestLSB.test_probability({f=})')
         # load cover
-        dct_c = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / 'seal1.jpg').Y
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
+        # embed steganography
+        ps, _ = cl.lsb._costmap.probability(x0, alpha=.4)
+        delta = cl.simulate._ternary.simulate(ps=ps, seed=12345)
+        # test change rate
+        self.assertAlmostEqual((delta != 0).mean(), .4/2, 2)
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_dct(self, f):
+        self._logger.info(f'TestLSB.test_dct({f=})')
+        # load cover
+        y0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{f}.jpg').Y
         # simulate the stego
-        dct_s = cl.lsb.simulate(
-            dct_c, alpha,
-            modify=modify,
-            permute=permute,
+        y1 = cl.lsb.simulate(
+            y0, .4,
+            modify=cl.LSB_MATCHING,
+            permute=True,
             cover_range=(-1024, 1023),
             seed=12345,
         )
         # check change rate
-        beta_hat = (dct_c != dct_s).mean()
+        beta_hat = (y0 != y1).mean()
         alpha_hat = beta_hat * 2
-        self.assertAlmostEqual(alpha, alpha_hat, 2)
-
+        self.assertAlmostEqual(.4, alpha_hat, 2)
 
     # TODO: chi2 test
     # TODO: ws

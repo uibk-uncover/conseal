@@ -12,10 +12,11 @@ from .. import tools
 
 
 def simulate_single_channel(
-    cover_spatial: np.ndarray,
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
-    embedding_rate: float,
+    x0: np.ndarray,
+    y0: np.ndarray,
+    qt: np.ndarray,
+    alpha: float,
+    *,
     wet_cost: float = 10**13,
     dtype: np.dtype = np.float64,
     implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
@@ -32,18 +33,18 @@ def simulate_single_channel(
     The details of the methods are described in the
     `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-universal-wavelet-relative-distortion-j-uniward>`__.
 
-    :param cover_spatial: decompressed (pixel) cover image
+    :param x0: decompressed (pixel) cover image,
         of shape [height, width]
-    :type cover_spatial: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param cover_dct_coeffs: quantized cover DCT coefficients
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param y0: quantized cover DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: quantization table
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
         of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param embedding_rate: embedding rate,
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param alpha: embedding rate,
         in bits per nzAC coefficient
-    :type embedding_rate: float
+    :type alpha: float
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
     :param dtype: data type to use for distortion computation,
@@ -61,25 +62,25 @@ def simulate_single_channel(
 
     :Example:
 
-    >>> im_dct.Y = cl.juniward.simulate_single_channel(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0],  # QT
-    ...   cover_spatial=im_spatial.spatial[..., 0],  # decompressed
-    ...   embedding_rate=0.4,  # alpha
+    >>> jpeg1.Y = cl.juniward.simulate_single_channel(
+    ...   y0=jpeg0.Y,  # DCT
+    ...   qt=jpeg0.qt[0],  # QT
+    ...   x0=im0.spatial[..., 0],  # decompressed
+    ...   alpha=0.4,  # embedding rate
     ...   seed=12345)  # seed
     """
     # Count number of embeddable DCT coefficients
-    num_non_zero_AC_coeffs = tools.dct.nzAC(cover_dct_coeffs)
+    nzAC = tools.dct.nzAC(y0)
 
-    if num_non_zero_AC_coeffs == 0:
+    if nzAC == 0:
         raise ValueError('Expected non-zero AC coefficients')
 
     # Compute cost for embedding into the quantized DCT coefficients
     # of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     rho_p1, rho_m1 = compute_cost_adjusted(
-        cover_spatial=cover_spatial,
-        cover_dct_coeffs=cover_dct_coeffs,
-        quantization_table=quantization_table,
+        x0=x0,
+        y0=y0,
+        qt=qt,
         dtype=dtype,
         implementation=implementation,
         wet_cost=wet_cost,
@@ -90,19 +91,16 @@ def simulate_single_channel(
     rho_m1_2d = tools.dct.jpeglib_to_jpegio(rho_m1)
 
     # STC simulation
-    stego_noise_dct_2d = simulate.ternary(
-        rho_p1=rho_p1_2d,
-        rho_m1=rho_m1_2d,
-        alpha=embedding_rate,
-        n=num_non_zero_AC_coeffs,
+    delta_2d = simulate.ternary(
+        rhos=(rho_p1_2d, rho_m1_2d),
+        alpha=alpha,
+        n=nzAC,
         generator=generator,
         seed=seed,
     )
 
     # Convert from 2D to 4D
-    stego_noise_dct = tools.dct.jpegio_to_jpeglib(stego_noise_dct_2d)
+    delta = tools.dct.jpegio_to_jpeglib(delta_2d)
 
     # stego = cover + stego noise
-    stego_dct_coeffs = cover_dct_coeffs + stego_noise_dct
-
-    return stego_dct_coeffs
+    return y0 + delta

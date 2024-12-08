@@ -1,8 +1,14 @@
-"""
+"""Implementation of EBS cost.
+
+The method was introduced in
+C. Wang, et al. An efficient JPEG steganographic scheme based on block entropy of DCT coefficients.
+IEEE ICASSP, 2012.
+
+It was used in the ALASKA challenge.
 
 Author: Martin Benes
 Affiliation: University of Innsbruck
-"""
+"""  # noqa: E501
 
 import enum
 import numpy as np
@@ -18,7 +24,13 @@ class Implementation(enum.Enum):
 
 
 def _block_entropy(b: np.ndarray) -> float:
-    """Computes block entropy of flattened block b."""
+    """Computes block entropy of flattened block b.
+
+    :param b:
+    :type b: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return:
+    :rtype: float
+    """
     b = b[1:]  # remove DC
     if (b == 0).all():
         return 0.
@@ -29,26 +41,36 @@ def _block_entropy(b: np.ndarray) -> float:
 
 
 def compute_cost(
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
+    y0: np.ndarray,
+    qt: np.ndarray,
+    *,
     rounding_error: np.ndarray = None,
     theta: float = 2,
 ) -> np.ndarray:
     """Compute EBS cost.
 
-    From
-    C. Wang, et al. An efficient JPEG steganographic scheme based on block entropy of DCT coefficients.
-    IEEE ICASSP, 2012.
-
     Near-equivalent to Remi Cogranne's implementation.
     The difference comes from numerical difference in log/np.log.
+
+    :param y0:
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt:
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param rounding_error:
+    :type rounding_error:
+    :param theta: distortion parameter, 2 by default (from paper)
+    :type theta: float
+    :return:
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+
     """
     # block entropy cost
     block_entropies = np.apply_along_axis(
         _block_entropy,
         axis=1,
-        arr=cover_dct_coeffs.reshape(-1, 64),
-    ).reshape(*cover_dct_coeffs.shape[:2], 1, 1)
+        arr=y0.reshape(-1, 64),
+    ).reshape(*y0.shape[:2], 1, 1)
 
     # block distortion
     block_distortion = 1/(block_entropies**theta)
@@ -62,10 +84,10 @@ def compute_cost(
         # compute flipping cost rho_flip_i = [(np.abs(y' - x_qi)-.5)*qi]**2
         raise NotImplementedError('distortion from precover not implemented')
     else:
-        qti = quantization_table.copy()
+        qti = qt.copy()
         for i in range(2):
             qti = np.expand_dims(qti, i)
-            qti = np.repeat(qti, cover_dct_coeffs.shape[i], i)
+            qti = np.repeat(qti, y0.shape[i], i)
         flip_distortion = qti**2
 
     # final cost
@@ -73,22 +95,23 @@ def compute_cost(
 
 
 def compute_cost_adjusted(
-    cover_dct_coeffs: np.ndarray,
-    quantization_table: np.ndarray,
-    precover: np.ndarray = None,
+    y0: np.ndarray,
+    qt: np.ndarray,
+    *,
+    x0: np.ndarray = None,
     theta: float = 2,
-    implementation: Implementation = Implementation.EBS_ORIGINAL,
+    implementation: Implementation = Implementation.EBS_FIX_WET,
     wet_cost: float = 10**13,
 ) -> np.ndarray:
     """Computes the costmap and prepares the costmap for ternary embedding.
 
-    :param cover_dct_coeffs: quantized cover DCT coefficients
+    :param y0: quantized cover DCT coefficients,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :type cover_dct_coeffs: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param quantization_table: quantization table
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
         of shape [8, 8]
-    :type quantization_table: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param precover: precover for rounding error computation,
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param x0: precover for rounding error computation,
         of shape [num_vertical_blocks*8, num_horizontal_blocks*8]
     :param theta: distortion parameter, 2 by default (from paper)
     :type theta: float
@@ -96,32 +119,30 @@ def compute_cost_adjusted(
     :type implementation: :class:`Implementation`
     :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
-    :return: probability maps for +1 and -1 changes,
-        in DCT domain of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :return: probability maps for +1 and -1 changes in DCT domain of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: tuple
 
     :Example:
 
-    >>> rho_p1, rho_m1 = cl.ebs.compute_cost_adjusted(
-    ...   cover_dct_coeffs=im_dct.Y,  # DCT
-    ...   quantization_table=im_dct.qt[0])  # QT
+    >>> (rho_p1, rho_m1) = cl.ebs.compute_cost_adjusted(
+    ...   y0=im_dct.Y,  # DCT
+    ...   qt=im_dct.qt[0])  # QT
     >>> im_dct.Y += cl.simulate.ternary(
-    ...   rho_p1=rho_p1,  # distortion of +1
-    ...   rho_m1=rho_m1,  # distortion of -1
+    ...   rhos=(rho_p1, rho_m1)  # distortions of +1 and -1 changes
     ...   alpha=0.4,  # alpha
     ...   n=im_dct.Y.size,  # cover size
     ...   seed=12345)  # seed
     """
     # Compute rounding error
-    if precover is not None:
+    if x0 is not None:
         raise NotImplementedError('side-informed EBS not implemented')
     else:
         rounding_error = None
 
     # Compute cost
     rho = compute_cost(
-        cover_dct_coeffs=cover_dct_coeffs,
-        quantization_table=quantization_table,
+        y0=y0,
+        qt=qt,
         rounding_error=rounding_error,
         theta=theta,
     )
@@ -141,7 +162,7 @@ def compute_cost_adjusted(
 
     elif implementation == Implementation.EBS_FIX_WET:
         # Avoid 04 coefficients with e = 0.5
-        if precover is not None:
+        if x0 is not None:
             max_cost_mat = np.zeros(shape=rho.shape, dtype=bool)
             max_cost_mat[:, :, 0, 0] = True
             max_cost_mat[:, :, 4, 0] = True
@@ -158,10 +179,10 @@ def compute_cost_adjusted(
 
     # Do not embed +1 if the DCT coefficient has max value
     rho_p1 = np.copy(rho)
-    rho_p1[cover_dct_coeffs >= 1023] = wet_cost
+    rho_p1[y0 >= 1023] = wet_cost
 
     # Do not embed -1 if the DCT coefficient has min value
     rho_m1 = np.copy(rho)
-    rho_m1[cover_dct_coeffs <= -1023] = wet_cost
+    rho_m1[y0 <= -1023] = wet_cost
 
     return rho_p1, rho_m1

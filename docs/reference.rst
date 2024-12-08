@@ -35,7 +35,6 @@ HUGO simulator
 
 .. autofunction:: conseal.hugo.simulate_single_channel
 
-
 LSB simulator
 """""""""""""
 
@@ -43,6 +42,24 @@ LSB simulator
 
 .. autoclass:: conseal.lsb.Change
    :members: LSB_REPLACEMENT, LSB_MATCHING
+
+MiPOD simulator
+"""""""""""""""""""
+
+.. autofunction:: conseal.mipod.simulate_single_channel
+
+.. autoclass:: conseal.mipod.Implementation
+   :members: MiPOD_ORIGINAL, MiPOD_FIX_WET
+
+S-UNIWARD simulator
+"""""""""""""""""""
+
+.. autofunction:: conseal.suniward.simulate_single_channel
+
+WOW simulator
+"""""""""""""""""""
+
+.. autofunction:: conseal.wow.simulate_single_channel
 
 
 Simulators of JPEG Steganography
@@ -59,6 +76,12 @@ EBS simulator
 
 .. autoclass:: conseal.ebs.Implementation
    :members: EBS_ORIGINAL, EBS_FIX_WET
+
+F5 simulator
+""""""""""""
+
+.. autofunction:: conseal.F5.simulate_single_channel
+
 
 J-UNIWARD simulator
 """""""""""""""""""
@@ -113,11 +136,25 @@ LSB adjusted cost
 
 .. autofunction:: conseal.lsb.compute_cost_adjusted
 
+nsF5 adjusted cost
+""""""""""""""""""
+
+.. autofunction:: conseal.nsF5.compute_cost_adjusted
+
+S-UNIWARD adjusted cost
+"""""""""""""""""""""""
+
+.. autofunction:: conseal.suniward.compute_cost_adjusted
+
 UERD adjusted cost
 """"""""""""""""""
 
 .. autofunction:: conseal.uerd.compute_cost_adjusted
 
+WOW adjusted cost
+"""""""""""""""""
+
+.. autofunction:: conseal.wow.compute_cost_adjusted
 
 
 Mid-level Simulator API
@@ -125,12 +162,34 @@ Mid-level Simulator API
 
 .. autofunction:: conseal.simulate.ternary
 
+.. autofunction:: conseal.simulate.binary
+
+Steganographic coding
+^^^^^^^^^^^^^^^^^^^^^
+
+The simulator can be modified by incorporating coding-specific features.
+
+.. autofunction:: conseal.coding.efficiency
+
+Hamming codes
+"""""""""""""
+
+.. autofunction:: conseal.coding.hamming.efficiency
+
+Wet-paper codes
+"""""""""""""""
+
+.. autofunction:: conseal.coding.hamming.generate_H
+
+
 Other utilities
 ^^^^^^^^^^^^^^^
 
 .. autofunction:: conseal.tools.nzAC
 
 .. autofunction:: conseal.tools.AC
+
+.. autofunction:: conseal.tools.permute.password_to_seed
 
 
 Low-level API
@@ -170,10 +229,25 @@ LSB cost
 
 .. autofunction:: conseal.lsb._costmap.compute_cost
 
+nsF5 cost
+"""""""""
+
+.. autofunction:: conseal.nsF5._costmap.compute_cost
+
+S-UNIWARD cost
+""""""""""""""
+
+.. autofunction:: conseal.suniward._costmap.compute_cost
+
 UERD cost
 """""""""
 
 .. autofunction:: conseal.uerd._costmap.compute_cost
+
+WOW cost
+""""""""
+
+.. autofunction:: conseal.wow._costmap.compute_cost
 
 
 Probability
