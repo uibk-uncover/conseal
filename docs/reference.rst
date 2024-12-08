@@ -10,14 +10,13 @@ For more information, see the `glossary <https://conseal.readthedocs.io/en/lates
    :depth: 2
 
 
-
 High-level API
 --------------
 
 On high-level API, the embedding is a black-box.
 You pass in the cover image and obtain the stego image.
 
-Currently, there are seven steganography simulators implemented: EBS, LSB, HUGO, HILL, J-UNIWARD, nsF5 and UERD.
+Currently, there are seven steganography simulators implemented: EBS, F5, HILL, HUGO, J-UNIWARD, LSB, MiPOD, nsF5, S-UNIWARD, UERD and WOW.
 
 
 Simulators of Spatial Steganography
@@ -109,7 +108,6 @@ On mid-level API, you separately compute the cost (automatically adjusted for we
 
 Adjusted cost
 ^^^^^^^^^^^^^
-
 
 EBS adjusted cost
 """""""""""""""""

@@ -32,13 +32,13 @@ def simulate_single_channel(
     The details of the methods are described in the
     `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#entropy-block-stego>`__.
 
-    :param y0: quantized cover DCT coefficients,
+    :param y0: quantized cover DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param qt: quantization table,
+    :param qt: quantization table
         of shape [8, 8]
     :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: embedding rate,
+    :param alpha: embedding rate
         in bits per nzAC coefficient
     :type alpha: float
     :param wet_cost: wet cost for unembeddable coefficients
@@ -49,7 +49,8 @@ def simulate_single_channel(
     :type generator: `numpy.random.Generator <https://numpy.org/doc/stable/reference/random/generator.html>`__
     :param seed: random seed for embedding simulator
     :type seed: int
-    :return: quantized stego DCT coefficients of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :return: quantized stego DCT coefficients
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:

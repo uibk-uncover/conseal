@@ -78,9 +78,7 @@ def compute_cost(
 
     :Example:
 
-    >>> rho = cl.uerd._costmap.compute_cost(
-    ...     y0=jpeg0.Y,  # DCT
-    ...     qt=jpeg0.qt[0])  # QT
+    >>> # TODO
     """
     # Compute block energies
     block_energies = compute_block_energies(y0, qt)

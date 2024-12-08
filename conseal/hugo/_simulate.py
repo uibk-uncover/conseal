@@ -16,8 +16,10 @@ Permission to use, copy, modify, and distribute this software for educational, r
 -------------------------------------------------------------------------
 """  # noqa: E501
 
-
 import numpy as np
+
+from . import _costmap
+from ..simulate import _ternary
 
 
 def simulate_single_channel(
@@ -29,8 +31,7 @@ def simulate_single_channel(
     wet_cost: float = 1e8,
     **kw,
 ) -> np.ndarray:
-    """Simulates HUGO embedding at an embedding rate into single-channel cover,
-    and returns stego.
+    """Simulates HUGO embedding into a single channel.
 
     HUGO was introduced in
     T. Pevny, et al. Using High-Dimensional Image Models to Perform Highly Undetectable Steganography.
@@ -39,25 +40,44 @@ def simulate_single_channel(
     The details of the methods are described in the
     `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#highly-undetectable-stego>`__.
 
-    :param x0: uncompressed (pixel) cover image,
+    :param x0: uncompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: embedding rate,
+    :param alpha: embedding rate
         in bits per pixel
     :type alpha: float
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
     :param kw: remaining keyword parameters are passed to simulator
     :type kw: dict
-    :return: modified stego image,
+    :return: modified stego image
         of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
     >>> x1 = cl.hugo.simulate_single_channel(
-    ...   x0=x0,       # pixels
-    ...   alpha=0.4,   # alpha
-    ...   seed=12345)  # seed
+    ...     x0=x0,  # pixels
+    ...     alpha=0.4,  # alpha
+    ...     seed=12345)  # seed
     """
-    raise NotImplementedError
+    #
+    if alpha == 0:
+        return x0
+
+    # Compute cost
+    rhos = _costmap.compute_cost_adjusted(
+        x0,
+        sigma=sigma,
+        gamma=gamma,
+        wet_cost=wet_cost,
+    )
+
+    # Simulate
+    delta = _ternary.ternary(
+        rhos=rhos,
+        alpha=alpha,
+        n=x0.size,
+        **kw,
+    )
+    return x0 + delta.astype('uint8')

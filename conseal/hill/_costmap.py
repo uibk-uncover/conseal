@@ -20,16 +20,16 @@ def compute_cost(
 ) -> np.ndarray:
     """Computes HILL cost.
 
-    :param x0: uncompressed (pixel) cover image,
+    :param x0: uncompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: cost for +-1 change,
+    :return: cost for +-1 change
         of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> # TODO
+    >>> rho = cl.hill.compute_cost(x0=x0)
     """
     # high-pass filter
     H_KB = np.array([
@@ -63,22 +63,23 @@ def compute_cost(
 
 def compute_cost_adjusted(
     x0: np.ndarray,
+    *,
     wet_cost: float = 1e10,
 ) -> typing.Tuple[np.ndarray]:
     """Computes HILL cost with wet-cost adjustments.
 
-    :param x0: uncompressed (pixel) cover image,
+    :param x0: uncompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
-    :return: costs for +1 and -1 changes,
+    :return: costs for +1 and -1 changes
         of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> # TODO
+    >>> rhos = cl.hill.compute_cost_adjusted(x0=x0)
     """
     assert len(x0.shape) == 2, 'single channel expected'
     # process input

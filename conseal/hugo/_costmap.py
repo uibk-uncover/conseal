@@ -53,7 +53,7 @@ def compute_cost(
     sigma: float = 1,
     gamma: float = 1,
 ) -> typing.Tuple[np.ndarray]:
-    """Computes raw cost.
+    """Computes HUGO cost.
 
     Unlike most other distortions, HUGO is truly directional.
 
@@ -127,14 +127,14 @@ def compute_cost_adjusted(
     gamma: float = 1,
     wet_cost: float = 1e8,
 ):
-    """
+    """Computes HUGO cost with wet-cost adjustments.
 
-    :param x0: uncompressed (pixel) cover image,
+    :param x0: uncompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param sigma: parameter
+    :param sigma: additive parameter
     :type sigma: float
-    :param gamma: parameter
+    :param gamma: exponent parameter
     :type gamma: float
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float

@@ -47,10 +47,10 @@ def compute_cost(
 ) -> np.ndarray:
     """Compute the J-UNIWARD cost.
 
-    :param x0: decompressed (pixel) image,
+    :param x0: decompressed (pixel) image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param qt: quantization table,
+    :param qt: quantization table
         of shape [8, 8]
     :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param sigma: parameter controlling the content sensitivity, avoids division by zero but also controls the sensitivity to content.
@@ -59,17 +59,13 @@ def compute_cost(
     :type dtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`__
     :param implementation: choose J-UNIWARD implementation
     :type implementation: :class:`Implementation`
-    :return: embedding cost,
+    :return: embedding cost
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> im0 = jpeglib.read_spatial('cover.jpeg')
-    >>> jpeg0 = jpeglib.read_dct('cover.jpeg')
-    >>> rho = cl.juniward._costmap.compute_cost(
-    ...   x0=im0.spatial,  # decompressed spatial
-    ...   qt=jpeg0.qt[0])  # QT
+    >>> # TODO
     """  # noqa: E501
     assert len(x0.shape) == 2, "Expected grayscale image"
     height, width = x0.shape

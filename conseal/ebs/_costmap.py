@@ -63,7 +63,9 @@ def compute_cost(
     :return:
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
+    :Example:
 
+    >>> # TODO
     """
     # block entropy cost
     block_entropies = np.apply_along_axis(
@@ -105,22 +107,23 @@ def compute_cost_adjusted(
 ) -> np.ndarray:
     """Computes the costmap and prepares the costmap for ternary embedding.
 
-    :param y0: quantized cover DCT coefficients,
+    :param y0: quantized cover DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param qt: quantization table,
+    :param qt: quantization table
         of shape [8, 8]
     :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param x0: precover for rounding error computation,
+    :param x0: precover for rounding error computation
         of shape [num_vertical_blocks*8, num_horizontal_blocks*8]
-    :param theta: distortion parameter, 2 by default (from paper)
+    :param theta: cost parameter, 2 by default (from paper)
     :type theta: float
     :param implementation: choose EBS implementation
     :type implementation: :class:`Implementation`
     :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
-    :return: probability maps for +1 and -1 changes in DCT domain of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
-    :rtype: tuple
+    :return: probability maps for +1 and -1 changes
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
@@ -128,7 +131,7 @@ def compute_cost_adjusted(
     ...   y0=im_dct.Y,  # DCT
     ...   qt=im_dct.qt[0])  # QT
     >>> im_dct.Y += cl.simulate.ternary(
-    ...   rhos=(rho_p1, rho_m1)  # distortions of +1 and -1 changes
+    ...   rhos=(rho_p1, rho_m1)  # costs of +1 and -1 changes
     ...   alpha=0.4,  # alpha
     ...   n=im_dct.Y.size,  # cover size
     ...   seed=12345)  # seed

@@ -43,17 +43,15 @@ class TestHUGO(unittest.TestCase):
     def test_hugo_stego(self, f: str):
         self._logger.info(f'TestHUGO.test_hugo_stego({f})')
         # load cover
-        x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # embed steganography
-        rhos = cl.hugo.compute_cost_adjusted(x)
-        y = x + cl.simulate.ternary(
-            rhos=rhos,
+        x1 = cl.hugo.simulate_single_channel(
+            x0=x0,
             alpha=.4,
-            n=x.size,
             order='F',
             generator='MT19937',
             seed=139187,
         )
         # compare to matlab reference
-        y_ref = np.array(Image.open(STEGO_DIR / f'{f}.png'))
-        np.testing.assert_allclose(y, y_ref)
+        x1_ref = np.array(Image.open(STEGO_DIR / f'{f}.png'))
+        np.testing.assert_allclose(x1, x1_ref)

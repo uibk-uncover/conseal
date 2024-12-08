@@ -35,9 +35,7 @@ def probability(
 
     :Example:
 
-    >>> (p_p1, p_m1), _ = cl.nsF5._costmap.probability(
-    ...     y0=jpeg0.Y,  # DCT
-    ...     alpha=.4)    # embedding rate, 0.4 bits per non-zero coefficient
+    >>> # TODO
     """
     assert len(y0.shape) == 4, 'DCT must have 4 dimensions'
     assert y0.shape[2] == y0.shape[3] == 8, 'expected blocks of size 8x8'
@@ -84,6 +82,10 @@ def compute_cost(
     :return: probability of +-1 change,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
     """
     assert len(y0.shape) == 4, 'DCT must have 4 dimensions'
     assert y0.shape[2] == y0.shape[3] == 8, 'expected blocks of size 8x8'

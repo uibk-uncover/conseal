@@ -77,14 +77,16 @@ def estimate_variance(
 def compute_cost(x0: np.ndarray) -> np.ndarray:
     """Produces MiPOD cost. Not a cost like HILL, but a Fisher information.
 
-    :param x0:
-    :type x0:
-    :return:
-    :rtype:
+    :param x0: uncompressed (pixel) cover image
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: cost for +-1 change
+        of shape [height, width]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> # TODO
+    >>> fi = cl.mipod.compute_cost(x0=x0)
     """
     x0 = x0.astype(float)
 

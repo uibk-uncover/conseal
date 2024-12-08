@@ -80,6 +80,7 @@ def compute_cost(
 
 def compute_cost_adjusted(
     x0: np.ndarray,
+    *,
     wet_cost: float = 10**8,
     **kw,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
@@ -96,7 +97,7 @@ def compute_cost_adjusted(
 
     :Example:
 
-    >>> # TODO
+    >>> rhos = cl.suniward.compute_cost_adjusted(x0=x0)
     """
     assert len(x0.shape) == 2, 'single channel expected'
 

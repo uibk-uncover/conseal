@@ -69,37 +69,51 @@ Sublattice simulator
 Cost functions
 --------------
 
-Uniform Embedding Revisited Distortion (UERD)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+F5 and non-shrinkage F5 (nsF5)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+F5 is an LSB steganography for DCT domain.
+It performs "*permutative straddling*", when the message is spreaded over the non-zero DCT AC coefficients of the cover.
+F5 reembeds message bit, whenever 1 or -1 are turned into 0.
+
+This causes a detectable artifact, later improved in non-shrinkage F5 (nsF5) by introducing wet-paper codes.
+
+Entropy Block Stego (EBS) cost
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *TODO: To be completed*
 
-JPEG Universal Wavelet Relative Distortion (J-UNIWARD)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Uniform Embedding Revisited (UERD) cost
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *TODO: To be completed*
 
-Entropy Block Stego (EBS)
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Wavelet Obtained Weights (WOW) cost
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *TODO: To be completed*
 
-EBS was used as a benchmark against the SI-UNIWARD.
+Spatial Universal Wavelet Relative (S-UNIWARD) cost
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Non-shrinkage F5 (nsF5)
-^^^^^^^^^^^^^^^^^^^^^^^
+*TODO: To be completed*
 
-nsF5 is not a cost function, but a complete steganographic design.
-Published in 2007, it does not yet follow the `design of modern steganography <https://conseal.readthedocs.io/en/latest/glossary.html#steganographic-design>`,
-but performs "*permutative straddling*", when the message is spreaded across the entire cover.
+JPEG Universal Wavelet Relative (J-UNIWARD) cost
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This is done using pseudo-random permutation over non-zero DCT AC coefficients,
-combined with wet-paper codes (the difference from F5, which solves the shrinkage problem).
+*TODO: To be completed*
 
-Because of this construction, module ``conseal.nsF5`` cannot define function
-``compute_cost_adjusted`` and ``compute_cost``, and the mid-level and low-level call sequence
-differs from the other modules implementing JPEG steganography.
+EBS was used in ALASKA 1 and as a benchmark against the SI-UNIWARD.
 
+HIgh-Low-Low (HILL) cost
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
+
+Minimizing the Power of Optimal Detector (MiPOD) cost
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*TODO: To be completed*
 
 JPEG and DCT
 ------------

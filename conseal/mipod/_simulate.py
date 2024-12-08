@@ -35,6 +35,25 @@ def probability(
     x0: np.ndarray,
     alpha: float,
 ) -> Tuple[Tuple[np.ndarray], float]:
+    """Computes change probabilities for MiPOD embedding.
+
+    :param x0: uncompressed (pixel) cover image
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param alpha: embedding rate
+    :type alpha: float
+    :return: tuple ((p_p1, p_m1), lmbda), where
+        p_p1 is the probability of +1 change,
+        p_m1 is the probability of -1 change, and
+        lbda is the determined lambda.
+    :rtype: tuple
+
+    :Example:
+
+    >>> (p_p1, p_m1), _ = cl.mipod.probability(
+    ...     x0=x0,
+    ...     alpha=.4)
+    """
     fisher_information = compute_cost(x0=x0)
 
     # Absolute payload in nats
@@ -71,7 +90,10 @@ def simulate_single_channel(
 
     :Example:
 
-    >>> # TODO
+    >>> x1 = cl.mipod.simulate_single_channel(
+    ...     x0=x0,
+    ...     alpha=.4,
+    ...     seed=12345)
     """
     # rho is the fisher information
     rho = compute_cost(x0=x0)

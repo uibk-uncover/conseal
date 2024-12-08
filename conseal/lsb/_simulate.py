@@ -36,17 +36,21 @@ def simulate(
     :param x0: cover image, in pixel or DCT domain,
         of arbitrary shape
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: embedding rate in bits per element
+    :param alpha: embedding rate
+        in bits per element
     :type alpha: float
-    :param modify: modification strategy, replacement by default
+    :param modify: modification strategy,
+        replacement by default
     :type modify: :class:`Change`
-    :param permute: Permute the changes, otherwise sequential
+    :param permute: permute the changes, otherwise sequential
     :type permute: bool
-    :param cover_range: Range of cover values, (0,255) by default.
+    :param cover_range: range of cover values,
+        (0,255) by default
     :type cover_range: tuple
     :param n: cover size, used for DCT cover, number of elements by default
     :type n: int
-    :param e: embedding efficiency in bits per change
+    :param e: embedding efficiency
+        in bits per change
     :type e: float
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
@@ -76,16 +80,9 @@ def simulate(
         e=e,
         wet_cost=wet_cost
     )
-    # rho_p1, rho_m1 = _costmap.compute_distortion(
-    #     modify=modify,
-    #     cover_range=cover_range,
-    #     wet_cost=wet_cost,
-    # )
     # simulate
     delta = _ternary.simulate(
         ps=ps,
-        # p_p1=p_p1,
-        # p_m1=p_m1,
         **kw,
     )
     return cover + delta.astype('uint8')

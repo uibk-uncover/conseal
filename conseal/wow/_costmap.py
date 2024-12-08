@@ -102,7 +102,7 @@ def compute_cost_adjusted(
 
     :Example:
 
-    >>> # TODO
+    >>> rhos = cl.wow.compute_cost_adjusted(x0=x0)
     """
     assert len(x0.shape) == 2, 'single channel expected'
 

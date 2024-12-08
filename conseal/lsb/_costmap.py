@@ -93,7 +93,8 @@ def compute_cost_adjusted(
 
     :Example:
 
-    >>> # TODO
+    >>> rhos = cl.lsb.compute_cost_adjusted(x0)
+    >>> x1 = x0 + cl.simulate.ternary(rhos=rhos, alpha=.4, seed=12345)
     """
     # compute cost
     rho_p1, rho_m1 = compute_cost(
@@ -126,10 +127,11 @@ def probability(
 ) -> np.ndarray:
     """Returns LSB probability map for consequent simulation.
 
-    :param cover: cover image, in pixel or DCT domain,
+    :param cover: cover image
         of arbitrary shape
+        in pixel or DCT domain
     :type cover: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: embedding rate,
+    :param alpha: embedding rate
         in bits per pixel
     :type alpha: float
     :param modify: modification strategy, replacement by default
@@ -140,7 +142,7 @@ def probability(
     :type cover_range: tuple
     :param n: cover size, used for DCT cover, number of elements by default
     :type n: int
-    :param e: embedding efficiency,
+    :param e: embedding efficiency
         in bits per change
     :type e: float
     :param wet_cost: wet cost for unembeddable elements
@@ -150,7 +152,8 @@ def probability(
 
     :Example:
 
-    >>> # TODO
+    >>> ps, _ = cl.lsb.probability(x0, alpha=.4)
+    >>> x1 = x0 + cl.simulate._ternary.simulate(ps=ps, seed=12345)
     """
     if n is None:
         n = cover.size

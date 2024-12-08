@@ -17,6 +17,10 @@ def nzAC(dct: np.ndarray) -> int:
     :type dct: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: number of non-zero DCT AC coefficients
     :rtype: int
+
+    :Example:
+
+    >>> cl.tools.nzAC(jpeg0.Y)
     """
     assert len(dct.shape) == 4, "Expected 4D DCT input array"
     return (dct != 0).sum() - (dct[:, :, 0, 0] != 0).sum()
@@ -29,6 +33,10 @@ def AC(dct: np.ndarray) -> int:
     :type dct: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: number of DCT AC coefficients
     :rtype: int
+
+    :Example:
+
+    >>> cl.tools.AC(jpeg0.Y)
     """
     assert len(dct.shape) == 4, "Expected 4D DCT input array"
     return dct.size - np.prod(dct.shape[:2])

@@ -198,14 +198,24 @@ def ternary_entropy(probs):
 #     return np.nansum(H)
 
 
-def ternary_probs(fisher_information, payload, max_num_iterations=30, excess_values_num_iter=10):
+def ternary_probs(
+    fisher_information: float,
+    payload: int,
+    max_num_iterations: int = 30,
+    excess_values_num_iter: int = 10,
+) -> float:
     """
     Determine the change rates for each cover element by searching for the Lagrangian multiplier lambda that optimizes the payload constraint.
-    :param fisher_information:
+    :param fisher_information: fisher information
+    :type fisher_information: float
     :param payload: target payload
+    :type payload: int
     :param max_num_iterations: maximum number of binary search iterations
+    :type max_num_iterations: int
     :param excess_values_num_iter: number of iterations for computing the values that exceed the precomputed range
+    :type excess_values_num_iter: int
     :return: change rate per cover element
+    :rtype: float
     """
     ixlnx3 = load_lookup_table()
 

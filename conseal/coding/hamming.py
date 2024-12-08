@@ -18,6 +18,10 @@ def efficiency(
     :type alpha: float
     :return: embedding efficiency in bits per change
     :rtype: float
+
+    :Example:
+
+    >>> e = cl.coding.efficiency(0.4)  # e at alpha=0.4
     """
     assert alpha >= 1e-3, 'instable for very low embedding rates'
 

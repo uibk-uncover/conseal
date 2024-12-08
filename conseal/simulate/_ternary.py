@@ -33,12 +33,12 @@ def probability(
     :type alpha: float
     :param n: cover size/number of cover elements
     :type n: int
-    :param e: Embedding efficiency,
-        in bits per element.
-        If not provided, optimal coding is assumed.
+    :param e: embedding efficiency
+        in bits per element,
+        optimal coding assumed by default
     :type e: float
-    :param objective: Objective function to maximize.
-        Entropy by default
+    :param objective: objective function to maximize,
+        entropy by default
     :type objective: callable
     :return: tuple ((p_p1, p_m1), lmbda), where
         p_p1 is the probability of +1 change,

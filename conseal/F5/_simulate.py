@@ -14,7 +14,7 @@ def simulate_single_channel(*args, **kw) -> np.ndarray:
 
     This is done by simulating nsF5 first, and then re-introducing the shrinkage.
 
-    :return: quantized stego DCT coefficients,
+    :return: quantized stego DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
