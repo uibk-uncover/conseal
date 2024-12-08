@@ -40,10 +40,17 @@ pip3 install .
 
 | Steganography method | Domain | Reference |
 | --- | --- | --- |
-| nsF5: no-shrinkage F5 | JPEG | [Original F5 algorithm](https://doi.org/10.1007/3-540-45496-9_21), [no-shrinkage extension](https://doi.org/10.1145/1288869.1288872) |
+| F5 | JPEG | [Reference](https://doi.org/10.1007/3-540-45496-9_21) |
+| nsF5: no-shrinkage F5 | JPEG | [Reference](https://dde.binghamton.edu/kodovsky/pdf/Fri07-ACM.pdf) |
 | EBS: entropy block steganography | JPEG | [Reference](https://doi.org/10.1109/ICASSP.2012.6288246) |
 | UERD: uniform embedding revisited distortion | JPEG | [Reference](https://doi.org/10.1109/TIFS.2015.2473815) |
-| J-UNIWARD: JPEG-domain universal wavelet relative distortion | JPEG | [Reference](https://doi.org/10.1186/1687-417X-2014-1) |
+| J-UNIWARD: JPEG-domain universal wavelet relative distortion | JPEG | [Reference](https://dde.binghamton.edu/vholub/pdf/EURASIP14_Universal_Distortion_Function_for_Steganography_in_an_Arbitrary_Domain.pdf) |
+| LSB: least significant bit | Spatial / JPEG | |
+| HILL: high-low-low | Spatial | [Reference](https://projet.liris.cnrs.fr/imagine/pub/proceedings/ICIP-2014/Papers/1569891955.pdf) |
+| HUGO: highly undetectable stego | Spatial | [Reference](http://agents.fel.cvut.cz/stegodata/pdfs/Pev10-Hugo.pdf) |
+| MiPOD: minimizing the power of optimal detector | Spatial | [Reference](https://dde.binghamton.edu/vsedighi/pdf/TIFS2015_Content_Adaptive_Steganography_by_Minimizing_Statistical_Detectability.pdf) |
+| S-UNIWARD: spatial-domain universal wavelet relative distortion | spatial | [Reference](https://dde.binghamton.edu/vholub/pdf/EURASIP14_Universal_Distortion_Function_for_Steganography_in_an_Arbitrary_Domain.pdf) |
+| WOW: wavelet obtained weights | spatial | [Reference](https://dde.binghamton.edu/vholub/pdf/WIFS12_Designing_Steganographic_Distortion_Using_Directional_Filters.pdf) |
 
 ## Usage
 
@@ -55,109 +62,172 @@ import conseal as cl
 
 This package currently contains the three JPEG steganography methods J-UNIWARD, UERD, and nsF5. The following examples show how to embed a JPEG cover image `cover.jpeg` with an embedding rate of 0.4 bits per non-zero AC coefficient (bpnzAC):
 
-- J-UNIWARD
+
+
+- F5
 
 ```python
 # load cover
-im_spatial = jpeglib.read_spatial("cover.jpeg", jpeglib.JCS_GRAYSCALE)
-im_dct = jpeglib.read_dct("cover.jpeg")
+jpeg = jpeglib.read_dct("cover.jpeg")
 
-# embed J-UNIWARD 0.4
-im_dct.Y = cl.juniward.simulate_single_channel(
-    cover_spatial=im_spatial.spatial[..., 0],
-    cover_dct_coeffs=im_dct.Y,
-    quantization_table=im_dct.qt[0],
-    embedding_rate=0.4,
-    seed=12345
-)
+# embed F5 0.4 bpnzAC
+jpeg.Y = cl.F5.simulate_single_channel(
+    y0=jpeg.Y,
+    alpha=0.4,
+    seed=12345)
 
 # save result as stego image
-im_dct.write_dct("stego.jpeg")
-```
-
-- UERD
-
-```python
-# load cover
-im_dct = jpeglib.read_dct("cover.jpeg")
-
-# embed UERD 0.4
-im_dct.Y = cl.uerd.simulate_single_channel(
-    cover_dct_coeffs=im_dct.Y,
-    quantization_table=im_dct.qt[0],
-    embedding_rate=0.4,
-    seed=12345
-)
-
-# save result as stego image
-im_dct.write_dct("stego.jpeg")
+jpeg.write_dct("stego.jpeg")
 ```
 
 - nsF5
 
 ```python
 # load cover
-im_dct = jpeglib.read_dct("cover.jpeg")
+jpeg = jpeglib.read_dct("cover.jpeg")
 
 # embed nsF5 0.4 bpnzAC
-im_dct.Y = cl.nsF5.simulate_single_channel(
-    cover_dct_coeffs=im_dct.Y,
-    embedding_rate=0.4,
-    seed=12345
-)
+jpeg.Y = cl.nsF5.simulate_single_channel(
+    y0=jpeg.Y,
+    alpha=0.4,
+    seed=12345)
 
 # save result as stego image
-im_dct.write_dct("stego.jpeg")
+jpeg.write_dct("stego.jpeg")
 ```
 
 - EBS
 
 ```python
 # load cover
-im_dct = jpeglib.read_dct("cover.jpeg")
+jpeg = jpeglib.read_dct("cover.jpeg")
 
 # embed EBS 0.4 bpnzAC
-im_dct.Y = cl.ebs.simulate_single_channel(
-    cover_dct_coeffs=im_dct.Y,
-    quantization_table=im_dct.qt[0],
-    embedding_rate=0.4,
-    seed=12345
-)
+jpeg.Y = cl.ebs.simulate_single_channel(
+    y0=jpeg.Y,
+    qt=jpeg.qt[0],
+    alpha=0.4,
+    seed=12345)
 
 # save result as stego image
-im_dct.write_dct("stego.jpeg")
+jpeg.write_dct("stego.jpeg")
+```
+
+- UERD
+
+```python
+# load cover
+jpeg = jpeglib.read_dct("cover.jpeg")
+
+# embed UERD 0.4
+jpeg.Y = cl.uerd.simulate_single_channel(
+    y0=jpeg.Y,
+    qt=jpeg.qt[0],
+    embedding_rate=0.4,
+    seed=12345)
+
+# save result as stego image
+jpeg.write_dct("stego.jpeg")
+```
+
+- J-UNIWARD
+
+```python
+# load cover
+im0 = jpeglib.read_spatial("cover.jpeg", jpeglib.JCS_GRAYSCALE)
+jpeg = jpeglib.read_dct("cover.jpeg")
+
+# embed J-UNIWARD 0.4
+jpeg.Y = cl.juniward.simulate_single_channel(
+    x0=im0.spatial[..., 0],
+    y0=jpeg.Y,
+    qt=jpeg.qt[0],
+    alpha=0.4,
+    seed=12345)
+
+# save result as stego image
+jpeg.write_dct("stego.jpeg")
 ```
 
 - HUGO
 
 ```python
 # load cover
-cover_spatial = np.array(Image.open("cover.png"))
+x0 = np.array(Image.open("cover.png"))
 
 # embed HUGO 0.4 bpnzAC
-stego_spatial = cl.hugo.simulate_single_channel(
-    cover_spatial=cover_spatial,
-    embedding_rate=0.4,
+x1 = cl.hugo.simulate_single_channel(
+    x0=x0,
+    alpha=0.4,
     seed=12345)
 
 # save result as stego image
-Image.fromarray(stego_spatial).save("stego.png")
+Image.fromarray(x1).save("stego.png")
+```
+
+- WOW
+
+
+```python
+# load cover
+x0 = np.array(Image.open("cover.png"))
+
+# embed WOW 0.4 bpnzAC
+x1 = cl.wow.simulate_single_channel(
+    x0=x0,
+    alpha=0.4,
+    seed=12345)
+
+# save result as stego image
+Image.fromarray(x1).save("stego.png")
+```
+
+- S-UNIWARD
+
+```python
+# load cover
+x0 = np.array(Image.open("cover.png"))
+
+# embed S-UNIWARD 0.4 bpnzAC
+x1 = cl.suniward.simulate_single_channel(
+    x0=x0,
+    alpha=0.4,
+    seed=12345)
+
+# save result as stego image
+Image.fromarray(x1).save("stego.png")
+```
+
+- MiPOD
+
+```python
+# load cover
+x0 = np.array(Image.open("cover.png"))
+
+# embed MiPOD 0.4 bpnzAC
+x1 = cl.mipod.simulate_single_channel(
+    x0=x0,
+    alpha=0.4,
+    seed=12345)
+
+# save result as stego image
+Image.fromarray(x1).save("stego.png")
 ```
 
 - HILL
 
 ```python
 # load cover
-cover_spatial = np.array(Image.open("cover.png"))
+x0 = np.array(Image.open("cover.png"))
 
 # embed HUGO 0.4 bpnzAC
-stego_spatial = cl.hill.simulate_single_channel(
-    cover_spatial=cover_spatial,
-    embedding_rate=0.4,
+x1 = cl.hill.simulate_single_channel(
+    x0=x0,
+    alpha=0.4,
     seed=12345)
 
 # save result as stego image
-Image.fromarray(stego_spatial).save("stego.png")
+Image.fromarray(x1).save("stego.png")
 ```
 
 ## Acknowledgements and Disclaimer
