@@ -89,12 +89,12 @@ Uniform Embedding Revisited (UERD) cost
 *TODO: To be completed*
 
 Wavelet Obtained Weights (WOW) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *TODO: To be completed*
 
 Spatial Universal Wavelet Relative (S-UNIWARD) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *TODO: To be completed*
 
@@ -111,7 +111,7 @@ HIgh-Low-Low (HILL) cost
 *TODO: To be completed*
 
 Minimizing the Power of Optimal Detector (MiPOD) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *TODO: To be completed*
 
