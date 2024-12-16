@@ -2,11 +2,11 @@
 
 # -- Project information
 project = 'conseal'
-copyright = '2023, Martin Benes & Benedikt Lorch, University of Innsbruck'
+copyright = '2024, Martin Benes & Benedikt Lorch, University of Innsbruck'
 author = 'Martin Benes, Benedikt Lorch'
 
-release = '2024.06'
-version = '2023.06'
+release = '2024.12'
+version = '2024.12'
 
 # -- General configuration
 

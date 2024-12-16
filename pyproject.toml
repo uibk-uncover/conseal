@@ -3,7 +3,7 @@
 name = "conseal"
 version = "2024.12"
 dependencies = [
-    "numpy < 2.0.0",
+    "numpy",
     "jpeglib >= 1.0.0",
     "scipy",
     "numba",
