@@ -13,7 +13,10 @@ from .permute import blocks, iterate_ac, iterate, password_to_seed
 # modules
 from . import dct
 from . import spatial
+from . import lrt
 
+ATTACKER_INDIFFERENT = lrt.Attacker.ATTACKER_INDIFFERENT
+ATTACKER_OMNISCIENT = lrt.Attacker.ATTACKER_OMNISCIENT
 
 __all__ = [
     'entropy',

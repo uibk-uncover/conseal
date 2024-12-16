@@ -12,11 +12,21 @@ Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
 
+import enum
 import numpy as np
 from typing import Callable, Tuple
 import warnings
 
 from .. import tools
+
+
+class Sender(enum.Enum):
+    """Type of sender."""
+
+    PAYLOAD_LIMITED_SENDER = enum.auto()
+    """Payload-limited sender."""
+    DISTORTION_LIMITED_SENDER = enum.auto()
+    """Distortion-limited sender."""
 
 
 def get_p(
@@ -34,7 +44,7 @@ def get_p(
     :param lbda: parameter value
     :type lbda: float
     :param add_zero:
-    :type add_zero:
+    :type add_zero: bool
     :param p_pm1: probability tensor for changes associated to rhos[0]
         of an arbitrary shape
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -103,10 +113,66 @@ def average_payload(
     return ps, H
 
 
-def get_objective(e: float = None, q: int = None) -> Callable:
-    def _objective(*args, **kw):
+def average_distortion(
+    rhos: Tuple[np.ndarray],
+    *,
+    # e: float = None,
+    lbda: float = None,
+    ps: Tuple[np.ndarray] = None,
+    # q: int = None,
+) -> Tuple[Tuple[np.ndarray], float]:
+    """
+
+    :param ps: Probability maps.
+    :type ps: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param e: Embedding efficiency. If not provided, optimal coding is assumed.
+    :type e: float
+    :param lbda: Parameter of the Gibbs distribution, if rhos are given.
+    :type lbda: float
+    :param rhos: Cost maps. Can be provided instead of `ps`.
+    :type rhos: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return:
+    :rtype: float
+
+    :Example:
+
+    >>> # TODO
+    """
+    assert (
+        (ps is not None and lbda is None or ps is None and lbda is not None)
+    ), 'one of ps or lbda must be given'
+    #
+    if ps is None:
+        # add_zero = True if q is None else len(rhos) == q-1
+        add_zero = True
+        ps = [
+            get_p(lbda, rhos[i], *rhos[:i], *rhos[i+1:], add_zero=add_zero)
+            for i in range(len(rhos))
+        ]
+
+    # average distortion
+    D = np.sum([
+        rhos[i] * ps[i]
+        for i in range(len(rhos))
+    ])
+    return ps, D
+
+
+def get_objective(
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    e: float = None,
+    q: int = None,
+) -> Callable:
+    def _pls_objective(*args, **kw):
         return average_payload(*args, e=e, q=q, **kw)
-    return average_payload if e is None else _objective
+
+    if sender == Sender.PAYLOAD_LIMITED_SENDER:
+        # print('selected PLS objective')
+        return average_payload if e is None else _pls_objective
+    if sender == Sender.DISTORTION_LIMITED_SENDER:
+        # print('selected DLS objective')
+        assert e is None, 'e not implemented for DLS'
+        return average_distortion
 
 
 def calc_lambda(
@@ -160,7 +226,7 @@ def calc_lambda(
         iterations += 1
 
         # unbounded = search fails
-        if iterations > 10:
+        if iterations > 15:
             warnings.warn("unbounded distortion, search fails", RuntimeWarning)
             return l3
 

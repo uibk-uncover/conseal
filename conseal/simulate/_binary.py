@@ -13,7 +13,7 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 from typing import Tuple, Callable
 
-from ._optim import get_objective, calc_lambda
+from ._optim import get_objective, calc_lambda, Sender
 
 
 def probability(
@@ -23,13 +23,13 @@ def probability(
     *,
     e: float = None,
     objective: Callable = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
 ) -> Tuple[np.ndarray, float]:
     """Convert binary distortion to binary probability.
 
     :param rhos: distortion tensor for +-1 change
     :type rhos: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: embedding rate,
-        in bits per element
+    :param alpha: embedding rate in bits per element, generally a constraint for the specified sender type
     :type alpha: float
     :param n: cover size/number of cover elements
     :type n: int
@@ -40,6 +40,8 @@ def probability(
     :param objective: Objective function to maximize.
         Entropy by default
     :type objective: callable
+    :param sender: type of sender, changes the semantics of parameter alpha,
+        PLS by default
     :return: tuple ((p_pm1), lmbda), where
         p_pm1 is the probability of +-1 change, and
         lbda is the determined lambda.
@@ -56,7 +58,7 @@ def probability(
     ...   seed=12345)   # seed
     """
     if objective is None:
-        objective = get_objective(e=e, q=2)
+        objective = get_objective(e=e, q=2, sender=sender)
 
     message_length = int(np.round(alpha * n))
     lbda = calc_lambda(rhos, message_length, n, objective)
@@ -139,6 +141,7 @@ def binary(
     *,
     e: float = None,
     objective: Callable = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
     **kw,
 ) -> np.ndarray:
     """Simulates binary embedding given distortion and embedding rate.
@@ -168,5 +171,5 @@ def binary(
     ...   n=im_dct.Y.size,  # cover size
     ...   seed=12345)  # seed
     """
-    ps, lbda = probability(rhos=rhos, alpha=alpha, n=n)
+    ps, lbda = probability(rhos=rhos, alpha=alpha, n=n, sender=sender)
     return simulate(ps, **kw)

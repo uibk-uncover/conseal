@@ -11,6 +11,31 @@ from tempfile import NamedTemporaryFile
 from tqdm import tqdm
 
 
+
+
+#
+df = []
+# for fname in glob('test/assets/cover/jpeg_75_gray/*.jpg'):
+files = glob(str(Path(os.environ['DATA']) / 'data/alaska2/fabrika-2024-01-26/images_ahd/*.png'))[:1]
+for fname in tqdm(files):
+    x0 = np.array(Image.open(fname).convert('L'))
+    rho_p1, rho_m1 = cl.hill.compute_cost_adjusted(x0)
+    (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+        (rho_p1, rho_m1),
+        .01,  # distortion
+        n=x0.size,
+        sender=cl.DLS,
+    )
+    cost_hat = (np.sum(p_p1 * rho_p1) + np.sum(p_m1 * rho_m1)) / x0.size
+    H_hat = cl.tools.entropy(p_p1, p_m1) / x0.size
+
+    print(fname, rho_p1.shape, rho_m1.shape, cost_hat, H_hat)
+
+
+
+
+exit()
+
 def attack(y1, qt):
     # cartesian calibration
     with NamedTemporaryFile(suffix='jpeg') as tmp:

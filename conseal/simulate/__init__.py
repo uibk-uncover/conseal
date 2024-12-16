@@ -12,7 +12,12 @@ from . import _ternary
 from ._binary import binary
 from ._ternary import ternary
 
-from ._optim import get_p, average_payload
+from ._optim import get_p, average_payload, average_distortion, Sender
+
+PAYLOAD_LIMITED_SENDER = Sender.PAYLOAD_LIMITED_SENDER
+DISTORTION_LIMITED_SENDER = Sender.DISTORTION_LIMITED_SENDER
+PLS = PAYLOAD_LIMITED_SENDER
+DLS = DISTORTION_LIMITED_SENDER
 
 
 def simulate(

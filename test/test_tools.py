@@ -1,14 +1,17 @@
 
+import conseal as cl
 import logging
 import numpy as np
 import os
 from parameterized import parameterized
+from PIL import Image
+import pandas as pd
 import sys
 import tempfile
 import unittest
 
-sys.path.append('.')
-import conseal as cl
+sys.path.append('test')
+import defs
 
 
 class TestTools(unittest.TestCase):
@@ -86,6 +89,40 @@ class TestTools(unittest.TestCase):
         for h, w, c in cl.tools.iterate(x, key=key):
             visited[h, w, c] += 1
         self.assertTrue((visited == 1).all())
+
+    # @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_lrt(self):
+        self._logger.info('TestTools.test_lrt')
+
+        defls = []
+        for f in defs.TEST_IMAGES:
+            # load cover
+            x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
+            defl = {}
+            # LSB
+            ps_lsb, _ = cl.lsb._costmap.probability(x0, alpha=.4, e=None)
+            # print('LSB:', cl.simulate.average_payload(ps=ps_lsb)[1] / x0.size)
+            defl['lsb'] = cl.tools.lrt.attack(x0, ps=ps_lsb, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
+            # HUGO
+            rhos_hugo = cl.hugo.compute_cost_adjusted(x0)
+            ps_hugo, _ = cl.simulate._ternary.probability(rhos=rhos_hugo, alpha=.4, n=x0.size)
+            # print('HUGO:', cl.simulate.average_payload(ps=ps_hugo)[1] / x0.size)
+            defl['hugo'] = cl.tools.lrt.attack(x0, ps=ps_hugo, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
+            # HILL
+            rhos_hill = cl.hill.compute_cost_adjusted(x0)
+            ps_hill, _ = cl.simulate._ternary.probability(rhos=rhos_hill, alpha=.4, n=x0.size)
+            # print('HILL:', cl.simulate.average_payload(ps=ps_hill)[1] / x0.size)
+            defl['hill'] = cl.tools.lrt.attack(x0, ps=ps_hill, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
+            # MiPOD
+            ps_mipod, _ = cl.mipod.probability(x0, alpha=.4)
+            # print('MiPOD:', cl.simulate.average_payload(ps=ps_mipod)[1] / x0.size)
+            defl['mipod'] = cl.tools.lrt.attack(x0, ps=ps_mipod, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
+            #
+            defls.append(defl)
+
+        defls = pd.DataFrame(defls)
+        print(defls)
+        print(defls.median())
 
 
 __all__ = ['TestTools']

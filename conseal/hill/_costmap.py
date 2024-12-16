@@ -33,9 +33,9 @@ def compute_cost(
     """
     # high-pass filter
     H_KB = np.array([
-        [-1,  2, -1],
-        [ 2, -4,  2],
-        [-1,  2, -1]
+        [-1, +2, -1],
+        [+2, -4, +2],
+        [-1, +2, -1]
     ], dtype='float32')
     I1 = scipy.signal.convolve2d(
         x0, H_KB,

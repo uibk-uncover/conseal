@@ -13,7 +13,7 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 from typing import Tuple, Callable
 
-from ._optim import get_objective, calc_lambda
+from ._optim import get_objective, calc_lambda, Sender
 
 
 def probability(
@@ -23,13 +23,13 @@ def probability(
     *,
     e: float = None,
     objective: Callable = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
 ) -> Tuple[np.ndarray, float]:
     """Convert binary distortion to binary probability.
 
     :param rhos: distortion tensor for +1 and -1 change
     :type rhos: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: embedding rate,
-        in bits per element
+    :param alpha: embedding rate in bits per element, generally a constraint for the specified sender type
     :type alpha: float
     :param n: cover size/number of cover elements
     :type n: int
@@ -57,7 +57,7 @@ def probability(
     ...   seed=12345)       # seed
     """
     if objective is None:
-        objective = get_objective(e=e, q=3)
+        objective = get_objective(e=e, q=3, sender=sender)
 
     m = int(np.round(alpha * n))
     lbda = calc_lambda(
@@ -149,14 +149,15 @@ def ternary(
     *,
     e: float = None,
     objective: Callable = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
     **kw,
 ) -> np.ndarray:
     """Simulates ternary embedding given distortion and embedding rate.
 
-    :param rhos: costs for +1 and -1 changes,
+    :param rhos: costs for +1 and -1 changes
         of an arbitrary shape
     :type rhos: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param alpha: embedding rate,
+    :param alpha: embedding rate
         in bits per element
     :type alpha: float
     :param n: cover size
@@ -183,5 +184,6 @@ def ternary(
         n=n,
         e=e,
         objective=objective,
+        sender=sender,
     )
     return simulate(ps=ps, **kw)

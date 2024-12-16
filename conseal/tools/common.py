@@ -18,6 +18,8 @@ def _entropy(*ps, base: float = 2) -> float:
     :type ps:
     :param base:
     :type base:
+    :param base: unit of information, bits by default
+    :type base: float
     :return: Entropy.
     :rtype: float
 
@@ -40,8 +42,8 @@ def entropy(*ps, base: int = 2):
 
     :param p: Probability tensor.
     :type p: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param base:
-    :type base:
+    :param base: unit of information, bits by default
+    :type base: float
     :return: Entropy
     :rtype: float
 

@@ -13,6 +13,7 @@ import numpy as np
 import typing
 
 from .. import simulate
+from .. import tools
 
 
 class Change(enum.Enum):
@@ -157,6 +158,8 @@ def probability(
     """
     if n is None:
         n = cover.size
+    if e is None:
+        e = alpha / tools.inv_entropy(alpha)
 
     p_p1 = np.zeros(cover.shape, dtype='double')
     p_m1 = np.zeros(cover.shape, dtype='double')
