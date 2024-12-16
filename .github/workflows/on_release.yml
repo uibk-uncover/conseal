@@ -94,7 +94,7 @@ jobs:
           path: dist
       - name: Install wheel
         run: |
-          pip install jpeglib numpy scipy parameterized numba pillow
+          pip install jpeglib numpy scipy parameterized numba pillow pandas
           pip install --find-links ./dist conseal --no-index
       - name: Run unittests
         shell: bash
