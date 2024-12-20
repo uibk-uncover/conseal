@@ -232,7 +232,7 @@ Image.fromarray(x1).save("stego.png")
 
 ## Acknowledgements and Disclaimer
 
-Developed by [Martin Benes](https://github.com/martinbenes1996) and [Benedikt Lorch](https://github.com/btlorch/), University of Innsbruck, 2023.
+Developed by [Martin Benes](https://github.com/martinbenes1996) and [Benedikt Lorch](https://github.com/btlorch/), University of Innsbruck, 2024.
 
 The J-UNIWARD and nsF5 implementations in this package are based on the original Matlab code provided by the Digital Data Embedding Lab at Binghamton University.
 We also thank Patrick Bas and Rémi Cogranne for sharing their implementations of UERD and EBS with us.
