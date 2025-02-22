@@ -52,6 +52,9 @@ dev = [
 ]
 deploy = []
 
+[project.scripts]
+unseal = "conseal.tools.scripts.unseal:run"
+
 [tool.setuptools.packages.find]
 include = ["conseal*"]
 exclude = ["wheelhouse*"]

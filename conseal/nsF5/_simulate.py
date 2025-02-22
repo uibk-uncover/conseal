@@ -46,6 +46,7 @@ def simulate_single_channel(
     alpha: float,
     *,
     add_shrinkage: bool = False,
+    e: float = None,
     seed: int = None,
 ) -> np.ndarray:
     """Simulates nsF5 embedding at an embedding rate into single-channel cover and returns stego.
@@ -62,6 +63,8 @@ def simulate_single_channel(
     :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param alpha: embedding rate
     :type alpha: float
+    :param e: embedding efficiency
+        in bits per change
     :param seed: random seed for embedding simulator
     :type seed: int
     :return: quantized stego DCT coefficients,
@@ -83,7 +86,8 @@ def simulate_single_channel(
         return y0
 
     # Compute bound on embedding efficiency
-    e = alpha / tools.inv_entropy(alpha)
+    if e is None:
+        e = alpha / tools.inv_entropy(alpha)
 
     # Number of nonzero DCT AC coefficients
     nzAC = tools.dct.nzAC(y0)
@@ -92,16 +96,16 @@ def simulate_single_channel(
     # Calculate change rate on the bound
     beta = alpha / e
 
-    # # Introduce shrinkage
-    # if add_shrinkage:
-    #     p_pm1 = np.mean(np.abs(y0) == 1)  # probability of 1 or -1
-    #     beta = beta / (1 - p_pm1)  # adjust change rate
-    #     """
-    #     beta' = beta + beta * p + beta * p**2 + ...
-    #     beta' = beta + beta * (sum_{i=1:\infty} p**i)
-    #     beta' = beta + beta * p / (1 - p)
-    #     beta' = beta / (1 - p)
-    #     """
+    # Introduce shrinkage
+    if add_shrinkage:
+        p_pm1 = np.mean(np.abs(y0) == 1)  # probability of 1 or -1
+        beta = beta / (1 - p_pm1)  # adjust change rate
+        """
+        beta' = beta + beta * p + beta * p**2 + ...
+        beta' = beta + beta * (sum_{i=1:infty} p**i)
+        beta' = beta + beta * p / (1 - p)
+        beta' = beta / (1 - p)
+        """
 
     # Number of changes
     num_changes = int(np.ceil(beta * nzAC))
@@ -157,20 +161,20 @@ def simulate_single_channel(
     # Flatten cover DCT coefficients
     y0_2d = y0.transpose((0, 2, 1, 3)).reshape((num_vertical_blocks * 8, num_horizontal_blocks * 8))
 
-    # Re-embed zeros (shrinkage)
-    if add_shrinkage:
-        start = 0
-        num_zeros = (
-            np.abs(y0_2d[tuple(permuted_indices_2d[start:num_changes].T)]) == 1
-        ).sum()
-        while num_zeros > 0:
-            # Move segment
-            start = num_changes
-            num_changes += num_zeros
-            # Number of zeros in new segment
-            num_zeros = (
-                np.abs(y0_2d[tuple(permuted_indices_2d[start:num_changes].T)]) == 1
-            ).sum()
+    # # Re-embed zeros (shrinkage)
+    # if add_shrinkage:
+    #     start = 0
+    #     num_zeros = (
+    #         np.abs(y0_2d[tuple(permuted_indices_2d[start:num_changes].T)]) == 1
+    #     ).sum()
+    #     while num_zeros > 0:
+    #         # Move segment
+    #         start = num_changes
+    #         num_changes += num_zeros
+    #         # Number of zeros in new segment
+    #         num_zeros = (
+    #             np.abs(y0_2d[tuple(permuted_indices_2d[start:num_changes].T)]) == 1
+    #         ).sum()
 
     # Coefficients to be changed
     to_be_changed_2d = permuted_indices_2d[:num_changes]
