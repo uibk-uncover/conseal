@@ -33,7 +33,10 @@ def _entropy(*ps, base: float = 2) -> float:
     assert np.isclose(np.sum(px, axis=0), 1).all(), 'denormalized probabilities'
     # entropy
     px[px <= 0] = 1  # avoid log(0)
-    H = -(px * np.log(px) / np.log(base))
+    if base == 2:  # makes default faster
+        H = -(px * np.log2(px))
+    else:
+        H = -(px * np.log(px) / np.log(base))
     return np.nansum(H)
 
 
