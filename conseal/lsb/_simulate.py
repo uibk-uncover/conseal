@@ -62,12 +62,35 @@ def simulate(
     :Example:
 
     >>> x0 = np.array(Image.open('cover.pgm'))
-    >>> x1 = cl.lsb.simulate_single_channel(
-    ...   x0=x0,
+    >>> x1 = cl.lsb.simulate(
+    ...   cover=x0,
     ...   alpha=0.4,
     ...   modify=cl.LSB_MATCHING,
     ...   seed=12345)
     >>> Image.fromarray(x1).save('stego.pgm')
+
+    The function can also take DCT coefficients
+
+    >>> jpeg0 = jpeglib.read_dct('cover.jpeg')
+    >>> jpeg1 = jpeg0.copy()
+    >>> jpeg1.Y = cl.lsb.simulate(
+    ...   cover=jpeg0.Y,
+    ...   alpha=0.4,
+    ...   modify=cl.LSB_MATCHING,
+    ...   cover_range=(-1024, 1023),
+    ...   seed=12345)
+    >>> jpeg1.write_dct('stego.jpeg')
+
+    Technically, the function can also simulate LSB for color images.
+    This is the reason, why it is called `simulate` instead of `simulate_single_channel`.
+
+    >>> x0 = np.array(Image.open('cover.ppm'))
+    >>> x1 = cl.lsb.simulate(
+    ...   cover=x0,
+    ...   alpha=0.4,
+    ...   modify=cl.LSB_MATCHING,
+    ...   seed=12345)
+    >>> Image.fromarray(x1).save('stego.ppm')
     """
     # compute probability
     ps, _ = _costmap.probability(
@@ -85,4 +108,4 @@ def simulate(
         ps=ps,
         **kw,
     )
-    return cover + delta.astype('uint8')
+    return cover + delta.astype(cover.dtype)

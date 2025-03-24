@@ -82,6 +82,8 @@ def entropy(*ps, base: int = 2):
 
 def inv_entropy(
     h: float,
+    *,
+    xtol: float = 1e-4,
 ) -> float:
     """Computes inverse entropy.
 
@@ -100,7 +102,7 @@ def inv_entropy(
         """SS error from H(p)=h."""
         return (_entropy(p, 1-p) - h)**2
 
-    return scipy.optimize.fminbound(mse_H_eq_h, 0, .5, xtol=1e-4)
+    return scipy.optimize.fminbound(mse_H_eq_h, 0, .5, xtol=xtol)
 
 
 def matlab_round(x):

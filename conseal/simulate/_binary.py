@@ -171,5 +171,12 @@ def binary(
     ...   n=im_dct.Y.size,  # cover size
     ...   seed=12345)  # seed
     """
-    ps, lbda = probability(rhos=rhos, alpha=alpha, n=n, sender=sender)
+    ps, lbda = probability(
+        rhos=rhos,
+        alpha=alpha,
+        n=n,
+        e=e,
+        objective=objective,
+        sender=sender,
+    )
     return simulate(ps, **kw)

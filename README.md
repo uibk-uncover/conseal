@@ -149,6 +149,22 @@ jpeg.Y = cl.juniward.simulate_single_channel(
 jpeg.write_dct("stego.jpeg")
 ```
 
+- LSB
+
+```python
+# load cover
+x0 = np.array(Image.open("cover.png"))
+
+# embed HUGO 0.4 bpnzAC
+x1 = cl.lsb.simulate(
+    x0=x0,
+    alpha=0.4,
+    seed=12345)
+
+# save result as stego image
+Image.fromarray(x1).save("stego.png")
+```
+
 - HUGO
 
 ```python
