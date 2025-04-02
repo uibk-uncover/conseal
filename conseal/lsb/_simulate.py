@@ -8,7 +8,7 @@ import numpy as np
 import typing
 
 from . import _costmap
-from ._costmap import Change
+from ._costmap import Change, Location
 from ..simulate import _ternary
 
 
@@ -17,10 +17,12 @@ def simulate(
     alpha: float,
     *,
     modify: Change = Change.LSB_REPLACEMENT,
-    permute: bool = True,
+    locate: Location = None,
+    permute: bool = None,  # deprecated
     cover_range: typing.Tuple[int] = (0, 255),
     n: int = None,
     e: float = 2,
+    rhos: np.ndarray = None,
     wet_cost: float = 10**10,
     **kw,
 ) -> np.ndarray:
@@ -97,10 +99,12 @@ def simulate(
         cover=cover,
         alpha=alpha,
         modify=modify,
+        locate=locate,
         permute=permute,
         cover_range=cover_range,
         n=n,
         e=e,
+        rhos=rhos,
         wet_cost=wet_cost
     )
     # simulate

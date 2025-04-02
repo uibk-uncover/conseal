@@ -1,5 +1,62 @@
 
 import conseal as cl
+print(cl.__path__)
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
+from scipy.signal import convolve2d
+
+
+
+x0 = np.array(Image.open('campus512_gray.png'))
+
+rhos = cl.ws._costmap.compute_cost(x0)
+# # flip
+# x0_bar = x0 ^ 1
+# x0 = x0.astype('float32')
+
+# # predict
+# f_kb = np.array([
+#     [-1, +2, -1],
+#     [+2,  0, +2],
+#     [-1, +2, -1],
+# ], dtype='float32') / 4.
+# x0_hat = convolve2d(
+#     x0.astype('float32'), f_kb,
+#     mode='same', boundary='symm'
+# )
+
+# # calculate local WS residuals
+# betas_hat = (x0 - x0_bar) * (x0 - x0_hat)
+# rhos = np.exp(-np.abs(betas_hat))
+# rhos = 1 / np.abs(betas_hat)
+
+# plt.imshow(rhos, cmap='gray')
+# plt.show()
+
+
+x1 = cl.lsb.simulate(x0, alpha=.1, locate=cl.LOCATION_SELECTED, rhos=rhos, seed=12345)
+# x1 = x0 + delta
+y = np.repeat(x0[..., None], 3, 2)
+y[x0 != x1] = [255, 128, 0]
+
+plt.imshow(y)
+# plt.imshow(x1, cmap='gray')
+plt.show()
+
+
+exit()
+
+
+
+
+
+
+
+
+
+
+import conseal as cl
 from glob import glob
 import jpeglib
 import numpy as np

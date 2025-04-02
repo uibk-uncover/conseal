@@ -42,6 +42,9 @@ LSB simulator
 .. autoclass:: conseal.lsb.Change
    :members: LSB_REPLACEMENT, LSB_MATCHING
 
+.. autoclass:: conseal.lsb.Location
+   :members: LOCATION_PERMUTED, LOCATION_SEQUENTIAL, LOCATION_SELECTED
+
 MiPOD simulator
 """""""""""""""""""
 

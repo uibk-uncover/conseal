@@ -6,7 +6,7 @@ Affiliation: University of Innsbruck
 
 # simulate
 from ._simulate import simulate
-from ._costmap import compute_cost_adjusted, Change
+from ._costmap import compute_cost_adjusted, Change, Location
 
 #
 from . import _simulate
@@ -18,4 +18,5 @@ __all__ = [
     'compute_cost_adjusted',
     'simulate_single_channel',
     'Change',
+    'Location',
 ]

@@ -11,7 +11,9 @@ Affiliation: University of Innsbruck
 import enum
 import numpy as np
 import typing
+import warnings
 
+from . import _selection_channel
 from .. import simulate
 from .. import tools
 
@@ -23,6 +25,17 @@ class Change(enum.Enum):
     """LSB replacement."""
     LSB_MATCHING = enum.auto()
     """LSB matching."""
+
+
+class Location(enum.Enum):
+    """Location of embedding changes."""
+
+    LOCATION_PERMUTED = enum.auto()
+    """Permuted embedding."""
+    LOCATION_SEQUENTIAL = enum.auto()
+    """Sequential embedding."""
+    LOCATION_SELECTED = enum.auto()
+    """Selection channel."""
 
 
 def compute_cost(
@@ -120,9 +133,11 @@ def probability(
     alpha: float,
     *,
     modify: Change = Change.LSB_REPLACEMENT,
-    permute: bool = True,
+    locate: Location = None,
+    permute: bool = None,  # deprecated
     cover_range: typing.Tuple[int] = (0, 255),
     n: int = None,
+    rhos: np.array = None,
     e: float = 2,
     wet_cost: float = 10**10,
 ) -> np.ndarray:
@@ -146,6 +161,8 @@ def probability(
     :param e: embedding efficiency
         in bits per change
     :type e: float
+    :param rhos: costs for the selection channel
+    :type rhos: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param wet_cost: wet cost for unembeddable elements
     :type wet_cost: float
     :return: probability map of the same shape as cover
@@ -156,6 +173,19 @@ def probability(
     >>> ps, _ = cl.lsb.probability(x0, alpha=.4)
     >>> x1 = x0 + cl.simulate._ternary.simulate(ps=ps, seed=12345)
     """
+    if permute is not None:
+        warnings.warn(
+            'permuted is deprecated, use locate instead',
+            DeprecationWarning,
+        )
+        if permute:
+            locate = Location.LOCATION_PERMUTED
+        else:
+            locate = Location.LOCATION_SEQUENTIAL
+    elif locate is None:
+        locate = Location.LOCATION_PERMUTED
+
+    #
     if n is None:
         n = cover.size
     if e is None:
@@ -170,14 +200,18 @@ def probability(
         change_rate = changes / n
 
         # permutative straddling
-        if permute:
+        if locate == Location.LOCATION_PERMUTED:
             p = np.ones(cover.shape, dtype=float) * change_rate
         # sequential embedding
-        else:
+        elif locate == Location.LOCATION_SEQUENTIAL:
             p = np.reshape(
                 [1/e]*involved_elements + [0]*(n - involved_elements),
                 cover.shape
             )
+        # selection channel
+        elif locate == Location.LOCATION_SELECTED:
+            assert rhos is not None, 'rhos were not given'
+            p = _selection_channel.probability(rhos=rhos, alpha=alpha, e=e)
 
         # LSB replacement
         if modify == Change.LSB_REPLACEMENT:

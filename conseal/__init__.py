@@ -13,6 +13,7 @@ from . import lsb  # can be also used for JPEG
 from . import mipod
 from . import suniward
 from . import wow
+from . import ws
 
 # JPEG
 from . import ebs
@@ -29,6 +30,10 @@ EBS_ORIGINAL = ebs.Implementation.EBS_ORIGINAL
 EBS_FIX_WET = ebs.Implementation.EBS_FIX_WET
 LSB_REPLACEMENT = lsb.Change.LSB_REPLACEMENT
 LSB_MATCHING = lsb.Change.LSB_MATCHING
+Location = lsb.Location
+LOCATION_PERMUTED = lsb.Location.LOCATION_PERMUTED
+LOCATION_SEQUENTIAL = lsb.Location.LOCATION_SEQUENTIAL
+LOCATION_SELECTED = lsb.Location.LOCATION_SELECTED
 MiPOD_ORIGINAL = mipod.Implementation.MiPOD_ORIGINAL
 MiPOD_FIX_WET = mipod.Implementation.MiPOD_FIX_WET
 DISTORTION_LIMITED_SENDER = simulate.DISTORTION_LIMITED_SENDER

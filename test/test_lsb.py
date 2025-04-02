@@ -28,13 +28,13 @@ class TestLSB(unittest.TestCase):
         del self.tmp
 
     @parameterized.expand([
-        [alpha, modify, permute]
+        [alpha, modify, locate]
         for alpha in [.05, .1, .2, .4]
         for modify in [cl.LSB_REPLACEMENT, cl.LSB_MATCHING]
-        for permute in [True, False]
+        for locate in [cl.LOCATION_PERMUTED, cl.LOCATION_SEQUENTIAL]
     ])
-    def test_simulate(self, alpha: float, modify: str, permute: bool):
-        self._logger.info(f"TestLSB.test_simulate({alpha}, {permute})")
+    def test_simulate(self, alpha: float, modify: str, locate: cl.Location):
+        self._logger.info(f"TestLSB.test_simulate({alpha}, {locate})")
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / 'seal1.png'))
         # embed steganography
@@ -42,7 +42,7 @@ class TestLSB(unittest.TestCase):
         x1 = cl.lsb.simulate(
             x0, alpha,
             modify=modify,
-            permute=permute,
+            locate=locate,
             seed=12345,
         )
         end = time.perf_counter()
@@ -60,7 +60,7 @@ class TestLSB(unittest.TestCase):
         # test speed
         delta = end - start
         self.assertLess(delta, .10)  # faster than 100ms
-        self._logger.info(f'LSB {modify} embedding [{permute=}, {modify=}] 0.4bpnzAC in 512x512: {delta*1000:.02f} ms')
+        self._logger.info(f'LSB {modify} embedding [{locate=}, {modify=}] 0.4bpnzAC in 512x512: {delta*1000:.02f} ms')
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
     def test_cost(self, f):
@@ -94,7 +94,7 @@ class TestLSB(unittest.TestCase):
         y1 = cl.lsb.simulate(
             y0, .4,
             modify=cl.LSB_MATCHING,
-            permute=True,
+            locate=cl.LOCATION_PERMUTED,
             cover_range=(-1024, 1023),
             seed=12345,
         )
@@ -105,6 +105,21 @@ class TestLSB(unittest.TestCase):
 
     # TODO: chi2 test
     # TODO: ws
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_selected(self, f):
+        self._logger.info(f'TestLSB.test_selected({f=})')
+        # load cover
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
+        # get cost
+        rhos = cl.ws._costmap.compute_cost(x0)
+        # simulate the stego
+        x1 = cl.lsb.simulate(x0, alpha=.1, locate=cl.LOCATION_SELECTED, rhos=rhos, seed=12345)
+        x1_ = cl.lsb.simulate(x0, alpha=.1, locate=cl.LOCATION_PERMUTED, seed=12345)
+        #
+        E_rho = np.mean((x1 != x0).astype('float') * rhos)
+        E_rho_ = np.mean((x1_ != x0).astype('float') * rhos)
+        self.assertLess(E_rho, E_rho_ * .1)  # 10 fold smaller (it reduces the WS cost)
 
 
 __all__ = ["TestLSB"]
