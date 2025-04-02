@@ -59,7 +59,7 @@ S-UNIWARD simulator
 .. autofunction:: conseal.suniward.simulate_single_channel
 
 WOW simulator
-"""""""""""""""""""
+"""""""""""""
 
 .. autofunction:: conseal.wow.simulate_single_channel
 
