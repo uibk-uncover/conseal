@@ -1,7 +1,7 @@
 
 [project]
 name = "conseal"
-version = "2025.04"
+version = "2025.04.1"
 dependencies = [
     "numpy",
     "jpeglib >= 1.0.0",
