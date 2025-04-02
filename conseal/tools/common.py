@@ -96,7 +96,7 @@ def inv_entropy(
 
     >>> # TODO
     """
-    global EPS
+    # global EPS
 
     def mse_H_eq_h(p) -> float:
         """SS error from H(p)=h."""
