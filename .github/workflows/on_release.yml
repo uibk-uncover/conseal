@@ -59,6 +59,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: artifact-${{ strategy.job-index }}
           path: ./wheelhouse/conseal*.whl
 
   make_sdist:
@@ -73,6 +74,7 @@ jobs:
         run: pipx run build --sdist
       - uses: actions/upload-artifact@v4
         with:
+          name: artifact-${{ strategy.job-index }}
           path: dist/*.tar.gz
 
   unit_tests:
@@ -90,7 +92,8 @@ jobs:
       - name: Downloads artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifact
+          pattern: artifact-*
+          merge-multiple: true
           path: dist
       - name: Install wheel
         run: |
@@ -115,7 +118,8 @@ jobs:
       - name: Downloads artifact
         uses: actions/download-artifact@v4
         with:
-          name: artifact
+          pattern: artifact-*
+          merge-multiple: true
           path: dist
       - name: Publish on PyPI
         uses: pypa/gh-action-pypi-publish@v1.4.1
