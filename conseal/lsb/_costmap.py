@@ -197,7 +197,8 @@ def probability(
         # number of changes
         involved_elements = int(np.ceil(alpha * n))
         changes = int(np.ceil(involved_elements / e))
-        change_rate = changes / n
+        change_rate = changes / cover.size
+        # print(f'{n=} {e=} {changes=} {change_rate=}')
 
         # permutative straddling
         if locate == Location.LOCATION_PERMUTED:

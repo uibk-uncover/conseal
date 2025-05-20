@@ -83,8 +83,7 @@ def simulate_single_channel(
     rho_p1 = tools.dct.jpeglib_to_jpegio(rho_p1)
     rho_m1 = tools.dct.jpeglib_to_jpegio(rho_m1)
     delta = simulate.ternary(
-        rho_p1=rho_p1,
-        rho_m1=rho_m1,
+        rhos=(rho_p1, rho_m1),
         alpha=alpha,
         n=num_DCT_coeffs,
         generator=generator,
