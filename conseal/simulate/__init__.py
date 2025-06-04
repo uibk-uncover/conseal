@@ -13,6 +13,15 @@ from ._binary import binary
 from ._ternary import ternary
 
 from ._optim import get_p, average_payload, average_distortion, Sender
+from ._lambda_estimation import (
+    expected_distortion,
+    d_expected_distortion,
+    binary_search_lambda,
+    newton_lambda,
+    polynomial_proxy_lambda,
+    taylor_inverse_lambda,
+    compare_methods,
+)
 
 PAYLOAD_LIMITED_SENDER = Sender.PAYLOAD_LIMITED_SENDER
 DISTORTION_LIMITED_SENDER = Sender.DISTORTION_LIMITED_SENDER
@@ -21,12 +30,12 @@ DLS = DISTORTION_LIMITED_SENDER
 
 
 def simulate(
-    rhos: Tuple[np.ndarray],
-    alpha: float,
-    n: int,
-    seed: int = None,
-    q: int = None,
-    **kw,
+        rhos: Tuple[np.ndarray],
+        alpha: float,
+        n: int,
+        seed: int = None,
+        q: int = None,
+        **kw,
 ) -> Tuple[np.ndarray]:
     """
 
@@ -86,4 +95,11 @@ __all__ = [
     'get_p',
     'simulate',
     'average_payload',
+    'expected_distortion',
+    'd_expected_distortion',
+    'binary_search_lambda',
+    'newton_lambda',
+    'polynomial_proxy_lambda',
+    'taylor_inverse_lambda',
+    'compare_methods',
 ]
