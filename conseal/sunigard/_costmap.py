@@ -66,8 +66,10 @@ def gabor(
             # Eq. 3
             v = -x * sin_θs[i] + y * cos_θs[i]
             # Eq. 1
-            Gxy = np.exp(-(u**2 + γ**2 * v**2) / (2 * σ**2)) *
+            Gxy = (
+                np.exp(-(u**2 + γ**2 * v**2) / (2 * σ**2)) *
                 np.cos(2*π*u/λ + ϕ)
+            )
             filters.append(Gxy - np.mean(Gxy))
     return filters
 
