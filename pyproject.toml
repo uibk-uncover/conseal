@@ -6,8 +6,7 @@ dependencies = [
     "numpy",
     "jpeglib >= 1.0.0",
     "scipy",
-    "numba",
-    "setuptools"
+    "numba"
 ]
 requires-python = ">= 3.8"
 authors = [

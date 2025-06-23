@@ -11,7 +11,7 @@ V. Holub, J. Fridrich and T. Denemark. http://dde.binghamton.edu/vholub/pdf/EURA
 
 import numpy as np
 from scipy.signal import correlate2d
-import typing
+from typing import List, Tuple
 
 from .. import tools
 
@@ -20,6 +20,7 @@ def compute_cost(
     x0: np.ndarray,
     *,
     sigma: float = 1,
+    filters: List[np.ndarray] = None,
 ) -> np.ndarray:
     """Computes S-UNIWARD cost.
 
@@ -28,6 +29,8 @@ def compute_cost(
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param sigma: stabilizing constant. Small sigmas make the embedding very sensitive to the image content. Large sigmas smooth out the embedding change probabilities.
     :type sigma: float
+    :param filters: filters to use, by default Daubechies8 wavelet
+    :type filters:
     :return: cost for +-1 change,
         of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -37,13 +40,13 @@ def compute_cost(
     >>> # TODO
     """  # noqa: E501
     # Get 2D wavelet filters - Daubechies 8
-    (high_pass_decomposition_filter, low_pass_decomposition_filter), filters = tools.spatial.daubechies8()
+    if filters is None:
+        (high_pass_decomposition_filter, low_pass_decomposition_filter), filters = tools.spatial.daubechies8()
     num_filters = len(filters)
-
-    pad_size = np.max([f.shape for f in filters])
 
     # Mirror-pad the spatial image. Extend image by the length of the filter in all dimensions.
     # "symmetric" means reflect, i.e. (d c b a | a b c d | d c b a)
+    pad_size = np.max([f.shape for f in filters])
     x0_padded = np.pad(x0, (pad_size, pad_size), 'symmetric')
 
     # Compute directional residual and suitability \xi for each filter
@@ -83,7 +86,7 @@ def compute_cost_adjusted(
     *,
     wet_cost: float = 10**8,
     **kw,
-) -> typing.Tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Computes S-UNIWARD cost with wet-cost adjustments.
 
     :param x0: uncompressed (pixel) cover image,

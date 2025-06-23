@@ -11,37 +11,41 @@ import unittest
 
 from . import defs
 
-STEGO_DIR = defs.ASSETS_DIR / 'suniward'
-COST_DIR = STEGO_DIR / 'costmap-matlab'
+# STEGO_DIR = defs.ASSETS_DIR / 'suniward'
+# COST_DIR = STEGO_DIR / 'costmap-matlab'
 
 
-class TestSUNIWARD(unittest.TestCase):
-    """Test suite for S-UNIWARD embedding."""
+class TestSUNIGARD(unittest.TestCase):
+    """Test suite for S-UNIGARD embedding."""
     _logger = logging.getLogger(__name__)
+
+    def test_gabor(self):
+        self._logger.info(f'TestSUNIGARD.test_gabor()')
+        features = cl.sunigard._costmap.gabor()
+        self.assertEqual(len(features), 32)
+        for f in features:
+            self.assertEqual(f.shape, (11, 11))
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
     def test_compare_suniward_matlab(self, f):
-        self._logger.info(f'TestSUNIWARD.test_compare_suniward_matlab({f})')
+        self._logger.info(f'TestSUNIGARD.test_compare_suniward_matlab({f})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # calculate cost
-        rho = cl.suniward._costmap.compute_cost(x0=x0)
+        rho = cl.sunigard._costmap.compute_cost(x0=x0)
 
-        # load matlab reference
-        rho_matlab = scipy.io.loadmat(COST_DIR / f'{f}_costmap.mat')['rho']
-        np.testing.assert_allclose(rho, rho_matlab)
-        # self.assertTrue(np.allclose(costmap, costmap_matlab))
+        # no reference for S-UNIGARD :(
 
     @parameterized.expand([
         [fname, i+1]
         for i, fname in enumerate(defs.TEST_IMAGES)
     ])
     def test_compare_embedding_matlab(self, fname: str, seed: int):
-        self._logger.info(f'TestSUNIWARD.test_compare_wow_matlab({fname}, {seed})')
+        self._logger.info(f'TestSUNIGARD.test_compare_wow_matlab({fname}, {seed})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
         # embed steganography
-        x1 = cl.suniward.simulate_single_channel(
+        x1 = cl.sunigard.simulate_single_channel(
             x0=x0,
             alpha=.4,
             generator="MT19937",
@@ -49,9 +53,7 @@ class TestSUNIWARD(unittest.TestCase):
             seed=seed,
         )
 
-        # test against DDE matlab reference
-        x1_matlab = np.array(Image.open(STEGO_DIR / f'{fname}_alpha_0.4_seed_{seed}.png'))
-        np.testing.assert_allclose(x1, x1_matlab)
+        # no reference for S-UNIGARD :(
 
 
 
