@@ -57,4 +57,4 @@ class TestSUNIGARD(unittest.TestCase):
 
 
 
-__all__ = ["TestSUNIWARD"]
+__all__ = ["TestSUNIGARD"]
