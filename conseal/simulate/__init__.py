@@ -12,12 +12,42 @@ from . import _ternary
 from ._binary import binary
 from ._ternary import ternary
 
-from ._optim import get_p, average_payload, average_distortion, Sender
+from ._defs import Sender
+from .optim import get_p, average_payload
+from .optim_new import get_objective, get_d_objective, get_probability, LambdaOptimizer
+from .optim_new import (
+    expected_distortion,
+    d_expected_distortion,
+    entropy_with_logit, entropy,
+    d_entropy_with_logit,
+    d_entropy
+)
+# from ._optim_binary import (
+#     expected_distortion,
+#     d_expected_distortion,
+#     # entropy_with_logit,
+#     # entropy,
+#     # d_entropy,
+#     # binary_search,
+#     # newton,
+#     # polynomial_proxy,
+#     # taylor_inverse,
+#     # compare_methods,
+# )
 
 PAYLOAD_LIMITED_SENDER = Sender.PAYLOAD_LIMITED_SENDER
 DISTORTION_LIMITED_SENDER = Sender.DISTORTION_LIMITED_SENDER
+PAYLOAD_LIMITED_SENDER_DDE = Sender.PAYLOAD_LIMITED_SENDER_DDE
 PLS = PAYLOAD_LIMITED_SENDER
+PLS_DDE = PAYLOAD_LIMITED_SENDER_DDE
 DLS = DISTORTION_LIMITED_SENDER
+BINARY_SEARCH_DDE = LambdaOptimizer.BINARY_SEARCH_DDE
+BINARY_SEARCH = LambdaOptimizer.BINARY_SEARCH
+NEWTON = LambdaOptimizer.NEWTON
+POLYNOMIAL_PROXY = LambdaOptimizer.POLYNOMIAL_PROXY
+TAYLOR_INVERSE = LambdaOptimizer.TAYLOR_INVERSE
+# TAYLOR_NEWTON = LambdaOptimizer.TAYLOR_NEWTON
+# BINARY_SEARCH_NEWTON = LambdaOptimizer.BINARY_SEARCH_NEWTON
 
 
 def simulate(
@@ -78,7 +108,7 @@ def simulate(
 
 
 __all__ = [
-    '_optim',
+    'optim',
     '_ternary',
     'ternary',
     '_binary',
@@ -86,4 +116,15 @@ __all__ = [
     'get_p',
     'simulate',
     'average_payload',
+    'get_objective',
+    'get_d_objective',
+    'get_probability',
+    'LambdaOptimizer',
+    #
+    'expected_distortion',
+    'd_expected_distortion',
+    'entropy_with_logit',
+    'entropy',
+    'd_entropy_with_logit',
+    'd_entropy',
 ]

@@ -13,7 +13,8 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 from typing import Tuple, Callable
 
-from ._optim import get_objective, calc_lambda, Sender
+from ._defs import Sender
+from .optim_new import get_objective, get_d_objective, LambdaOptimizer
 
 
 def probability(
@@ -23,7 +24,11 @@ def probability(
     *,
     e: float = None,
     objective: Callable = None,
-    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER_DDE,
+    lambda_optimizer: LambdaOptimizer = LambdaOptimizer.BINARY_SEARCH_DDE,
+    lbda0: Tuple[float] = None,
+    tol: float = None,
+    max_iter: int = None,
 ) -> Tuple[np.ndarray, float]:
     """Convert binary distortion to binary probability.
 
@@ -56,19 +61,31 @@ def probability(
     ...   ps=(p_p1, p_m1),  # probability of +1 and -1
     ...   seed=12345)       # seed
     """
+    if objective is not None and lambda_optimizer != LambdaOptimizer.BINARY_SEARCH:
+        raise NotImplementedError('custom objective requires binary search')
     if objective is None:
-        objective = get_objective(e=e, q=3, sender=sender)
-
+        objective = get_objective(e=e, sender=sender)
+        d_objective = get_d_objective(e=e, sender=sender)
+    else:
+        d_objective = None
+    #
     m = int(np.round(alpha * n))
-    lbda = calc_lambda(
+    ps, lbda = lambda_optimizer(
         rhos=rhos,
-        m=m,
+        target=m,
         n=n,
         objective=objective,
+        d_objective=d_objective,
+        lbda0=lbda0,
+        tol=tol,
+        max_iter=max_iter,
     )
-    #
-    (p_p1, p_m1), H = objective(lbda=lbda, rhos=rhos)
-    return (p_p1, p_m1), lbda
+    return ps, lbda
+    # (p_p1, p_m1), H = objective(lbda=lbda, rhos=rhos)
+    # return (p_p1, p_m1), lbda
+    # #
+    # (p_p1, p_m1), H = objective(lbda=lbda, rhos=rhos)
+    # return (p_p1, p_m1), lbda
 
 
 def simulate(
@@ -149,7 +166,7 @@ def ternary(
     *,
     e: float = None,
     objective: Callable = None,
-    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER_DDE,
     **kw,
 ) -> np.ndarray:
     """Simulates ternary embedding given distortion and embedding rate.
