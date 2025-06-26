@@ -18,15 +18,8 @@ from typing import Callable, Tuple
 import warnings
 
 from .. import tools
-
-
-class Sender(enum.Enum):
-    """Type of sender."""
-
-    PAYLOAD_LIMITED_SENDER = enum.auto()
-    """Payload-limited sender."""
-    DISTORTION_LIMITED_SENDER = enum.auto()
-    """Distortion-limited sender."""
+from . import optim_new
+from ._defs import Sender
 
 
 def get_p(
@@ -53,6 +46,7 @@ def get_p(
 
     >>> # TODO
     """
+    warnings.warn('get_p is deprecated, use get_probability instead', DeprecationWarning)
     # denominator (forced left-associativity)
     denum = 1 if add_zero else 0
     for rho in rhos:
@@ -87,12 +81,12 @@ def average_payload(
 
     >>> # TODO
     """
-    assert (
-        (ps is not None and rhos is None or ps is None and rhos is not None)
-    ), 'one of ps or rhos must be given'
-    assert (
-        lbda is not None or ps is not None
-    ), 'lbda can be specified only with rhos'
+    # assert (
+    #     (ps is not None and rhos is None or ps is None and rhos is not None)
+    # ), 'one of ps or rhos must be given'
+    # assert (
+    #     lbda is not None or ps is not None
+    # ), 'lbda can be specified only with rhos'
     #
     if ps is None:
         add_zero = True if q is None else len(rhos) == q-1
@@ -111,6 +105,52 @@ def average_payload(
         H = tools._entropy(*ps)
 
     return ps, H
+
+
+def d_average_payload(
+    *,
+    ps: Tuple[np.ndarray] = None,
+    e: float = None,
+    lbda: float = None,
+    rhos: Tuple[np.ndarray] = None,
+    q: int = None,
+) -> float:
+    # assert (
+    #     (ps is not None and rhos is None or ps is None and rhos is not None)
+    # ), 'one of ps or rhos must be given'
+    # assert (
+    #     lbda is not None or ps is not None
+    # ), 'lbda can be specified only with rhos'
+    #
+    add_zero = True if q is None else len(rhos) == q-1
+    if ps is None:
+        ps = [
+            get_p(lbda, rhos[i], *rhos[:i], *rhos[i+1:], add_zero=add_zero)
+            for i in range(len(rhos))
+        ]
+
+    # Imperfect coding - given embedding efficiency
+    if e is not None:
+        raise NotImplementedError
+    else:
+        px = np.array(list(ps))
+        if add_zero:
+            px0 = 1-np.sum(px, axis=0)[None]
+            px = np.concatenate([px, px0], axis=0)
+
+        px[px <= 0] = 1  # avoid log(0)
+        p = px[:-1]
+        p0 = px[-1:]
+        E_rho = np.sum(p * rhos, axis=0, keepdims=True)
+        dp_dlambda = p * (E_rho - rhos)
+        log2_term = np.log2(p0) - np.log2(p)
+        dH = dp_dlambda * log2_term
+
+        # px[px <= 0] = 1  # avoid log(0)
+        # log2_px = np.log2(px)
+        # log2_recip = 1.4426950408889634  # 1 / np.log2(2)
+        # dH = (log2_px + log2_recip) * (log2_px - log2_px[-1:])
+    return np.sum(dH)
 
 
 def average_distortion(
@@ -169,17 +209,37 @@ def get_objective(
     if sender == Sender.PAYLOAD_LIMITED_SENDER:
         # print('selected PLS objective')
         return average_payload if e is None else _pls_objective
-    if sender == Sender.DISTORTION_LIMITED_SENDER:
+    elif sender == Sender.DISTORTION_LIMITED_SENDER:
         # print('selected DLS objective')
         assert e is None, 'e not implemented for DLS'
         return average_distortion
+    else:
+        raise NotImplementedError(f'unknown sender {sender}')
 
 
-def calc_lambda(
+def get_d_objective(
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    e: float = None,
+    q: int = None,
+) -> Callable:
+    def _d_pls_objective(*args, **kw):
+        return d_average_payload(*args, e=e, q=q, **kw)
+
+    if sender == Sender.PAYLOAD_LIMITED_SENDER:
+        # print('selected PLS objective')
+        return d_average_payload if e is None else _d_pls_objective
+    elif sender == Sender.DISTORTION_LIMITED_SENDER:
+        raise NotImplementedError('DiLS not implemented for Newton')
+    else:
+        raise NotImplementedError(f'unknown sender {sender}')
+
+
+def binary_search_lambda(
     rhos: Tuple[np.ndarray],
     m: int,
     n: int,
     objective: Callable = None,
+    **kw
 ) -> float:
     """Implements binary search for lambda.
 
@@ -264,3 +324,21 @@ def calc_lambda(
         warnings.warn("optimization might not have converged", RuntimeWarning)
 
     return lbda
+
+
+# class LambdaOptimizer(enum.Enum):
+#     """Type of lambda optimizer."""
+
+#     BINARY_SEARCH = enum.auto()
+#     """Binary search."""
+#     NEWTON = enum.auto()
+#     """Newton method."""
+
+#     def __call__(self, *args, **kw):
+#         global binary_search_lambda, _optim_binary
+#         if self == LambdaOptimizer.BINARY_SEARCH:
+#             return binary_search_lambda(*args, **kw)
+#         else:
+#             raise NotImplementedError(f"No implementation for optimizer {self}")
+
+

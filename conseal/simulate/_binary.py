@@ -13,7 +13,9 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 from typing import Tuple, Callable
 
-from ._optim import get_objective, calc_lambda, Sender
+from ._defs import Sender
+# from .optim import LambdaOptimizer
+from .optim_new import get_objective, get_d_objective, LambdaOptimizer
 
 
 def probability(
@@ -23,7 +25,12 @@ def probability(
     *,
     e: float = None,
     objective: Callable = None,
-    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER_DDE,
+    lambda_optimizer: LambdaOptimizer = LambdaOptimizer.BINARY_SEARCH,
+    # lbda0: Tuple[float] = None,
+    # tol: float = 1e-3,
+    # max_iter: int = None,
+    **kw,
 ) -> Tuple[np.ndarray, float]:
     """Convert binary distortion to binary probability.
 
@@ -57,13 +64,27 @@ def probability(
     ...   ps=(p_pm1,),  # probability of +1 and -1
     ...   seed=12345)   # seed
     """
-    if objective is None:
-        objective = get_objective(e=e, q=2, sender=sender)
-
-    message_length = int(np.round(alpha * n))
-    lbda = calc_lambda(rhos, message_length, n, objective)
     #
-    ps, _ = objective(lbda=lbda, rhos=rhos)
+    if objective is not None and lambda_optimizer != LambdaOptimizer.BINARY_SEARCH:
+        raise NotImplementedError('custom objective requires binary search')
+    if objective is None:
+        objective = get_objective(e=e, sender=sender)
+        d_objective = get_d_objective(e=e, sender=sender)
+    else:
+        d_objective = None
+
+    #
+    m = int(np.round(alpha * n))
+    ps, lbda = lambda_optimizer(
+        target=m,
+        rhos=rhos,
+        objective=objective,
+        d_objective=d_objective,
+        n=n,
+        **kw,
+    )
+
+    #
     return ps, lbda
 
 
@@ -141,7 +162,7 @@ def binary(
     *,
     e: float = None,
     objective: Callable = None,
-    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER_DDE,
     **kw,
 ) -> np.ndarray:
     """Simulates binary embedding given distortion and embedding rate.
