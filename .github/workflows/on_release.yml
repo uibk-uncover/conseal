@@ -1,11 +1,9 @@
 name: Release CI/CD # workflow name
 on: # trigger
   release:
-    branches: [main]
     types:
       - created
-  # push:
-  #   branches: [main]
+  workflow_dispatch:  # <- allows manual triggering
 
 jobs:
   build_wheels:
