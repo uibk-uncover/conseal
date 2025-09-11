@@ -7,7 +7,11 @@ Affiliation: University of Innsbruck
 import numpy as np
 import scipy.optimize
 
-EPS = np.finfo(np.float64).eps
+EPS64 = np.finfo(np.float64).eps
+"""small numerical constant for f64"""
+EPS32 = np.finfo(np.float32).eps
+"""small numerical constant for f32"""
+EPS = EPS64
 """small numerical constant"""
 
 

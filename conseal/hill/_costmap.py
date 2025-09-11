@@ -12,7 +12,58 @@ import numpy as np
 import scipy.signal
 import typing
 
+from .._conseal import hill as rs
 from .. import tools
+
+
+def _compute_cost(
+    x0: np.ndarray,
+) -> np.ndarray:
+    """Computes HILL cost.
+
+    :param x0: uncompressed (pixel) cover image
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: cost for +-1 change
+        of shape [height, width]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> rho = cl.hill.compute_cost(x0=x0)
+    """
+    # process input
+    x0 = x0.astype('float32')
+
+    # high-pass filter
+    H_KB = np.array([
+        [-1, +2, -1],
+        [+2, -4, +2],
+        [-1, +2, -1]
+    ], dtype='float32')
+    I1 = scipy.signal.convolve2d(
+        x0, H_KB,
+        mode='same', boundary='symm',
+    )
+    # print(np.abs(I1 / 4.))
+
+    # low-pass filter 1
+    L1 = np.ones((3, 3), dtype='float32') / 3**2
+    I2 = scipy.signal.convolve2d(
+        np.abs(I1 / 4.), L1,
+        mode='same', boundary='symm',
+    )
+
+    # low-pass filter 2
+    L2 = np.ones((15, 15), dtype='float32')/15**2
+    I2[I2 < tools.EPS32] = tools.EPS32
+    I3 = scipy.signal.convolve2d(
+        1./(I2), L2,
+        mode='same', boundary='symm',
+    )
+
+    #
+    return I3
 
 
 def compute_cost(
@@ -31,34 +82,21 @@ def compute_cost(
 
     >>> rho = cl.hill.compute_cost(x0=x0)
     """
-    # high-pass filter
-    H_KB = np.array([
-        [-1, +2, -1],
-        [+2, -4, +2],
-        [-1, +2, -1]
-    ], dtype='float32')
-    I1 = scipy.signal.convolve2d(
-        x0, H_KB,
-        mode='same', boundary='symm',
-    )
+    # check types
+    if x0.dtype != np.uint8:
+        raise TypeError('parameter x0 must be uint8')
+    # choose implementation
+    backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST:
+        rho = rs.compute_cost(x0=x0)
+    elif backend == tools.BACKEND_PYTHON:
+        rho = _compute_cost(x0=x0)
 
-    # low-pass filter 1
-    L1 = np.ones((3, 3), dtype='float32') / 3**2
-    I2 = scipy.signal.convolve2d(
-        np.abs(I1), L1,
-        mode='same', boundary='symm',
-    )
-
-    # low-pass filter 2
-    L2 = np.ones((15, 15), dtype='float32')/15**2
-    I2[I2 < tools.EPS] = tools.EPS
-    I3 = scipy.signal.convolve2d(
-        1./(I2), L2,
-        mode='same', boundary='symm',
-    )
+    else:
+        raise NotImplementedError(f'unknown backend {backend}')
 
     #
-    return I3
+    return rho
 
 
 def compute_cost_adjusted(
@@ -82,8 +120,6 @@ def compute_cost_adjusted(
     >>> rhos = cl.hill.compute_cost_adjusted(x0=x0)
     """
     assert len(x0.shape) == 2, 'single channel expected'
-    # process input
-    x0 = x0.astype('float32')
 
     # Compute costmap
     rho = compute_cost(x0=x0)

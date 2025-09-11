@@ -7,6 +7,7 @@ from parameterized import parameterized
 from PIL import Image
 import sys
 import tempfile
+import time
 import unittest
 
 from . import defs
@@ -60,3 +61,45 @@ class TestHILL(unittest.TestCase):
         self.assertGreaterEqual(delta.min(), -1)
 
         # TODO: compare to stegolab
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_rust(self, fname: str):
+        self._logger.info(f'TestHILL.test_rust({fname=})')
+        #
+        with cl.BACKEND_PYTHON:
+            path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+            x0 = np.array(Image.open(path))
+            rho_ref = cl.hill._costmap.compute_cost(x0)
+        with cl.BACKEND_RUST:
+            path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+            x0 = np.array(Image.open(path))
+            rho = cl.hill._costmap.compute_cost(x0)
+        #
+        np.testing.assert_allclose(rho, rho_ref, rtol=1e-5)
+        """
+        SciPy appears to internally use f64, even if both arguments are f32.
+        Therefore, I must test down to 1e-5.
+        For high-cost elements, the absolute error differs even by 20.
+        But the relative error remains around 1e-7.
+        """
+
+    def test_speedup(self):
+        self._logger.info('TestHILL.test_speedup()')
+        #
+        with cl.BACKEND_RUST:
+            start = time.perf_counter()
+            for fname in defs.TEST_IMAGES:
+                path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+                x0 = np.array(Image.open(path))
+                rho = cl.hill._costmap.compute_cost(x0)
+            end = time.perf_counter()
+            print('rust:', end - start, 's')
+        #
+        with cl.BACKEND_PYTHON:
+            start = time.perf_counter()
+            for fname in defs.TEST_IMAGES:
+                path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+                x0 = np.array(Image.open(path))
+                rho = cl.hill._costmap.compute_cost(x0)
+            end = time.perf_counter()
+            print('python:', end - start, 's')

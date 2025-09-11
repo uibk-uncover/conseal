@@ -21,6 +21,9 @@ from . import juniward
 from . import nsF5
 from . import uerd
 
+# backend to choose
+from .tools import get_backend, set_backend
+
 
 # abbreviations of enum
 JUNIWARD_ORIGINAL = juniward.Implementation.JUNIWARD_ORIGINAL
@@ -41,6 +44,8 @@ PLS = PAYLOAD_LIMITED_SENDER
 DLS = DISTORTION_LIMITED_SENDER
 ATTACKER_INDIFFERENT = tools.ATTACKER_INDIFFERENT
 ATTACKER_OMNISCIENT = tools.ATTACKER_OMNISCIENT
+BACKEND_PYTHON = tools.BACKEND_PYTHON
+BACKEND_RUST = tools.BACKEND_RUST
 
 # set version
 try:

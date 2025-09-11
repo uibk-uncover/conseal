@@ -1,12 +1,20 @@
 
+[build-system]
+requires = ["maturin>=1.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+module-name = "conseal._conseal"
+bindings = "pyo3"
+
 [project]
 name = "conseal"
-version = "2025.04"
+version = "2025.09"
 dependencies = [
     "numpy",
     "jpeglib >= 1.0.0",
     "scipy",
-    "numba"
+    "numba >= 0.61",
 ]
 requires-python = ">= 3.8"
 authors = [
@@ -47,7 +55,8 @@ dev = [
     "flake8",
     "parameterized",
     "pillow",
-    "pandas"
+    "pandas",
+    "maturin"
 ]
 deploy = []
 

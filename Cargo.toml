@@ -1,0 +1,16 @@
+[package]
+name = "_conseal"
+version = "2025.9.0"
+edition = "2024"
+
+[lib]
+name = "_conseal"  # This is the module name, matching what Python will import
+crate-type = ["cdylib"]
+path = "src/lib.rs"
+
+[dependencies]
+numpy = "0.24"
+
+[dependencies.pyo3]
+version = "0.24.1"
+features = ["extension-module", "abi3-py38"]

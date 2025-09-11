@@ -54,3 +54,7 @@ venv.bak/
 wheelhouse
 
 *.npz
+
+# Rust
+Cargo.lock
+target
