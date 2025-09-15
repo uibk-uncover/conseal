@@ -82,12 +82,12 @@ def compute_cost(
 
     >>> rho = cl.hill.compute_cost(x0=x0)
     """
-    # check types
-    if x0.dtype != np.uint8:
-        raise TypeError('parameter x0 must be uint8')
     # choose implementation
     backend = tools.get_backend()
     if backend == tools.BACKEND_RUST:
+        # check types
+        if x0.dtype != np.uint8:
+            raise TypeError('parameter x0 must be uint8')
         rho = rs.compute_cost(x0=x0)
     elif backend == tools.BACKEND_PYTHON:
         rho = _compute_cost(x0=x0)
