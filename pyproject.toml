@@ -9,7 +9,7 @@ bindings = "pyo3"
 
 [project]
 name = "conseal"
-version = "2025.09"
+version = "2025.09.1"
 dependencies = [
     "numpy",
     "jpeglib >= 1.0.2",
