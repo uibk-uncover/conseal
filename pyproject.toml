@@ -6,6 +6,20 @@ build-backend = "maturin"
 [tool.maturin]
 module-name = "conseal._conseal"
 bindings = "pyo3"
+include = [
+    "conseal/**",
+    "src/**",
+    "LICENSE",
+    "README.md",
+    "pyproject.toml",
+    "Cargo.toml"
+]
+exclude = [
+    "test/**",
+    "docs/**",
+    ".github/**",
+    "run.py",
+]
 
 [project]
 name = "conseal"
@@ -62,11 +76,6 @@ deploy = []
 
 [project.scripts]
 unseal = "conseal.tools.scripts.unseal:run"
-
-[tool.setuptools.packages.find]
-include = ["conseal*"]
-exclude = ["wheelhouse*"]
-namespaces = false
 
 [tool.coverage.report]
 fail_under = 80
