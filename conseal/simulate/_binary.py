@@ -60,8 +60,14 @@ def probability(
     if objective is None:
         objective = get_objective(e=e, q=2, sender=sender)
 
-    message_length = int(np.round(alpha * n))
-    lbda = calc_lambda(rhos, message_length, n, objective)
+    m = int(np.round(alpha * n))
+    lbda = calc_lambda(
+        rhos=rhos,
+        m=m,
+        n=n,
+        objective=objective,
+        alpha_max=np.maximum(1., alpha),
+    )
     #
     ps, _ = objective(lbda=lbda, rhos=rhos)
     return ps, lbda

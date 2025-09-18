@@ -180,6 +180,7 @@ def calc_lambda(
     m: int,
     n: int,
     objective: Callable = None,
+    alpha_max: float = 1,
 ) -> float:
     """Implements binary search for lambda.
 
@@ -233,12 +234,13 @@ def calc_lambda(
     # Initialize lower bound to zero
     l1 = 0
     # The lower bound for the message size is n
-    m1 = float(n)
+    m1 = float(n * alpha_max)  # allows alpha up to alpha_max bpp
+    # print(f'{alpha_max=}')
     alpha = float(m) / n  # embedding rate
 
     # Binary search for lambda
     # Relative payload must be within 1e-3 of the required relative payload
-    while float(m1 - m3) / n > alpha / 1000 and iterations < 30:
+    while float(m1 - m3) / n > alpha / 1000 and iterations < int(30 * alpha_max):
         # Mid of the interval [l1, l3]
         lbda = l1 + (l3 - l1) / 2
 
@@ -256,6 +258,7 @@ def calc_lambda(
             # We can increase the lower bound
             l1 = lbda
             m1 = m2
+        # print(f'It {iterations} | {m1/n=} {m2/n=} {m3/n=} | {l1=} {lbda=} {l3=} |')
 
         # Proceed to the next iteration
         iterations = iterations + 1

@@ -65,6 +65,7 @@ def probability(
         m=m,
         n=n,
         objective=objective,
+        alpha_max=np.maximum(1., alpha + .1),
     )
     #
     (p_p1, p_m1), H = objective(lbda=lbda, rhos=rhos)

@@ -25,7 +25,7 @@ class TestSimulate(unittest.TestCase):
         os.remove(self.tmp.name)
         del self.tmp
 
-    @parameterized.expand([[.05], [.1], [.2], [.4]])
+    @parameterized.expand([[.05], [.1], [.2], [.4], [1.2]])
     def test_simulate_ternary_constant(self, alpha):
         self._logger.info('TestSimulate.test_simulate_ternary_constant')
         # constant distortion
@@ -43,7 +43,7 @@ class TestSimulate(unittest.TestCase):
         alpha_hat = Hp/n
         self.assertAlmostEqual(alpha, alpha_hat, 3)
 
-    @parameterized.expand([[.05], [.1], [.2], [.4]])
+    @parameterized.expand([[.05], [.1], [.2], [.4], [1.2]])
     def test_simulate_ternary_random(self, alpha):
         self._logger.info('TestSimulate.test_simulate_ternary_random')
         #
