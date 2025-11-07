@@ -37,8 +37,8 @@ def average_payload(
     if e is not None:
         H = np.sum(ps) * e
     # Perfect coding - upper bound efficiency
-    elif q is None or len(ps) == q-1:  # no change is zero cost
-        raise NotImplementedError
+    # elif q is None or len(ps) == q-1:  # no change is zero cost
+    #     raise NotImplementedError
     else:
         H = np.sum([
             tools.entropy(ps[0][c])
@@ -116,15 +116,15 @@ def simulate(
     >>> delta = cl.color.joint.simulate(ps=ps, seed=12345)
     """
     #
-    seeds = common.seed_per_channel(seed)
-    #
     (p_pm1,) = ps
+    seeds = common.seed_per_channel(seed, len(p_pm1))
+    #
     x1 = [
         sim._binary.simulate(
             ps=(p_pm1[c],),
             seed=seeds[c],
             **kw
-        ) for c in range(p_pm1.shape[0])
+        ) for c in range(len(p_pm1))
     ]
     #
     if stack_axis is not None:
