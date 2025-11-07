@@ -148,9 +148,7 @@ class TestColor(unittest.TestCase):
                 cl.tools.entropy(p_p1, p_m1)
             )
         alpha_hat = np.sum(hs_hat) / x0.size
-        # np.testing.assert_allclose(alpha_hat, alpha, atol=1e-3)
         self.assertAlmostEqual(alpha_hat, alpha, places=3)
-        # self.assertTrue(np.allclose(alpha, alphas_hat, atol=1e-3))
         # print('independent:', alphas_hat, rhos)
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
