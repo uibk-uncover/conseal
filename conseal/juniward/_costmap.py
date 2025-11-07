@@ -19,7 +19,6 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import enum
 import numpy as np
 import scipy.signal
-# from scipy.signal import correlate2d
 import typing
 
 from .. import tools

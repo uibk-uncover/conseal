@@ -1,6 +1,7 @@
 
 #
 from . import coding
+from . import color
 from . import simulate
 from . import tools
 
