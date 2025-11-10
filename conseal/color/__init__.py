@@ -6,7 +6,7 @@ Affiliation: University of Innsbruck
 
 # globals
 from .common import num_dct, map_channels, seed_per_channel, transpose01
-from ._qary import qary, q_to_pow2q
+from .qary import q_to_pow2q
 
 # modules
 from . import joint
