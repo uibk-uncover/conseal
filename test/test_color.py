@@ -167,7 +167,7 @@ class TestColor(unittest.TestCase):
         rhos8, deltas = cl.color.q_to_pow2q(rhos)
 
         #
-        delta = cl.color.qary(
+        delta = cl.color.qary.qary(
             rhos=rhos8,
             deltas=deltas,
             alpha=.4,
