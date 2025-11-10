@@ -165,6 +165,7 @@ class TestColor(unittest.TestCase):
 
         #
         rhos8, deltas = cl.color.q_to_pow2q(rhos)
+        print(rhos8.shape, deltas.shape)
 
         #
         delta = cl.color.qary.qary(
@@ -174,6 +175,8 @@ class TestColor(unittest.TestCase):
             n=x0.size,
             seed=12345,
         )
+        print(np.mean(delta))
+
 
 
 __all__ = ["TestColor"]

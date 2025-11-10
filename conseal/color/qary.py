@@ -5,6 +5,7 @@ from typing import Tuple, Callable
 
 from .. import tools
 
+
 def average_payload(
     *,
     ps: Tuple[np.ndarray] = None,
@@ -48,7 +49,7 @@ def average_payload(
 
     # Perfect coding - upper bound efficiency
     else:
-        H_hat = tools.entropy(*ps)
+        H_hat = tools._entropy(*ps)
 
     # print(lbda, H_hat, rhos.shape)
 
@@ -60,6 +61,7 @@ def probability(
     alpha: float,
     n: int,
     objective: Callable = None,
+    add_zero: bool = True,
     stack_axis: int = None
 ) -> Tuple[Tuple[np.ndarray], float]:
     """"""
@@ -71,7 +73,7 @@ def probability(
     message_length = int(np.round(alpha * n))
     lbda = scipy.optimize.fminbound(
         lambda lbda: (
-            objective(rhos=rhos, lbda=lbda)[1] - message_length
+            objective(rhos=rhos, lbda=lbda, add_zero=add_zero)[1] - message_length
         )**2,
         0, 1000,
         xtol=1,
@@ -80,7 +82,7 @@ def probability(
     )
 
     # get probabilites
-    ps, _ = objective(lbda=lbda, rhos=rhos)
+    ps, _ = objective(lbda=lbda, rhos=rhos, add_zero=add_zero)
     if stack_axis is not None:
         ps = np.stack(ps, axis=stack_axis)
     return ps, lbda
@@ -119,7 +121,7 @@ def simulate(
 
 def get_deltas(rhos: np.ndarray) -> np.ndarray:
     q = len(rhos)
-    deltas = np.arange(1, 2**q)
+    deltas = np.arange(0, 2**q)
     deltas = (((deltas[:, None] & (1 << np.arange(q)))) > 0).astype(int)
     return deltas
 
@@ -135,6 +137,7 @@ def qary(
 ) -> np.ndarray:
     """"""
     # construct delta matrix
+    add_zero = rhos.shape[0] - 1 == deltas.shape[0]
     if deltas is None:
         deltas = get_deltas(rhos)
     #
@@ -143,6 +146,7 @@ def qary(
         alpha=alpha,
         n=n,
         objective=objective,
+        add_zero=add_zero,
     )
     # print('after probability:', [p.shape for p in ps])
     # print(average_payload(ps=ps, lbda=lbda)[1] / n)
