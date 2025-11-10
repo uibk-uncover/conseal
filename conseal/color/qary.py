@@ -60,6 +60,7 @@ def probability(
     alpha: float,
     n: int,
     objective: Callable = None,
+    stack_axis: int = None
 ) -> Tuple[Tuple[np.ndarray], float]:
     """"""
     # objective
@@ -80,6 +81,8 @@ def probability(
 
     # get probabilites
     ps, _ = objective(lbda=lbda, rhos=rhos)
+    if stack_axis is not None:
+        ps = np.stack(ps, axis=stack_axis)
     return ps, lbda
 
 
