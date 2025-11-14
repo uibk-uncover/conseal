@@ -181,6 +181,7 @@ def calc_lambda(
     n: int,
     objective: Callable = None,
     alpha_max: float = 1,
+    **kw,
 ) -> float:
     """Implements binary search for lambda.
 
@@ -222,7 +223,7 @@ def calc_lambda(
         l3 *= 2
 
         # Compute total entropy m3
-        _, m3 = objective(lbda=l3, rhos=rhos)  # objective function
+        _, m3 = objective(lbda=l3, rhos=rhos, **kw)  # objective function
 
         iterations += 1
 
@@ -245,7 +246,7 @@ def calc_lambda(
         lbda = l1 + (l3 - l1) / 2
 
         # Calculate entropy at the mid of the interval
-        _, m2 = objective(lbda=lbda, rhos=rhos)  # objective function
+        _, m2 = objective(lbda=lbda, rhos=rhos, **kw)  # objective function
 
         # binary search
         if m2 < m:
