@@ -3,6 +3,7 @@ import numpy as np
 import scipy.optimize
 from typing import Tuple, Callable
 
+from .. import simulate as sim
 from .. import tools
 
 
@@ -12,7 +13,7 @@ def average_payload(
     e: float = None,
     lbda: float = None,
     rhos: Tuple[np.ndarray] = None,
-    add_zero: bool = True,
+    add_zero: bool = False,
 ) -> Tuple[Tuple[np.ndarray], float]:
     """"""
     assert (
@@ -61,7 +62,7 @@ def probability(
     alpha: float,
     n: int,
     objective: Callable = None,
-    add_zero: bool = True,
+    add_zero: bool = False,
     stack_axis: int = None
 ) -> Tuple[Tuple[np.ndarray], float]:
     """"""
@@ -71,15 +72,7 @@ def probability(
 
     # lambda search
     message_length = int(np.round(alpha * n))
-    lbda = scipy.optimize.fminbound(
-        lambda lbda: (
-            objective(rhos=rhos, lbda=lbda, add_zero=add_zero)[1] - message_length
-        )**2,
-        0, 1000,
-        xtol=1,
-        maxfun=100,
-        # disp=3,
-    )
+    lbda = sim.calc_lambda(rhos=rhos, m=message_length, n=n, objective=objective, add_zero=add_zero)
 
     # get probabilites
     ps, _ = objective(lbda=lbda, rhos=rhos, add_zero=add_zero)
@@ -148,8 +141,6 @@ def qary(
         objective=objective,
         add_zero=add_zero,
     )
-    # print('after probability:', [p.shape for p in ps])
-    # print(average_payload(ps=ps, lbda=lbda)[1] / n)
     return simulate(
         ps=ps,
         deltas=deltas,

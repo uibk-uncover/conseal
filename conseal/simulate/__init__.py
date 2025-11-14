@@ -12,7 +12,8 @@ from . import _ternary
 from ._binary import binary
 from ._ternary import ternary
 
-from ._optim import get_p, average_payload, average_distortion, Sender
+from ._optim import get_p, calc_lambda, average_payload
+from ._optim import Sender, average_distortion
 
 PAYLOAD_LIMITED_SENDER = Sender.PAYLOAD_LIMITED_SENDER
 DISTORTION_LIMITED_SENDER = Sender.DISTORTION_LIMITED_SENDER
@@ -86,4 +87,11 @@ __all__ = [
     'get_p',
     'simulate',
     'average_payload',
+    'average_distortion',
+    'calc_lambda',
+    'Sender',
+    'PAYLOAD_LIMITED_SENDER',
+    'DISTORTION_LIMITED_SENDER',
+    'DLS',
+    'PLS',
 ]
