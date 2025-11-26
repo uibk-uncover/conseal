@@ -101,7 +101,7 @@ fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>) -> PyResult
 
 
 #[pymodule]
-pub fn init_module(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+pub fn init_hill_module(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(compute_cost, m)?)?;
     Ok(())
 }

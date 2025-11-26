@@ -5,12 +5,52 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 from scipy.signal import convolve2d
+import time
 
 
+x0 = np.array(Image.open('test/assets/cover/uncompressed_gray/seal1.png'))
 
-x0 = np.array(Image.open('campus512_gray.png'))
+with cl.BACKEND_PYTHON:
+    start = time.perf_counter()
+    rho_py = cl.wow._costmap.compute_cost(x0, p=1)
+    end = time.perf_counter()
+    print('BACKEND_PYTHON:', end - start)
+with cl.BACKEND_RUST:
+    start = time.perf_counter()
+    rho_rs = cl.wow._costmap.compute_cost(x0, p=1)
+    end = time.perf_counter()
+    print('BACKEND_RUST:', end - start)
+#
+# rho_py = np.array(rho_py)
+# print('rho_py.shape:', rho_py.shape)
+# print('rho_rs.shape:', rho_rs.shape)
 
-rhos = cl.ws._costmap.compute_cost(x0)
+# print(rho_py[:5, :5])
+# print(rho_rs[:5, :5])
+# print(np.max(np.abs(rho_py - rho_rs)), np.mean(rho_py != rho_rs))
+# print(rho_rs[rho_py != rho_rs])
+# exit()
+
+
+# d = rho_py - rho_rs
+# vlim = np.max(np.abs(d))
+# x0[d != 0] = 255
+# # plt.imshow((d!= 0).astype('int'), vmin=0, vmax=10, cmap='gray')
+# plt.imshow(x0, cmap='gray')
+# plt.axis('off')
+# plt.show()
+# print(d.shape, x0.shape)
+
+
+# print('rho_py:', rho_py[d != 0])
+# print('rho_rs:', rho_rs[d != 0])
+# print('x0:', x0[d[16:-16, 16:-16] != 0])
+
+# _, wavelet_py = cl.tools.spatial.daubechies8()
+# wavelet_py = np.array(wavelet_py)
+# wavelet_rs = rho_rs
+np.testing.assert_array_equal(rho_py, rho_rs)
+exit()
 # # flip
 # x0_bar = x0 ^ 1
 # x0 = x0.astype('float32')

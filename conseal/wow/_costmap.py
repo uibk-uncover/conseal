@@ -12,14 +12,15 @@ import numpy as np
 import scipy.signal
 from typing import Tuple
 
+from .._conseal import wow as rs
 from .. import tools
 
 
-def compute_cost(
+def _compute_cost(
     x0: np.ndarray,
     *,
     p: float = -1,
-) -> Tuple[np.ndarray]:
+) -> np.ndarray:
     """Computes WOW cost.
 
     :param x0: uncompressed (pixel) cover image,
@@ -36,9 +37,11 @@ def compute_cost(
     >>> # TODO
     """
     assert len(x0.shape) == 2, 'single channel expected'
+    x0 = x0.astype('float64')
 
     # 2D wavelet filters (Daubechies 8)
-    _, F = tools.spatial.daubechies8()
+    F = tools.spatial.daubechies8()[1]
+    F = [f.astype('float64') for f in F]
 
     # add padding
     padSize = np.max([f.shape for f in F])
@@ -54,7 +57,6 @@ def compute_cost(
             F[fIndex],
             mode='same', boundary='symm'
         )
-
         # compute sustability
         xi.append(
             scipy.signal.convolve2d(
@@ -77,10 +79,46 @@ def compute_cost(
             x0_center[0]+1:-x0_center[0]+1,
             x0_center[1]+1:-x0_center[1]+1,
         ]
-
+        xi[fIndex] = np.clip(xi[fIndex], tools.EPS64, None)
     # compute embedding costs \rho
     rho = np.sum([xi[i]**p for i in range(3)], axis=0)**(-1/p)
-    # rho = np.expand_dims(rho, 2)
+    return rho
+
+
+def compute_cost(
+    x0: np.ndarray,
+    *,
+    p: float = -1,
+) -> np.ndarray:
+    """Computes WOW cost.
+
+    :param x0: uncompressed (pixel) cover image,
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param p: parameter for reciprocal Hoelder norm
+    :type p: float
+    :return: cost for +-1 change,
+        of shape [height, width]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
+    """
+    # choose implementation
+    backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST:
+        # check types
+        if x0.dtype != np.uint8:
+            raise TypeError('parameter x0 must be uint8')
+        rho = rs.compute_cost(x0=x0)
+    elif backend == tools.BACKEND_PYTHON:
+        rho = _compute_cost(x0=x0)
+
+    else:
+        raise NotImplementedError(f'unknown backend {backend}')
+
+    #
     return rho
 
 
