@@ -93,7 +93,7 @@ class TestHILL(unittest.TestCase):
                 x0 = np.array(Image.open(path))
                 rho = cl.hill._costmap.compute_cost(x0)
             end = time.perf_counter()
-            print('rust:', end - start, 's')
+            print('HILL rust:', end - start, 's')
         #
         with cl.BACKEND_PYTHON:
             start = time.perf_counter()
@@ -102,4 +102,4 @@ class TestHILL(unittest.TestCase):
                 x0 = np.array(Image.open(path))
                 rho = cl.hill._costmap.compute_cost(x0)
             end = time.perf_counter()
-            print('python:', end - start, 's')
+            print('HILL python:', end - start, 's')

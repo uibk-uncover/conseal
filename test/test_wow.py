@@ -7,6 +7,7 @@ from parameterized import parameterized
 from PIL import Image
 import scipy.io
 import tempfile
+import time
 import unittest
 
 from . import defs
@@ -65,6 +66,49 @@ class TestWOW(unittest.TestCase):
         # test stego against DDE matlab reference
         x1_ref = np.array(Image.open(STEGO_DIR / f'{f}.png'))
         np.testing.assert_array_equal(x1, x1_ref)
+
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_rust(self, fname: str):
+        self._logger.info(f'TestWOW.test_rust({fname=})')
+        #
+        with cl.BACKEND_PYTHON:
+            path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+            x0 = np.array(Image.open(path))
+            rho_ref = cl.wow._costmap.compute_cost(x0)
+        with cl.BACKEND_RUST:
+            path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+            x0 = np.array(Image.open(path))
+            rho = cl.wow._costmap.compute_cost(x0)
+        #
+        np.testing.assert_allclose(rho, rho_ref, rtol=1e-5)
+        """
+        SciPy appears to internally use f64, even if both arguments are f32.
+        Therefore, I must test down to 1e-5.
+        For high-cost elements, the absolute error differs even by 20.
+        But the relative error remains around 1e-7.
+        """
+
+    def test_speedup(self):
+        self._logger.info('TestWOW.test_speedup()')
+        #
+        with cl.BACKEND_RUST:
+            start = time.perf_counter()
+            for fname in defs.TEST_IMAGES:
+                path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+                x0 = np.array(Image.open(path))
+                rho = cl.wow._costmap.compute_cost(x0)
+            end = time.perf_counter()
+            print('WOW rust:', end - start, 's')
+        #
+        with cl.BACKEND_PYTHON:
+            start = time.perf_counter()
+            for fname in defs.TEST_IMAGES:
+                path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
+                x0 = np.array(Image.open(path))
+                rho = cl.wow._costmap.compute_cost(x0)
+            end = time.perf_counter()
+            print('WOW python:', end - start, 's')
 
 
 __all__ = ['TestWOW']
