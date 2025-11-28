@@ -160,10 +160,12 @@ fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>, p: f64)
         let tmp = convolve1d_vertical(&x0_pad, a.as_slice().unwrap());
         let r  = convolve1d_horizontal(&tmp, b.as_slice().unwrap());
         // rotate 180 + absolute kernel
-        let mut a_rev = a.mapv(|v| v.abs());
+        let mut a_rev = a.clone();
         a_rev.invert_axis(Axis(0));
-        let mut b_rev = b.mapv(|v| v.abs());
+        a_rev = a_rev.to_owned().mapv(|v| v.abs());
+        let mut b_rev = b.clone();
         b_rev.invert_axis(Axis(0));
+        b_rev = b_rev.to_owned().mapv(|v| v.abs());
         // suitability
         let tmp2 = convolve1d_vertical(&r.mapv(|v| v.abs()), a_rev.as_slice().unwrap());
         let x = convolve1d_horizontal(&tmp2, b_rev.as_slice().unwrap());

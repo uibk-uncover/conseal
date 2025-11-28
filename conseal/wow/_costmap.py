@@ -134,9 +134,9 @@ def compute_cost(
         # check types
         if x0.dtype != np.uint8:
             raise TypeError('parameter x0 must be uint8')
-        rho = rs.compute_cost(x0=x0)
+        rho = rs.compute_cost(x0=x0, p=p)
     elif backend == tools.BACKEND_PYTHON:
-        rho = _compute_cost(x0=x0)
+        rho = _compute_cost(x0=x0, p=p)
 
     else:
         raise NotImplementedError(f'unknown backend {backend}')
