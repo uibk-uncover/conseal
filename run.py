@@ -20,11 +20,11 @@ x0 = np.array(Image.open('test/assets/cover/uncompressed_gray/seal1.png'))
 with cl.BACKEND_PYTHON:
     import time
     start = time.perf_counter()
-    rho2 = cl.wow._costmap._compute_cost(x0)
+    rho2 = cl.wow._costmap.compute_cost(x0)
     end = time.perf_counter()
     print('Py 2D:', end - start)
     start = time.perf_counter()
-    rho1 = cl.wow._costmap._compute_cost(x0, separable=True)
+    rho1 = cl.wow._costmap.compute_cost(x0, separable=True)
     end = time.perf_counter()
     print('Py 2x1D:', end - start)
 

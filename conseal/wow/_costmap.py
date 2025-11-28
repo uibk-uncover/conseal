@@ -19,8 +19,8 @@ from .. import tools
 def _compute_cost(
     x0: np.ndarray,
     *,
-    separable: bool = True,
     p: float = -1,
+    separable: bool = True,
 ) -> np.ndarray:
     """Computes WOW cost.
 
@@ -112,6 +112,7 @@ def compute_cost(
     x0: np.ndarray,
     *,
     p: float = -1,
+    separable: bool = True,
 ) -> np.ndarray:
     """Computes WOW cost.
 

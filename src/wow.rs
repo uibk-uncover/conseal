@@ -153,33 +153,33 @@ fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>, p: f64)
 
     for f in 0..3 {
 
-        // --- 1D separated ---
-        // separable filters: (a, b)
-        let (a, b) = (&sep_filters[f].0, &sep_filters[f].1);
-        // residual
-        let tmp = convolve1d_vertical(&x0_pad, a.as_slice().unwrap());
-        let r  = convolve1d_horizontal(&tmp, b.as_slice().unwrap());
-        // rotate 180 + absolute kernel
-        let mut a_rev = a.clone();
-        a_rev.invert_axis(Axis(0));
-        a_rev = a_rev.to_owned().mapv(|v| v.abs());
-        let mut b_rev = b.clone();
-        b_rev.invert_axis(Axis(0));
-        b_rev = b_rev.to_owned().mapv(|v| v.abs());
-        // suitability
-        let tmp2 = convolve1d_vertical(&r.mapv(|v| v.abs()), a_rev.as_slice().unwrap());
-        let x = convolve1d_horizontal(&tmp2, b_rev.as_slice().unwrap());
-
-
-        // // --- 2D ---
-        // // filter
-        // let kernel = filters.index_axis(Axis(0), f).to_owned();
+        // // --- 1D separated ---
+        // // separable filters: (a, b)
+        // let (a, b) = (&sep_filters[f].0, &sep_filters[f].1);
         // // residual
-        // let r = convolve2d(&x0_pad, &kernel);
+        // let tmp = convolve1d_vertical(&x0_pad, a.as_slice().unwrap());
+        // let r  = convolve1d_horizontal(&tmp, b.as_slice().unwrap());
         // // rotate 180 + absolute kernel
-        // let kernel_rot_abs = filters_rot.index_axis(Axis(0), f).to_owned().mapv(|v| v.abs());
+        // let mut a_rev = a.clone();
+        // a_rev.invert_axis(Axis(0));
+        // a_rev = a_rev.to_owned().mapv(|v| v.abs());
+        // let mut b_rev = b.clone();
+        // b_rev.invert_axis(Axis(0));
+        // b_rev = b_rev.to_owned().mapv(|v| v.abs());
         // // suitability
-        // let x = convolve2d(&r.mapv(|v| v.abs()), &kernel_rot_abs);
+        // let tmp2 = convolve1d_vertical(&r.mapv(|v| v.abs()), a_rev.as_slice().unwrap());
+        // let x = convolve1d_horizontal(&tmp2, b_rev.as_slice().unwrap());
+
+
+        // --- 2D ---
+        // filter
+        let kernel = filters.index_axis(Axis(0), f).to_owned();
+        // residual
+        let r = convolve2d(&x0_pad, &kernel);
+        // rotate 180 + absolute kernel
+        let kernel_rot_abs = filters_rot.index_axis(Axis(0), f).to_owned().mapv(|v| v.abs());
+        // suitability
+        let x = convolve2d(&r.mapv(|v| v.abs()), &kernel_rot_abs);
 
 
         // ----------
