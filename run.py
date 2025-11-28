@@ -8,6 +8,37 @@
 # import time
 
 
+import conseal as cl
+import numpy as np
+from PIL import Image
+import time
+
+
+
+x0 = np.array(Image.open('test/assets/cover/uncompressed_gray/seal1.png'))
+
+with cl.BACKEND_PYTHON:
+    import time
+    start = time.perf_counter()
+    rho2 = cl.wow._costmap._compute_cost(x0)
+    end = time.perf_counter()
+    print('Py 2D:', end - start)
+    start = time.perf_counter()
+    rho1 = cl.wow._costmap._compute_cost(x0, separable=True)
+    end = time.perf_counter()
+    print('Py 2x1D:', end - start)
+
+with cl.BACKEND_RUST:
+    start = time.perf_counter()
+    rho3 = cl.wow._costmap.compute_cost(x0)
+    end = time.perf_counter()
+    print('Rs 2x1D:', end - start)
+
+
+np.testing.assert_array_equal(rho1, rho3)
+
+exit()
+
 # x0 = np.array(Image.open('test/assets/cover/uncompressed_gray/seal1.png'))
 
 # with cl.BACKEND_PYTHON:

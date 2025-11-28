@@ -41,7 +41,7 @@ def compute_cost(
     """  # noqa: E501
     # Get 2D wavelet filters - Daubechies 8
     if filters is None:
-        (high_pass_decomposition_filter, low_pass_decomposition_filter), filters = tools.spatial.daubechies8()
+        filters = tools.spatial.daubechies8()[1]
     num_filters = len(filters)
 
     # Mirror-pad the spatial image. Extend image by the length of the filter in all dimensions.

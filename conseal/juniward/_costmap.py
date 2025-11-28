@@ -71,9 +71,9 @@ def compute_cost(
     assert height % 8 == 0, "Expected height to be a multiple of 8"
     assert width % 8 == 0, "Expected width to be a multiple of 8"
 
-    # Get 2D wavelet filters - Daubechies 8
-    (high_pass_decomposition_filter, low_pass_decomposition_filter), filters = tools.spatial.daubechies8()
-    wavelet_filter_size = len(high_pass_decomposition_filter)
+    # Get 2D wavelet filters - Daubechies
+    (high_pass_decomposition_filter, _), filters, _ = tools.spatial.daubechies8()
+    wavelet_filter_size = len(filters[0])
     num_filters = len(filters)
 
     # Pre-compute impact in spatial domain when a JPEG coefficient is changed by 1

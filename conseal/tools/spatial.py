@@ -90,4 +90,8 @@ def daubechies8(
         hpdf.reshape(-1, 1) @ lpdf.reshape(1, -1),
         hpdf.reshape(-1, 1) @ hpdf.reshape(1, -1),
     ]
-    return (hpdf, lpdf), F
+    # return (hpdf, lpdf), F
+    F_sep = [(lpdf, hpdf), (hpdf, lpdf), (hpdf, hpdf)]
+    return (hpdf, lpdf), F, F_sep
+
+

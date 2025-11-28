@@ -19,6 +19,7 @@ from .. import tools
 def _compute_cost(
     x0: np.ndarray,
     *,
+    separable: bool = False,
     p: float = -1,
 ) -> np.ndarray:
     """Computes WOW cost.
@@ -40,8 +41,8 @@ def _compute_cost(
     x0 = x0.astype('float64')
 
     # 2D wavelet filters (Daubechies 8)
-    F = tools.spatial.daubechies8()[1]
-    F = [f.astype('float64') for f in F]
+    _, F, F_sep = tools.spatial.daubechies8()
+    F_sep = [(i.astype('float64') for i in f) for f in F_sep]
 
     # add padding
     padSize = np.max([f.shape for f in F])
@@ -51,20 +52,42 @@ def _compute_cost(
     xi = []
     for fIndex in range(3):
 
-        # compute residual
-        R = scipy.signal.convolve2d(
-            x0_padded,
-            F[fIndex],
-            mode='same', boundary='symm'
-        )
-        # compute sustability
-        xi.append(
-            scipy.signal.convolve2d(
-                np.abs(R),
-                np.rot90(np.abs(F[fIndex]), k=2),
+        if separable:
+            # compute residual
+            a, b = F_sep[fIndex]
+            tmp = scipy.signal.convolve2d(
+                x0_padded, a[:, None], mode="same", boundary="symm"
+            )
+            R = scipy.signal.convolve2d(
+                tmp, b[None, :], mode="same", boundary="symm"
+            )
+
+            # compute suitability
+            a_rev = np.abs(a)[::-1]
+            b_rev = np.abs(b)[::-1]
+            tmp = scipy.signal.convolve2d(
+                np.abs(R), a_rev[:, None], mode="same", boundary="symm"
+            )
+            xi_val = scipy.signal.convolve2d(
+                tmp, b_rev[None, :], mode="same", boundary="symm"
+            )
+            xi.append(xi_val)
+        else:
+            # compute residual
+            R = scipy.signal.convolve2d(
+                x0_padded,
+                F[fIndex],
                 mode='same', boundary='symm'
             )
-        )
+            # compute suitability
+            xi.append(
+                scipy.signal.convolve2d(
+                    np.abs(R),
+                    np.rot90(np.abs(F[fIndex]), k=2),
+                    mode='same', boundary='symm'
+                )
+            )
+
         # correct the suitability shift if filter size is even
         if F[fIndex].shape[0] % 2 != 0:
             xi[fIndex] = np.roll(xi[fIndex], 1, axis=0)
