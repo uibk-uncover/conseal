@@ -48,6 +48,14 @@ def _compute_cost(
     padSize = np.max([f.shape for f in F])
     x0_padded = np.pad(x0, padSize, 'symmetric')
 
+    # def pad_symmetric_1d(arr, pad, axis):
+    #     slices = [slice(None)] * arr.ndim
+    #     arr_pad = np.pad(arr, [
+    #         (pad if i==axis else 0, pad if i==axis else 0)
+    #         for i in range(arr.ndim)
+    #     ], mode='symmetric')
+    #     return arr_pad
+
     # compute directional residual and suitability \xi for each filter
     xi = []
     for fIndex in range(3):
@@ -61,10 +69,18 @@ def _compute_cost(
             R = scipy.signal.convolve2d(
                 tmp, b[None, :], mode="same", boundary="symm"
             )
+            # tmp = scipy.ndimage.convolve1d(pad_symmetric_1d(x0_padded, a.size//2, axis=0), a, axis=0, mode='constant', cval=0)
+            # R = scipy.ndimage.convolve1d(pad_symmetric_1d(tmp, b.size//2, axis=1), b, axis=1, mode='constant', cval=0)
+            # tmp = scipy.ndimage.convolve1d(x0_padded, a, axis=0, mode='mirror')  # vertical
+            # R = scipy.ndimage.convolve1d(tmp, b, axis=1, mode='mirror')  # horizontal
 
             # compute suitability
             a_rev = np.abs(a)[::-1]
             b_rev = np.abs(b)[::-1]
+            # tmp = scipy.ndimage.convolve1d(np.abs(R), a_rev, axis=0, mode='mirror')
+            # xi_val = scipy.ndimage.convolve1d(tmp, b_rev, axis=1, mode='mirror')
+            # tmp = scipy.ndimage.convolve1d(pad_symmetric_1d(np.abs(R), a.size//2, axis=0), a_rev, axis=0, mode='constant', cval=0)
+            # xi_val = scipy.ndimage.convolve1d(pad_symmetric_1d(tmp, b.size//2, axis=1), b_rev, axis=1, mode='constant', cval=0)
             tmp = scipy.signal.convolve2d(
                 np.abs(R), a_rev[:, None], mode="same", boundary="symm"
             )
@@ -137,7 +153,7 @@ def compute_cost(
             raise TypeError('parameter x0 must be uint8')
         rho = rs.compute_cost(x0=x0, p=p)
     elif backend == tools.BACKEND_PYTHON:
-        rho = _compute_cost(x0=x0, p=p)
+        rho = _compute_cost(x0=x0, p=p, separable=separable)
 
     else:
         raise NotImplementedError(f'unknown backend {backend}')

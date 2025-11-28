@@ -20,7 +20,7 @@ x0 = np.array(Image.open('test/assets/cover/uncompressed_gray/seal1.png'))
 with cl.BACKEND_PYTHON:
     import time
     start = time.perf_counter()
-    rho2 = cl.wow._costmap.compute_cost(x0)
+    rho2 = cl.wow._costmap.compute_cost(x0, separable=False)
     end = time.perf_counter()
     print('Py 2D:', end - start)
     start = time.perf_counter()
@@ -35,7 +35,7 @@ with cl.BACKEND_RUST:
     print('Rs 2x1D:', end - start)
 
 
-np.testing.assert_array_equal(rho1, rho3)
+np.testing.assert_array_equal(rho1, rho2)
 
 exit()
 
