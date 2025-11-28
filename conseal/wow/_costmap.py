@@ -144,9 +144,6 @@ def compute_cost_adjusted(
     """
     assert len(x0.shape) == 2, 'single channel expected'
 
-    # process input
-    x0 = x0.astype('float32')
-
     # Compute costmap
     rho = compute_cost(x0=x0, **kw)
 
