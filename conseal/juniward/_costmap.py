@@ -293,7 +293,7 @@ def evaluate_cost(
     #     high_pass_decomposition_filter[:, None] * high_pass_decomposition_filter[None, :],
     # ], axis=0)
 
-    (high_pass_decomposition_filter, low_pass_decomposition_filter), filters = tools.spatial.daubechies8()
+    (high_pass_decomposition_filter, _), filters, _ = tools.spatial.daubechies8()
     num_filters = len(filters)
 
     # Pad X and Y by 16 pixels in all directions
