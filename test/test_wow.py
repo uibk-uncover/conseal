@@ -67,7 +67,6 @@ class TestWOW(unittest.TestCase):
         x1_ref = np.array(Image.open(STEGO_DIR / f'{f}.png'))
         np.testing.assert_array_equal(x1, x1_ref)
 
-
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
     def test_rust(self, fname: str):
         self._logger.info(f'TestWOW.test_rust({fname=})')

@@ -8,8 +8,8 @@ use numpy::{ndarray::Array, ndarray::Array1, ndarray::Array2, ndarray::Array3, n
 
 
 // ---------- internal helper, NOT exposed to Python ----------
-fn daubechies8() -> (Array3<f32>, Vec<(Array1<f32>, Array1<f32>)>) {
-    let hpdf: [f32; 16] = [
+fn daubechies8() -> (Array3<f64>, Vec<(Array1<f64>, Array1<f64>)>) {
+    let hpdf: [f64; 16] = [
         -0.0544158422,  0.3128715909, -0.6756307363,  0.5853546837,
          0.0158291053, -0.2840155430, -0.0004724846,  0.1287474266,
          0.0173693010, -0.0440882539, -0.0139810279,  0.0087460940,
@@ -17,9 +17,9 @@ fn daubechies8() -> (Array3<f32>, Vec<(Array1<f32>, Array1<f32>)>) {
     ];
 
     // build lpdf
-    let mut lpdf = [0f32; 16];
+    let mut lpdf = [0f64; 16];
     for i in 0..16 {
-        lpdf[i] = ((-1f32).powi(i as i32)) * hpdf[15 - i];
+        lpdf[i] = ((-1f64).powi(i as i32)) * hpdf[15 - i];
     }
 
     let h = Array::from_shape_vec((16, 1), hpdf.to_vec()).unwrap();
@@ -49,9 +49,9 @@ fn reflect_index(i: isize, n: isize) -> isize {
 }
 
 /// Symmetric pad a 2D array
-fn pad_symmetric(input: &Array2<f32>, pad_v: usize, pad_h: usize) -> Array2<f32> {
+fn pad_symmetric(input: &Array2<f64>, pad_v: usize, pad_h: usize) -> Array2<f64> {
     let (h, w) = input.dim();
-    let mut output = Array2::<f32>::zeros((h + 2*pad_v, w + 2*pad_h));
+    let mut output = Array2::<f64>::zeros((h + 2*pad_v, w + 2*pad_h));
 
     for i in 0..output.nrows() {
         for j in 0..output.ncols() {
@@ -64,7 +64,7 @@ fn pad_symmetric(input: &Array2<f32>, pad_v: usize, pad_h: usize) -> Array2<f32>
 }
 
 /// 2D convolution with symmetric padding and mode='same'
-fn convolve2d(input: &Array2<f32>, kernel: &Array2<f32>) -> Array2<f32> {
+fn convolve2d(input: &Array2<f64>, kernel: &Array2<f64>) -> Array2<f64> {
     let (h, w) = input.dim();
     let (kh, kw) = kernel.dim();
     let pad_h = kh / 2;
@@ -72,10 +72,10 @@ fn convolve2d(input: &Array2<f32>, kernel: &Array2<f32>) -> Array2<f32> {
     let pad = pad_h.max(pad_w);
     let input_pad = pad_symmetric(input, pad_h, pad_w);
 
-    let mut output = Array2::<f32>::zeros((h, w));
+    let mut output = Array2::<f64>::zeros((h, w));
     for i in 0..h {
         for j in 0..w {
-            let mut sum = 0.0f32;
+            let mut sum = 0.0f64;
             for u in 0..kh {
                 for v in 0..kw {
                     let x = i + u;
@@ -92,13 +92,13 @@ fn convolve2d(input: &Array2<f32>, kernel: &Array2<f32>) -> Array2<f32> {
 
 
 
-fn convolve1d_horizontal(input: &Array2<f32>, kernel: &[f32]) -> Array2<f32> {
+fn convolve1d_horizontal(input: &Array2<f64>, kernel: &[f64]) -> Array2<f64> {
     let (h, w) = input.dim();
     let k = kernel.len();
     let pad = k / 2;
     let input_pad = pad_symmetric(input, 0, pad);
 
-    let mut out = Array2::<f32>::zeros((h, w));
+    let mut out = Array2::<f64>::zeros((h, w));
 
     for i in 0..h {
         for j in 0..w {
@@ -113,7 +113,7 @@ fn convolve1d_horizontal(input: &Array2<f32>, kernel: &[f32]) -> Array2<f32> {
     out
 }
 
-fn convolve1d_vertical(input: &Array2<f32>, kernel: &[f32]) -> Array2<f32> {
+fn convolve1d_vertical(input: &Array2<f64>, kernel: &[f64]) -> Array2<f64> {
     // transpose the input
     let input_t = input.t();
     let mut tmp = convolve1d_horizontal(&input_t.to_owned(), kernel);
@@ -135,10 +135,10 @@ fn convolve1d_vertical(input: &Array2<f32>, kernel: &[f32]) -> Array2<f32> {
 // #[pyo3(signature = (x0))]
 #[pyfunction]
 #[pyo3(signature = (x0, p = -1.0))]
-fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>, p: f32)
-    -> PyResult<Py<PyArray2<f32>>> {
+fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>, p: f64)
+    -> PyResult<Py<PyArray2<f64>>> {
 
-    let input = x0.as_array().mapv(|v| v as f32);
+    let input = x0.as_array().mapv(|v| v as f64);
     let (h, w) = input.dim();
     let mut x0_pad = pad_symmetric(&input, 16 as usize, 16 as usize);
 
@@ -191,14 +191,14 @@ fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>, p: f32)
         xi.push(x_crop);
     }
 
-    // convert xi Vec<Array2<f32>> into a single Array3<f32> of shape (3, h, w)
+    // convert xi Vec<Array2<f64>> into a single Array3<f64> of shape (3, h, w)
     let xi_3d = Array3::from_shape_vec(
         (3, h, w),
         xi.into_iter().flat_map(|arr| arr.into_raw_vec()).collect()
     ).unwrap();
 
     // compute sum over channels of xi_i^p
-    let rho = xi_3d.mapv(|v| v.max(f32::EPSILON)).mapv(|v| v.powf(p)).sum_axis(Axis(0)).mapv(|v| v.powf(-1.0f32 / p));
+    let rho = xi_3d.mapv(|v| v.max(f64::EPSILON)).mapv(|v| v.powf(p)).sum_axis(Axis(0)).mapv(|v| v.powf(-1.0f64 / p));
     Ok(PyArray2::from_owned_array(py, rho).into())
 }
 
