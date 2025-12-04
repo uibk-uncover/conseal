@@ -1,7 +1,7 @@
 
 use pyo3::prelude::*;
 // use pyo3::types::PyDict;
-use numpy::{PyArray2, PyReadonlyArray2, ndarray::Array};
+use numpy::{PyArray2, PyReadonlyArray2, ndarray::Array, ndarray::s};
 
 
 /// Computes HILL cost.
@@ -71,6 +71,30 @@ fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>) -> PyResult
             I2[[i-1, j-1]] = 1.0f32 / (val / 9.0f32).max(f32::EPSILON);
         }
     }
+
+    // // convolve with AVG 15x15 (separated)
+    // let mut tmp = Array::<f32, _>::zeros((h, w));
+    // for i in 7..I2.nrows()-7 {
+    //     for j in 0..I2.ncols() {
+    //         //
+    //         let mut sum = 0.0;
+    //         for offset in -7i32..=7i32 {
+    //             sum += I2[[(i as i32 + offset) as usize, j]];
+    //         }
+    //         tmp[[i, 7]] = sum / 15.0;
+    //     }
+    // }
+    // let mut cost = Array::<f32, _>::zeros((h, w));
+    // for i in 0..tmp.nrows() {
+    //     for j in 7..I2.ncols()-7 {
+    //         //
+    //         let mut sum = 0.0;
+    //         for offset in -7i32..=7i32 {
+    //             sum += tmp[[i, (j as i32 + offset) as usize]];
+    //         }
+    //         tmp[[7, j]] = sum / 15.0;
+    //     }
+    // }
 
     // convolve with AVG 15x15
     let mut cost = Array::<f32, _>::zeros((h, w));

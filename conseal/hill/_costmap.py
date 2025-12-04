@@ -18,6 +18,7 @@ from .. import tools
 
 def _compute_cost(
     x0: np.ndarray,
+    separable: bool = True,
 ) -> np.ndarray:
     """Computes HILL cost.
 
@@ -55,12 +56,22 @@ def _compute_cost(
     )
 
     # low-pass filter 2
-    L2 = np.ones((15, 15), dtype='float32')/15**2
-    I2[I2 < tools.EPS32] = tools.EPS32
-    I3 = scipy.signal.convolve2d(
-        1./(I2), L2,
-        mode='same', boundary='symm',
-    )
+    if separable:
+        L2 = np.ones((15,), dtype='float64') / 15
+        I2[I2 < tools.EPS32] = tools.EPS32
+        tmp = scipy.signal.convolve2d(
+            1./(I2), L2[:, None], mode="same", boundary="symm"
+        )
+        I3 = scipy.signal.convolve2d(
+            tmp, L2[None, :], mode="same", boundary="symm"
+        )
+    else:
+        L2 = np.ones((15, 15), dtype='float64')/15**2
+        I2[I2 < tools.EPS32] = tools.EPS32
+        I3 = scipy.signal.convolve2d(
+            1./(I2), L2,
+            mode='same', boundary='symm',
+        )
 
     #
     return I3
