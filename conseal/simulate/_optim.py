@@ -29,6 +29,39 @@ class Sender(enum.Enum):
     """Distortion-limited sender."""
 
 
+# def get_p(
+#     lbda: float,
+#     *rhos: np.ndarray,
+#     add_zero: bool = True,
+# ) -> np.ndarray:
+#     """Converts distortions into probabilities,
+#     using Boltzmann-Gibbs distribution
+
+#     For more details, see `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#embedding-simulation>`__.
+
+#     :param rhos: distortion of embedding choices, e.g. embedding +1 or embedding -1
+#     :type rhos: tuple
+#     :param lbda: parameter value
+#     :type lbda: float
+#     :param add_zero:
+#     :type add_zero: bool
+#     :param p_pm1: probability tensor for changes associated to rhos[0]
+#         of an arbitrary shape
+#     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+#     :Example:
+
+#     >>> # TODO
+#     """
+#     # denominator (forced left-associativity)
+#     denum = 1 if add_zero else 0
+#     for rho in rhos:
+#         denum += np.exp(-lbda * rho)
+#     #
+#     denum[denum == 0] = tools.EPS
+#     return np.exp(-lbda * rhos[0]) / denum
+
+
 def get_p(
     lbda: float,
     *rhos: np.ndarray,
@@ -53,14 +86,19 @@ def get_p(
 
     >>> # TODO
     """
-    # denominator (forced left-associativity)
-    denum = 1 if add_zero else 0
-    for rho in rhos:
-        denum += np.exp(-lbda * rho)
-    #
-    denum[denum == 0] = tools.EPS
-    return np.exp(-lbda * rhos[0]) / denum
-
+    all_rhos = [-lbda * rho for rho in rhos]
+    if add_zero:
+        # Create an array of zeros with the same shape as rhos
+        all_rhos.append(np.zeros_like(all_rhos[0]))
+    # shift
+    max_val = np.max(all_rhos, axis=0)
+    # stabilize denominator
+    denum = 0
+    for val in all_rhos:
+        denum += np.exp(val - max_val)
+    # stabilized numerator
+    num = np.exp((-lbda * rhos[0]) - max_val)
+    return num / denum
 
 def average_payload(
     *,

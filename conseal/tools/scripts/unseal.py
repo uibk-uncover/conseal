@@ -26,12 +26,13 @@ def run():
     assert x1.shape == x2.shape, 'images must be of the same shape'
 
     #
-
     delta = x1.astype('int32') - x2.astype('int32')
     changes, counts = np.unique(delta.flatten(), return_counts=True)
     print('====================================================')
     print(f'Change rate:', round((x1 != x2).mean(), 4))
     print('Changes:', {k: round(v, 4) for k, v in zip(changes, counts / x1.size)})
+    if len(x1.shape) > 2:
+        print('Change rates [per-channel]:', {ch: round((x1[..., ch] != x2[..., ch]).mean(), 4) for ch in range(x1.shape[-1])})
     print('====================================================')
 
     if args.diff is not False:

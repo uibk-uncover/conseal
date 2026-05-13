@@ -24,7 +24,7 @@ exclude = [
 
 [project]
 name = "conseal"
-version = "2025.11"
+version = "2026.05"
 dependencies = [
     "numpy",
     "jpeglib >= 1.0.2",
