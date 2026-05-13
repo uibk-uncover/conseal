@@ -104,7 +104,6 @@ def compute_cost(
 def compute_cost_adjusted(
     y0: np.ndarray,
     *,
-    n: int = None,
     wet_cost: float = 10**10,
 ) -> Tuple[np.ndarray]:
     """Compute nsF5 cost with wet-cost adjustments.
@@ -124,7 +123,7 @@ def compute_cost_adjusted(
     >>> jpeg1.Y = jpeg0.Y + cl.simulate.ternary(rhos=rhos, alpha=.4, seed=12345)
     """
     # Compute costmap
-    rho = compute_cost(y0=y0, n=n, wet_cost=wet_cost)
+    rho = compute_cost(y0=y0, wet_cost=wet_cost)
 
     # Assign wet cost
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
