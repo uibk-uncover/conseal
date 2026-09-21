@@ -9,7 +9,96 @@
 
 
 import conseal as cl
+import logging
+logging.basicConfig(level=logging.DEBUG)
 import numpy as np
+
+#
+rng = np.random.default_rng(12345)
+
+# costs
+q = 27
+n = 100_000
+sigma = np.linspace(1e2, 1e5, num=n)  # variance prior
+rhos = rng.normal(loc=0.0, scale=sigma, size=(q, n))  # heteroscedastic costs
+
+alpha = .4  # target relative entropy
+target = alpha * n  # target entropy
+lbda1 = cl.simulate.optim_new.search(
+    target=target,
+    rhos=rhos,
+    sender=cl.simulate.PAYLOAD_LIMITED_SENDER,
+    solver=cl.simulate.SOLVER_BSEARCH,
+    q=q,
+)
+f_val = cl.simulate.optim_new.entropy(rhos=rhos, lbda=lbda1, q=q)
+print(f_val / n)
+# exit()
+
+d = .1  # target relative entropy
+target = d * n  # target entropy
+lbda1 = cl.simulate.optim_new.search(
+    target=target,
+    rhos=rhos,
+    sender=cl.simulate.DISTORTION_LIMITED_SENDER,
+    solver=cl.simulate.SOLVER_BSEARCH,
+    q=q,
+)
+f_val = cl.simulate.optim_new.distortion(rhos=rhos, lbda=lbda1, q=q)
+print(f_val / n)
+
+exit()
+
+
+lbda0 = 0.0  # initial lambda
+d0 = np.inf  # initial distance
+rho_std = np.std(rhos)
+rho_scaled = rhos / rho_std
+for i, e in enumerate(range(-1, 5)):  # enumerate(range(-10, 15)):
+    #
+    lbda = 10**e
+    f_val = objective(rhos=rho_scaled, lbda=lbda, q=q)
+    print(f'  {e=} | {lbda=:g} {f_val=} | {target=}')
+
+    d = np.abs(f_val - target)
+    if d < d0:
+        d0, lbda0 = d, lbda
+    elif i > 1:
+        break  # dip passed
+
+#
+lbda0 = lbda0 / rho_std
+f_val = objective(rhos=rhos, lbda=lbda0)
+print(f' -> {lbda0=} {f_val=} | {target=}')
+
+exit()
+# ===
+
+p, lbda = cl.simulate.optim_new.newton(
+    target=target,
+    rhos=rhos,
+    lbda0=(lbda0,),
+)
+
+print(lbda)
+print(p.shape)
+
+
+
+exit()
+
+
+
+
+lbda0 = 0.0  # initial lambda
+d0 = np.inf  # initial distance
+
+
+
+import numpy as np
+print(cl.__path__)
+import matplotlib.pyplot as plt
+
 from PIL import Image
 import time
 

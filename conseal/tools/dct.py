@@ -171,6 +171,39 @@ def jpegio_to_jpeglib(dct_coeffs: np.ndarray) -> np.ndarray:
     return dct_coeffs
 
 
+def compute_dct_basis_functions(n: int = 8) -> np.ndarray:
+    """Computes a matrix with all 2D-DCT basis functions.
+
+    :param n: block size
+    :type n: int
+    :return: ndarray of shape [n*n, n*n]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
+    """
+    dct_basis_functions = np.zeros((n, n, n, n))
+
+    for j in range(n):
+        for i in range(n):
+            alpha_i = np.sqrt(1 / n) if i == 0 else np.sqrt(2 / n)
+            alpha_j = np.sqrt(1 / n) if j == 0 else np.sqrt(2 / n)
+
+            for y in range(n):
+                for x in range(n):
+                    dct_basis_functions[j, i, y, x] = (
+                        alpha_i * alpha_j
+                        * np.cos((np.pi * (2 * x + 1) * i) / (2 * n))
+                        * np.cos((np.pi * (2 * y + 1) * j) / (2 * n))
+                    )
+
+    # Reshape to size (n * n, n * n)
+    dct_basis_functions = dct_basis_functions.reshape((n * n, n * n))
+
+    return dct_basis_functions
+
+
 def compute_DCT_mat() -> np.ndarray:
     """
     Computes the 8x8 DCT matrix
