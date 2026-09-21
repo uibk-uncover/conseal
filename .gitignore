@@ -54,3 +54,6 @@ venv.bak/
 wheelhouse
 
 *.npz
+
+Cargo.lock
+target/

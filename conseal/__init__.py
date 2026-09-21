@@ -18,6 +18,7 @@ from . import ws
 # JPEG
 from . import ebs
 from . import F5
+from . import jmipod
 from . import juniward
 from . import nsF5
 from . import uerd
@@ -48,6 +49,10 @@ BINARY_SEARCH = simulate.BINARY_SEARCH
 NEWTON = simulate.NEWTON
 POLYNOMIAL_PROXY = simulate.POLYNOMIAL_PROXY
 TAYLOR_INVERSE = simulate.TAYLOR_INVERSE
+# SOLVER_BSEARCH_DDE = simulate.SOLVER_BSEARCH_DDE
+# SOLVER_BSEARCH = simulate.SOLVER_BSEARCH
+# SOLVER_NEWTON = simulate.SOLVER_NEWTON
+# SOLVER_POLYPROXY = simulate.SOLVER_POLYPROXY
 # TAYLOR_NEWTON = simulate.TAYLOR_NEWTON
 
 
@@ -61,6 +66,7 @@ __all__ = [
     'F5',
     'hill',
     'hugo',
+    'jmipod',
     'juniward',
     'lsb',
     'mipod',
