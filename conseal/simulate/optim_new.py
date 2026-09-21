@@ -2,13 +2,14 @@
 Implementation of λ estimation methods for the steganography simulator.
 
 Based on the Gibbs distribution approach for minimal embedding distortion.
-Provides several root‐finding strategies to solve E[D](λ) = target_distortion.
+Provides several root-finding strategies to solve E[D](λ) = target_distortion.
 
-Author: Ilyas Satik, Martin Benes
+Author: Martin Benes, Ilyas Satik, Marco Cotrotzo
 Affiliation: University of Innsbruck
 """
 
 import enum
+import logging
 import numpy as np
 from typing import Tuple, Callable
 import warnings
@@ -17,9 +18,11 @@ from ._defs import Sender
 from .. import tools
 
 
+
 def get_probability(
-    rhos: Tuple[np.ndarray],
+    rhos: np.ndarray | Tuple[np.ndarray],
     lbda: float,
+    *,
     add_zero: bool = True,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Converts distortions into probabilities,
@@ -41,30 +44,29 @@ def get_probability(
 
     >>> # TODO
     """
-    # denominator (forced left-associativity)
-    denum = 1 if add_zero else 0
-    logits = []
-    for rho in rhos:
-        # print(rhos)
-        logit = -lbda * rho
-        logits.append(logit)
-        denum += np.exp(logit)
+    rhos = np.array(rhos)
+    exponent = -lbda * rhos
+
+    # Log-Sum-Exp stabilization
+    exponent_max = np.max(exponent, axis=0, keepdims=True)
+    if add_zero:
+        exponent_max = np.maximum(0.0, exponent_max)
+    exponent_stable = exponent - exponent_max
+    gibbs = np.exp(exponent_stable)
+
     #
-    denum[denum == 0] = tools.EPS
-    # get probabilities
-    ps = [
-        np.exp(logit) / denum
-        for logit in logits
-    ]
-    return ps, logits
+    denum = np.exp(-exponent_max) if add_zero else 0.0
+    return gibbs / np.clip(denum + np.nansum(gibbs, axis=0, keepdims=True), 1e-15, None)
 
 
-def expected_distortion(
-    rhos: np.ndarray,
-    lbda: float,
+# === OBJECTIVES ===
+
+def distortion(
+    rhos: np.ndarray | Tuple[np.ndarray],
+    lbda: float = None,
     *,
+    ps: np.ndarray | Tuple[np.ndarray] = None,
     q: int = None,
-    e: float = None,
 ) -> float:
     """
     Compute the expected distortion E[D] under the Gibbs distribution for
@@ -79,32 +81,28 @@ def expected_distortion(
     :return: value of the expected distortion
     :rtype: float
     """
+    #
+    rhos = np.array(rhos)
     # calculate probabilities
-    if q is None:
-        add_zero = True
-        q = len(rhos) + 1
-    else:
-        add_zero = len(rhos) == q-1
-    # add_zero = True if q is None else len(rhos) == q-1
-    ps, _ = get_probability(lbda=lbda, rhos=rhos, add_zero=add_zero)
+    add_zero = True if q is None else len(rhos) == q-1
+    if ps is None:
+        assert lbda is not None, 'either lambda or ps must be provided'
+        ps = get_probability(lbda=lbda, rhos=rhos, add_zero=add_zero)
     # expected distortion
-    Erho = np.sum([
-        rho * p
-        for rho, p in zip(rhos, ps)
-    ])
+    Erho = np.sum(ps * rhos)
     return float(Erho)
 
 
-def d_expected_distortion(
+def d_distortion(
     rhos: np.ndarray,
-    lbda: float,
+    lbda: float = None,
     *,
+    ps: np.ndarray | Tuple[np.ndarray] = None,
     q: int = None,
-    e: float = None,
 ) -> float:
     """
     Compute the derivative of expected distortion with respect to λ:
-        dE[D]/dλ = −sum_i (rho_i^2 * p_i * (1 − p_i))
+        dE[D]/dλ = -sum_i (rho_i^2 * p_i * (1 - p_i))
 
     :param rho: embedding costs
     :type rho: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -113,124 +111,32 @@ def d_expected_distortion(
     :return: value of the derivative of the expected distortion
     :rtype: float
     """
+    #
+    rhos = np.array(rhos)
     # calculate probabilities
-    if q is None:
-        add_zero = True
-        q = len(rhos) + 1
-    else:
-        add_zero = len(rhos) == q-1
-    ps, logits = get_probability(lbda=lbda, rhos=rhos, add_zero=add_zero)
+    add_zero = True if q is None else len(rhos) == q-1
+    if ps is None:
+        assert lbda is not None, 'either lambda or ps must be provided'
+        ps = get_probability(lbda=lbda, rhos=rhos, add_zero=add_zero)
     # expected distortion
-    if q == 2:
-        dErho = -np.sum([
-            (rho**2) * p * (1-p)
-            for rho, p in zip(rhos, ps)
-        ])
-    elif q == 3:
-        print(len(rhos), len(ps))
-        # dErho = -np.sum([
-        #     rho**2 * np.exp(-2 * log1pexp(logit) - log1pexp(-logit))
-        #     for rho, logit in zip(rhos, logits)
-        # ])
-        dErho = -np.sum([
-            (rho**2) * (p**2) * (1-p)
-            for rho, p in zip(rhos, ps)
-        ])
-
-        # dErho = -np.sum(terms)
-        # # log_ps = [np.log(p) for p in ps]
-        # # dErho = -np.sum([
-        # #     rho**2 * np.exp(2*np.log(p) + log1pexp(-p))
-        # #     for rho, p in zip(rhos, ps)
-        # # ])
-        # ps = [np.clip(p, 1e-3, 1-1e-3) for p in ps]
-        # rhos = [np.clip(rho, 1e-3, 1-1e-3) for rho in rhos]
-
-        # H = -np.sum([
-        #     p*logit - log1pexp(logit)
-        #     for p, logit in zip(ps, logits)
-        # ]) / np.log(2)
-    else:
-        raise NotImplementedError(f'unknown d_expected_distortion for {q=}')
-
-    print(f'd_expected_distortion: {q=} {lbda=} {dErho=}')
-    return float(dErho)
-
-
-def log1pexp(x: np.ndarray) -> np.ndarray:
-    """Numerically stable calculation of logarithm.
-
-    Used for log(1+exp(L))=log(1-p).
-
-    :param x: input argument
-    :type x: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: result
-    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    """
-    out = np.empty_like(x)
-    mask = x > 0
-    out[mask] = x[mask] + np.log1p(np.exp(-x[mask]))
-    out[~mask] = np.log1p(np.exp(x[~mask]))
-    return out
-
-
-def entropy_with_logit(
-    ps: np.ndarray = None,
-    logits: np.ndarray = None,
-    *,
-    e: float = None,
-    q: float = None,
-) -> float:
-    """Compute the entropy H(p) of probability p.
-    Logit is provided for better numerical stability.
-
-    H = -sum p log2 p + (1-p) log2 (1-p)
-    = -1/ln2 * sum (p L - log(1+exp(L)))
-
-    :param p: change probability map
-    :type p: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param logit: logit
-    :type logit: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: value of the derivative of the entropy
-    :rtype: float
-    """
-    # Imperfect coding - given embedding efficiency
-    if e is not None:
-        H = np.sum(ps) * e
-    # Perfect coding - upper bound efficiency
-    elif q == 2:
-        H = -np.sum([
-            p*logit - log1pexp(logit)
-            for p, logit in zip(ps, logits)
-        ]) / np.log(2)
-    elif q == 3:
-        # logit_p1, logit_m1 = logits
-        # p_p1, p_m1 = ps
-        # #
-        # logZ = np.log1p(np.exp(logit_p1) + np.exp(logit_m1))  # log(1 + expLp + expLm)
-        # H = -np.sum(p_p1 * logit_p1 + p_m1 * logit_m1 - logZ) / np.log(2)
-        # return H
-        # logZ = np.log1p(
-        #     np.sum([np.exp(logit) for logit in logits], axis=0)
-        # )
-        # H = -np.sum([
-        #     p * logit
-        #     for p, logit in zip(ps, logits)
-        # ])
-        H = -np.sum([
-            p*logit - log1pexp(logit)
-            for p, logit in zip(ps, logits)
-        ]) / np.log(2)
-    else:
-        raise NotImplementedError(f'unknown entropy for {q=}')
-
-    return float(H)
+    return np.sum(-np.sum(ps * rhos**2, axis=0) + np.sum(ps * rhos, axis=0)**2)
+    # #
+    # E_rho = np.sum(ps * rhos, axis=0)
+    # active_variance = np.sum(ps * (rhos - E_rho) ** 2, axis=0)
+    # if add_zero:
+    #     p0 = 1.0 - np.sum(ps, axis=0)
+    #     zero_state_variance = p0 * (E_rho ** 2)
+    #     variance = active_variance + zero_state_variance
+    # else:
+    #     variance = active_variance
+    # return -float(np.sum(variance))
 
 
 def entropy(
     rhos: np.ndarray,
-    lbda: float,
+    lbda: float = None,
     *,
+    ps: np.ndarray | Tuple[np.ndarray] = None,
     q: int = None,
     e: float = None,
 ) -> float:
@@ -247,113 +153,43 @@ def entropy(
     :return: value of the derivative of the entropy
     :rtype: float
     """
-    if q is None:
-        add_zero = True
-        q = len(rhos) + 1
-    else:
-        add_zero = len(rhos) == q-1
-    ps, logits = get_probability(rhos=rhos, lbda=lbda, add_zero=add_zero)
-    return entropy_with_logit(ps=ps, logits=logits, q=q, e=e)
-
-
-def entropy_dde(
-    rhos: np.ndarray,
-    lbda: float,
-    *,
-    q: int = None,
-    e: float = None,
-) -> float:
-    if q is None:
-        add_zero = True
-        q = len(rhos) + 1
-    else:
-        add_zero = len(rhos) == q-1
-    ps, logits = get_probability(rhos=rhos, lbda=lbda, add_zero=add_zero)
+    #
+    rhos = np.array(rhos)
+    # calculate probabilities
+    add_zero = True if q is None else len(rhos) == q-1
+    if ps is None:
+        assert lbda is not None, 'either lambda or ps must be provided'
+        # print(f'get probability with {lbda=} {rhos.shape=} {add_zero=}')
+        ps = get_probability(lbda=lbda, rhos=rhos, add_zero=add_zero)
 
     # Imperfect coding - given embedding efficiency
     if e is not None:
         H = np.sum(ps) * e
     # Perfect coding - upper bound efficiency
-    elif q is None or len(ps) == q-1:  # no change is zero cost
-        H = tools.entropy(*ps)
+    elif add_zero:
+        ps = np.concatenate([
+            1-np.sum(ps, axis=0, keepdims=True),
+            ps,
+        ], axis=0)
+        ps = np.where(ps < 1e-10, 1.0, ps)
+        H = -np.nansum(ps * np.log2(ps))
     else:
-        H = tools._entropy(*ps)
+        ps = np.where(ps < 1e-10, 1.0, ps)
+        H = -np.sum(ps * np.log2(ps))
+    #     H = tools.entropy(*ps)
+    # else:
+    #     ps = np.where(ps < 1e-10, 1.0, ps)
+    #     H = -np.sum(ps * np.log2(ps))
+        # H = tools._entropy(*ps)
 
-    return H
-
-
-def d_entropy_with_logit(
-    ps: np.ndarray,
-    rhos: np.ndarray,
-    logits: np.ndarray,
-    *,
-    q: int = 2,
-    e: float = None,
-) -> float:
-    """Compute the derivative dH/dλ of the entropy H(p),
-    where p is the probability map and λ is the inverse entropy.
-    Logit is provided for better numerical stability.
-
-    :param p: change probability map
-    :type p: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param rho: embedding costs
-    :type rho: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param logit: logit
-    :type logit: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :return: value of the derivative of the entropy
-    :rtype: float
-    """
-    # derivative dH/dλ
-    # = 1/ln2 sum_i L_i p_i (1-p_i) rho_i
-    assert e is None
-    assert q-1 == len(ps)
-    if q == 2:
-        # dH = np.sum([
-        #     logit * p * (1 - p) * rho
-        #     for p, rho, logit in zip(ps, rhos, logits)
-        # ]) / np.log(2)
-        # print('Here!')
-        dH = np.sum([
-            logit * p * (1 - p) * rho
-            for p, rho, logit in zip(ps, rhos, logits)
-        ]) / np.log(2)
-    elif q == 3:
-        # print('Here!')
-
-        logit_p1, logit_m1 = logits
-        p_p1, p_m1 = ps
-        rho_p1, rho_m1 = rhos
-        # dH = -np.sum(
-        #     rho_p1 * p_p1 * (1 - p_p1) +
-        #     rho_m1 * p_m1 * (1 - p_m1) +
-        #     (rho_p1 * p_p1 + rho_m1 * p_m1) * (p_p1 + p_m1)
-        # ) / np.log(2)
-        rho_bar = rho_p1 * p_p1 + rho_m1 * p_m1
-        dH = np.sum(
-            + p_p1 * (rho_p1 - rho_bar) * (1 + np.log(p_p1))
-            + p_m1 * (rho_m1 - rho_bar) * (1 + np.log(p_m1))
-            - (1 - p_p1 - p_m1) * rho_bar * (1 + np.log(1 - p_p1 - p_m1))
-        ) / np.log(2)
-
-        # dH = -np.sum([
-        #     logit * p**2 * (1 - p) * rho
-        #     for p, rho, logit in zip(ps, rhos, logits)
-        # ]) / np.log(2)
-        # dH = -np.sum([
-        #     logit * p**2 * (1 - p) * rho
-        #     for p, rho, logit in zip(ps, rhos, logits)
-        # ]) / np.log(2)
-    else:
-        raise NotImplementedError(f'unknown d_entropy for {q=}')
-    # dH = np.sum(logit * p * (1 - p) * rho) / np.log(2)
-    # print(f'd_entropy_with_logit {dH=}')
-    return float(dH)
+    return float(H)
 
 
 def d_entropy(
     rhos: np.ndarray,
-    lbda: float,
+    lbda: float = None,
     *,
+    ps: np.ndarray | Tuple[np.ndarray] = None,
     q: int = None,
     e: float = None,
 ) -> float:
@@ -368,83 +204,74 @@ def d_entropy(
     :return: value of the derivative of the entropy
     :rtype: float
     """
-    if q is None:
-        add_zero = True
-        q = len(rhos) + 1
-    else:
-        add_zero = len(rhos) == q-1
+    if e is not None:
+        raise NotImplementedError('Newton method with imperfect coding not implemented')
+    #
+    rhos = np.array(rhos)
+    # calculate probabilities
     add_zero = True if q is None else len(rhos) == q-1
-    ps, logits = get_probability(rhos=rhos, lbda=lbda, add_zero=add_zero)
-    return d_entropy_with_logit(ps=ps, rhos=rhos, logits=logits, q=q, e=e)
+    if ps is None:
+        assert lbda is not None, 'either lambda or ps must be provided'
+        ps = get_probability(lbda=lbda, rhos=rhos, add_zero=add_zero)
+    # entropy
+    Erho = np.sum(rhos * ps, axis=0, keepdims=True)
+    ps = np.where(ps < 1e-10, 1.0, ps)
+    return np.sum(np.sum(ps * np.log2(ps) * (rhos - Erho), axis=0))
 
 
 def get_objective(
     sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    *,
     e: float = None,
 ) -> Callable:
-    # assert e is None, 'e not implemented'
     if sender == Sender.PAYLOAD_LIMITED_SENDER:
-        # print('using PLS H objective')
         if e is not None:
             return lambda *args, **kw: entropy(*args, e=e, **kw)
         else:
             return entropy
-    elif sender == Sender.PAYLOAD_LIMITED_SENDER_DDE:
-        if e is not None:
-            return lambda *args, **kw: entropy_dde(*args, e=e, **kw)
-        else:
-            return entropy_dde
     elif sender == Sender.DISTORTION_LIMITED_SENDER:
-        # print('using DiLS Erho objective')
         if e is not None:
-            return lambda *args, **kw: expected_distortion(*args, e=e, **kw)
+            return lambda *args, **kw: distortion(*args, e=e, **kw)
         else:
-            return expected_distortion
+            return distortion
     else:
         raise NotImplementedError(f'unknown sender {sender}')
-
-
-def placeholder(*args, **kw):
-    raise NotImplementedError
 
 
 def get_d_objective(
     sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    *,
     e: float = None,
 ) -> Callable:
     # assert e is None, 'e not implemented'
     if sender == Sender.PAYLOAD_LIMITED_SENDER:
-        # print('using PLS H d_objective')
         if e is not None:
-            return placeholder
-        else:
-            return d_entropy
-    elif sender == Sender.PAYLOAD_LIMITED_SENDER_DDE:
-        if e is not None:
-            return placeholder
+            return lambda *args, **kw: d_entropy(*args, e=e, **kw)
         else:
             return d_entropy
     elif sender == Sender.DISTORTION_LIMITED_SENDER:
-        # print('using DiLS Erho d_objective')
         if e is not None:
-            return placeholder
+            return lambda *args, **kw: d_distortion(*args, e=e, **kw)
         else:
-            return d_expected_distortion
+            return d_distortion
     else:
         raise NotImplementedError(f'unknown sender {sender}')
 
+# === SOLVERS ===
 
 def binary_search(
     target: float,
     rhos: np.ndarray,
-    objective: Callable,
-    d_objective: Callable,
     *,
-    lbda0: Tuple[float] = None,
-    tol: float = 1e-3,
-    n: int = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda1: Tuple[float] = None,
+    tol: float = 1,
+    n: int = None,  # legacy
     max_iter: int = None,
     q: int = None,
+    e: float = None,
 ) -> float:
     """Binary search to solve J(x) = target up to tolerance.
 
@@ -457,46 +284,52 @@ def binary_search(
     :return: estimated λ value
     :rtype: float
     """
-    if lbda0 is None:
-        lbda0 = (0, 1e4)
-    if n is None:
-        n = rhos[0].size
+    if objective is None:
+        objective = get_objective(sender=sender, e=e)
+    if lbda1 is None:
+        lbda1 = (0, 1e4)
+    # if n is None:
+    #     n = rhos[0].size
     if q is None:
         q = len(rhos) + 1
     if max_iter is None:
         max_iter = 30
     #
-    low, high = lbda0
-    # print()
+    low, high = lbda1
+
+    logging.debug(f'BSearch started, {target=} {low=} {high=} {tol=} {objective=} {d_objective=}')
     for it in range(max_iter):
-        # if (high - low) <= tol:
-        #     break
-        mid = .5 * (low + high)
-        f_val = objective(rhos=rhos, lbda=mid, q=q)
-        # print(f'  {it=} | {mid=} {f_val=} {target=}')
-        if abs(f_val - target) / n < tol:
+
+        lbda = .5 * (low + high)
+        f_val = objective(rhos=rhos, lbda=lbda, q=q)
+        logging.debug(f'  {it=} | {lbda=:.03g} {f_val=:.03f} | {target=}')
+        if abs(f_val - target) < tol:
             break
+
         if f_val > target:
-            low = mid
+            low = lbda
         else:
-            high = mid
+            high = lbda
     else:
         warnings.warn("optimization might not have converged", RuntimeWarning)
     lbda = .5 * (low + high)
-    return get_probability(rhos=rhos, lbda=lbda)[0], lbda
+    return lbda  # get_probability(rhos=rhos, lbda=lbda)[0], lbda
 
 
 def newton(
     target: float,
     rhos: np.ndarray,
-    objective: Callable,
-    d_objective: Callable,
     *,
-    lbda0: Tuple[float] = None,
-    tol: float = None,
-    n: int = None,
-    max_iter: int = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda1: Tuple[float],
+    tol: float = 1,
+    n: int = None,  # legacy
+    # add_zero: bool = True,
+    max_iter: int = 30,
     q: int = None,
+    e: float = None,
 ) -> float:
     """Newton-Raphson method to find λ satisfying E[D](λ) = target.
 
@@ -516,51 +349,56 @@ def newton(
     :type max_iter: int
     :return: Estimated λ value
     """
-    if lbda0 is None:
-        lbda0 = (target,)
+    if objective is None:
+        objective = get_objective(sender=sender, e=e)
+    if d_objective is None:
+        d_objective = get_d_objective(sender=sender, e=e)
     if n is None:
         n = rhos[0].size
     if q is None:
         q = len(rhos) + 1
-    if tol is None:
-        tol = 1e-3
-    if max_iter is None:
-        max_iter = 30
     #
-    (lbda,) = lbda0
+    rhos = np.array(rhos)
+    lbda = lbda1[0]
+    add_zero = True if q is None else len(rhos) == q-1
     #
-    print(f'Newton started, {target=} {lbda0=} {tol=}')
-    print(f'{objective=} {d_objective=}')
+    logging.debug(f'Newton started, {target=} {lbda=} {tol=} {objective=} {d_objective=}')
     for it in range(max_iter):
-        f_val = objective(rhos=rhos, lbda=lbda)
-        if abs(f_val - target) / n < tol:
+
+        ps = get_probability(rhos=rhos, lbda=lbda, add_zero=add_zero)
+
+        f_val = objective(rhos=rhos, lbda=lbda, ps=ps, q=q)
+        if abs(f_val - target) < tol:
+            logging.debug(f'  {it=} | {lbda=:.03g} {f_val=:.03f} | {target=}')
             break
-        df_val = d_objective(rhos=rhos, lbda=lbda)
-        # update = (f_val - target) / df_val
-        print(f'  {it=} | {lbda=} {f_val=} {df_val=} | {target=}')
-        if df_val == 0:
-            raise RuntimeError('derivative 0, cannot proceed')
-        # lbda1 = lbda - update
-        lbda1 = lbda - (f_val - target) / df_val
-        if lbda1 < 0:
-            raise RuntimeError('lambda below 0, wrong initialization')
-        lbda = lbda1
+
+        df_val = d_objective(rhos=rhos, lbda=lbda, ps=ps, q=q)
+        logging.debug(f'  {it=} | {lbda=:.03g} {f_val=:.03f} {df_val=:.03f} | {target=}')
+        if np.abs(df_val) < 1e-10:
+            warnings.warn('Newton search for lambda diverged')
+            break
+        lbda = lbda - (f_val - target) / df_val
+
     else:
-        warnings.warn("optimization might not have converged", RuntimeWarning)
-    return get_probability(rhos=rhos, lbda=lbda)[0], lbda
+        warnings.warn("Newton search for lambda did not converge", RuntimeWarning)
+
+    return lbda
+    # return get_probability(rhos=rhos, lbda=lbda)[0], lbda
 
 
 def polynomial_proxy(
     target: float,
     rhos: np.ndarray,
-    objective: Callable,
-    d_objective: Callable = None,
     *,
-    lbda0: Tuple[float] = None,
-    tol: float = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda1: Tuple[float] = None,
+    tol: float = 1,
     n: int = None,
     max_iter: int = 15,
     q: int = None,
+    e: float = None,
     deg: int = 2,
 ) -> float:
     """Fits a polynomial for a quick estimate.
@@ -578,17 +416,19 @@ def polynomial_proxy(
     :type lbdas: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: Estimated λ value or NaN if no valid real root
     """
-    if lbda0 is None:
-        lbda = (5, 30)
+    if objective is None:
+        objective = get_objective(sender=sender, e=e)
+    if lbda1 is None:
+        lbda1 = (5, 30)
     if n is None:
         n = rhos[0].size
     if q is None:
         q = len(rhos) - 1
     #
-    xs = np.array(lbda0, dtype=np.float64)
+    xs = np.array(lbda1, dtype=np.float64)
     ys = np.array([
         objective(lbda=lbda, rhos=rhos)
-        for lbda in lbda0
+        for lbda in lbda1
     ], dtype=np.float64)
     coefs = np.polyfit(xs, ys, deg)
     coefs[-1] -= target
@@ -599,7 +439,7 @@ def polynomial_proxy(
     else:
         warnings.warn("optimization might not have converged", RuntimeWarning)
         # print([np.abs(y - target) for y in ys], np.argmin([np.abs(ys - target) for lbda in lbda0]))
-        lbda = xs[np.argmin([np.abs(ys - target) for lbda in lbda0])]
+        lbda = xs[np.argmin([np.abs(ys - target) for lbda in lbda1])]
         # print(lbda)
     return get_probability(rhos=rhos, lbda=lbda)[0], lbda
 
@@ -607,14 +447,16 @@ def polynomial_proxy(
 def taylor_inverse(
     target: float,
     rhos: np.ndarray,
-    objective: Callable,
-    d_objective: Callable,
     *,
-    lbda0: float = None,
-    tol: float = None,
-    n: int = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda1: float = None,
+    tol: float = 1,
+    # n: int = None,
     max_iter: int = 15,
     q: int = None,
+    e: float = None
 ) -> float:
     """
     Single-step linear Taylor approximation: expand E[D](λ) around λ0, then invert.
@@ -628,39 +470,204 @@ def taylor_inverse(
     :return: estimated λ value (no iteration)
     :rtype: float
     """
-    if n is None:
-        n = rhos[0].size
+    if objective is None:
+        objective = get_objective(sender=sender, e=e)
+    if d_objective is None:
+        d_objective = get_d_objective(sender=sender, e=e)
+    # if n is None:
+    #     n = rhos[0].size
     if q is None:
         q = len(rhos) - 1
-    if lbda0 is None:
-        lbda0 = (5.,)
+    if lbda1 is None:
+        lbda1 = (5.,)
     # assess f(lbda) and f'(lbda)
-    (lbda0,) = lbda0
-    f_val = objective(lbda=lbda0, rhos=rhos)
-    df_val = d_objective(lbda=lbda0, rhos=rhos)
+    lbda = lbda1[0]
+    f_val = objective(lbda=lbda, rhos=rhos)
+    df_val = d_objective(lbda=lbda, rhos=rhos)
     # calculate lambda from Taylor
-    lbda = lbda0 + (target - f_val) / df_val
+    lbda = lbda + (target - f_val) / df_val
     #
     return get_probability(rhos=rhos, lbda=lbda)[0], lbda
 
 
-def estimate_lambda_search(
+def expsearch_best(
     target: float,
     rhos: Tuple[np.ndarray],
-    objective: Callable,
-    d_objective: Callable,
     *,
-    lbda0: Tuple[float] = None,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda0: Tuple[int] = None,
+    max_iter: int = None,
+    q: int = None,
+    e: float = None,
+) -> Tuple[Tuple[int], int]:
+
+    if objective is None:
+        objective = get_objective(sender=sender, e=e)
+    if lbda0 is None:
+        lbda0 = (-5, 15)
+    #
+    l0 = 0.0  # initial lambda
+    d0 = np.inf  # initial distance
+    #
+    logging.debug(f'expsearch_best started, {target=} {lbda0=} {objective=}')
+    for i, e in enumerate(range(*lbda0)):
+        #
+        lbda = 10**e
+        f_val = objective(rhos=rhos, lbda=lbda, q=q)
+        logging.debug(f'  {e=} | {lbda=:.03g} {f_val=:.03f} | {target=}')
+
+        d = np.abs(f_val - target)
+        if d < d0:
+            d0, l0 = d, lbda
+        elif i > 1:
+            break  # dip passed
+    else:
+        warnings.warn("Exponential search for lambda did not converge", RuntimeWarning)
+    #
+    return (l0,), i
+
+
+def expsearch_bound(
+    target: float,
+    rhos: Tuple[np.ndarray],
+    *,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda0: Tuple[int] = None,
+    max_iter: int = None,
+    q: int = None,
+    e: float = None,
+) -> Tuple[Tuple[int], int]:
+    rhos = np.array(rhos)
+    if objective is None:
+        objective = get_objective(sender=sender, e=e)
+    if lbda0 is None:
+        lbda0 = (-5, 15)
+    #
+    logging.debug(f'expsearch_best started, {target=} {lbda0=} {objective=}')
+    for i, e in enumerate(range(*lbda0)):
+        #
+        lbda1b = 10**e
+        f_val = objective(rhos=rhos, lbda=lbda1b, q=q)
+        logging.debug(f'  {e=} | {lbda1b=:.03g} {f_val=:.03f} | {target=}')
+
+        if f_val < target:  # dip passed
+            lbda1a = lbda1b/10 if i > 0 else 0  # TODO: negative lambda
+            break
+    else:
+        warnings.warn("Exponential search for lambda did not converge", RuntimeWarning)
+        lbda1a, lbda1b = lbda1b, np.finfo(rhos.dtype).max
+    #
+    return (lbda1a, lbda1b), i
+
+
+class LambdaSolver(enum.Enum):
+    """Type of lambda optimizer."""
+
+    SOLVER_BSEARCH_DDE = enum.auto()
+    """Binary search, compatible with DDE's Matlab."""
+    SOLVER_BSEARCH = enum.auto()
+    """Binary search."""
+    SOLVER_NEWTON = enum.auto()
+    """Newton method."""
+    SOLVER_POLYPROXY = enum.auto()
+    """Polynomial proxy method."""
+    # TAYLOR_INVERSE = enum.auto()
+    # """Taylor inverse method."""
+
+    @property
+    def solve(self):
+        solvers = {
+            LambdaSolver.SOLVER_NEWTON: newton,
+            LambdaSolver.SOLVER_BSEARCH: binary_search,
+            # SOLVER_BSEARCH_DDE: binary_search_dde,
+            LambdaSolver.SOLVER_POLYPROXY: polynomial_proxy,
+        }
+        return solvers[self]
+
+    @property
+    def expsearch(self):
+        expsearch = {
+            LambdaSolver.SOLVER_NEWTON: expsearch_best,
+            LambdaSolver.SOLVER_BSEARCH: expsearch_bound,
+            # SOLVER_BSEARCH_DDE: binary_search_dde,
+            # LambdaSolver.SOLVER_POLYPROXY: polynomial_proxy,
+        }
+        return expsearch[self]
+
+
+def search(
+    target: float,
+    rhos: Tuple[np.ndarray],
+    *,
+    solver: LambdaSolver = LambdaSolver.SOLVER_NEWTON,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda0: float | Tuple[int] = None,
+    tol: float = 1,  # bits
+    max_iter: int = 30,
+    n: int = None,  # legacy
+    q: int = None,
+    e: float = None,
+) -> float:
+    """"""
+    if objective is None:
+        objective = get_objective(sender=sender, e=e)
+    if d_objective is None:
+        d_objective = get_d_objective(sender=sender, e=e)
+    # if n is None:
+    #     n = rhos[0].size
+    if q is None:
+        q = len(rhos) + 1
+    #
+    lbda1, _ = solver.expsearch(
+        target=target,
+        rhos=rhos,
+        objective=objective,
+        d_objective=d_objective,
+        lbda0=lbda0,
+        q=q,
+    )
+    #
+    lbda = solver.solve(
+        target=target,
+        rhos=rhos,
+        objective=objective,
+        d_objective=d_objective,
+        lbda1=lbda1,
+        tol=tol,
+        max_iter=max_iter,
+        q=q,
+    )
+    return lbda
+
+# ===
+
+
+
+
+def exponential_search_dde(
+    target: float,
+    rhos: Tuple[np.ndarray],
+    *,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
+    objective: Callable = None,
+    d_objective: Callable = None,
+    lbda0: Tuple[float] = (1000,),
     tol: float = None,
     n: int = None,
-    max_iter: int = None,
+    max_iter: int = 15,
     q: int = None,
 ) -> Tuple[float, float]:
     assert n > 0, "Expected cover size greater than 0"
-    if max_iter is None:
-        max_iter = 15
-    if lbda0 is None:
-        lbda0 = (1000,)
+    # if max_iter is None:
+    #     max_iter = 15
+    # if lbda0 is None:
+    #     lbda0 = (1000,)
         # lbda0 = (n,)
     # print(f'estimate_lambda_search: {max_iter=} {lbda0=} {target=}')
 
@@ -692,7 +699,7 @@ def estimate_lambda_search(
     return (l3, m3), iterations
 
 
-def binary_search_dde(
+def search_dde(
     target: float,
     rhos: Tuple[np.ndarray],
     objective: Callable,
@@ -738,7 +745,7 @@ def binary_search_dde(
     if max_iter is None:
         max_iter = 30
 
-    (l3, m3), iterations = estimate_lambda_search(
+    (l3, m3), iterations = boundary_search(
         target=target,
         rhos=rhos,
         objective=objective,
