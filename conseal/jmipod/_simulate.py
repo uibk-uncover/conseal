@@ -29,6 +29,8 @@ def probability(
     y0: np.ndarray,
     qt: np.ndarray,
     alpha: float,
+    *,
+    n: int = None,
 ) -> Tuple[Tuple[np.ndarray], float]:
     """Computes change probabilities for J-MiPOD embedding.
 
@@ -39,12 +41,15 @@ def probability(
         of shape [8, 8]
     :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param alpha: embedding rate,
-        in bits per non-zero AC DCT coefficient
+        in bits per cover element (as counted by ``n``)
     :type alpha: float
+    :param n: number of cover elements the embedding rate is relative to,
+        the number of non-zero AC DCT coefficients (bpnzAC) by default
+    :type n: int
     :return: tuple ((p_p1, p_m1), payload), where
         p_p1 is the probability of +1 change,
         p_m1 is the probability of -1 change, and
-        payload is the absolute payload in nats.
+        payload is the absolute payload in bits.
     :rtype: tuple
 
     :Example:
@@ -56,16 +61,21 @@ def probability(
     """
     fisher_information = compute_cost(y0=y0, qt=qt)
 
-    # Number of embeddable (non-zero AC) DCT coefficients
-    nzAC = tools.dct.nzAC(y0)
+    # Number of cover elements the embedding rate is relative to.
+    # Defaults to the number of embeddable (non-zero AC) DCT coefficients.
+    if n is None:
+        n = tools.dct.nzAC(y0)
 
-    # Absolute payload in nats
-    payload = alpha * nzAC * np.log(2)
+    # Absolute payload in nats, needed to search for the Lagrangian multiplier
+    payload_nats = alpha * n * np.log(2)
 
     # change rate per DCT coefficient/selection channel
-    p_flat = _defs.ternary_probs(fisher_information, payload, max_num_iterations=30, excess_values_num_iter=10)
+    p_flat = _defs.ternary_probs(fisher_information, payload_nats, max_num_iterations=30, excess_values_num_iter=10)
 
     p = p_flat.reshape(fisher_information.shape, order="F")
+
+    # Absolute payload in bits
+    payload = alpha * n
 
     return (p, p), payload
 

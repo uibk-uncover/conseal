@@ -61,5 +61,29 @@ class TestJMiPOD(unittest.TestCase):
         stego_dct_matlab = jpeglib.read_dct(JMIPOD_DIR / stego_name)
         np.testing.assert_allclose(y1, stego_dct_matlab.Y)
 
+    @parameterized.expand([
+        ("seal1.jpg",),
+        ("seal2.jpg",),
+        ("seal3.jpg",),
+        ("seal4.jpg",),
+        ("seal5.jpg",),
+        ("seal6.jpg",),
+        ("seal7.jpg",),
+        ("seal8.jpg",),
+    ])
+    def test_probability_entropy_matches_payload(self, cover_name):
+        cover_dct = jpeglib.read_dct(COVER_DIR / cover_name)
+
+        (p_p1, p_m1), payload = cl.jmipod.probability(
+            y0=cover_dct.Y,
+            qt=cover_dct.qt[0],
+            alpha=0.4,
+        )
+
+        # The Lagrangian multiplier is chosen such that the total entropy of
+        # the change probabilities (in bits) matches the requested payload.
+        H = cl.tools.entropy(p_p1, p_m1)
+        np.testing.assert_allclose(H, payload, rtol=1e-2)
+
 
 __all__ = ["TestJMiPOD"]
