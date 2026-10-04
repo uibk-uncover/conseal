@@ -16,7 +16,7 @@ High-level API
 On high-level API, the embedding is a black-box.
 You pass in the cover image and obtain the stego image.
 
-Currently, there are twelve steganography simulators implemented: EBS, F5, HILL, HUGO, J-MiPOD, J-UNIWARD, LSB, MiPOD, nsF5, S-UNIWARD, UERD and WOW.
+Currently, there are seven steganography simulators implemented: EBS, F5, HILL, HUGO, J-UNIWARD, LSB, MiPOD, nsF5, S-UNIWARD, UERD and WOW.
 
 
 Simulators of Spatial Steganography
@@ -84,11 +84,6 @@ F5 simulator
 
 .. autofunction:: conseal.F5.simulate_single_channel
 
-
-J-MiPOD simulator
-""""""""""""""""""""
-
-.. autofunction:: conseal.jmipod.simulate_single_channel
 
 J-UNIWARD simulator
 """""""""""""""""""

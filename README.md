@@ -45,7 +45,6 @@ pip3 install .
 | EBS: entropy block steganography | JPEG | [Reference](https://doi.org/10.1109/ICASSP.2012.6288246) |
 | UERD: uniform embedding revisited distortion | JPEG | [Reference](https://doi.org/10.1109/TIFS.2015.2473815) |
 | J-UNIWARD: JPEG-domain universal wavelet relative distortion | JPEG | [Reference](https://dde.binghamton.edu/vholub/pdf/EURASIP14_Universal_Distortion_Function_for_Steganography_in_an_Arbitrary_Domain.pdf) |
-| J-MiPOD: JPEG-domain minimizing the power of optimal detector | JPEG | [Reference](https://doi.org/10.1145/3369412.3395075) |
 | LSB: least significant bit | Spatial / JPEG | |
 | HILL: high-low-low | Spatial | [Reference](https://projet.liris.cnrs.fr/imagine/pub/proceedings/ICIP-2014/Papers/1569891955.pdf) |
 | HUGO: highly undetectable stego | Spatial | [Reference](http://agents.fel.cvut.cz/stegodata/pdfs/Pev10-Hugo.pdf) |
@@ -141,23 +140,6 @@ jpeg = jpeglib.read_dct("cover.jpeg")
 # embed J-UNIWARD 0.4
 jpeg.Y = cl.juniward.simulate_single_channel(
     x0=im0.spatial[..., 0],
-    y0=jpeg.Y,
-    qt=jpeg.qt[0],
-    alpha=0.4,
-    seed=12345)
-
-# save result as stego image
-jpeg.write_dct("stego.jpeg")
-```
-
-- J-MiPOD
-
-```python
-# load cover
-jpeg = jpeglib.read_dct("cover.jpeg")
-
-# embed J-MiPOD 0.4 bpnzAC
-jpeg.Y = cl.jmipod.simulate_single_channel(
     y0=jpeg.Y,
     qt=jpeg.qt[0],
     alpha=0.4,

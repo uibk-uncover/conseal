@@ -19,7 +19,6 @@ from . import ws
 # JPEG
 from . import ebs
 from . import F5
-from . import jmipod
 from . import juniward
 from . import nsF5
 from . import uerd
@@ -62,7 +61,6 @@ __all__ = [
     'F5',
     'hill',
     'hugo',
-    'jmipod',
     'juniward',
     'lsb',
     'mipod',
