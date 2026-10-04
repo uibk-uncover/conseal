@@ -35,7 +35,11 @@ class TestJMiPOD(unittest.TestCase):
         costmap = cl.jmipod.compute_cost(y0=cover_dct.Y, qt=cover_dct.qt[0])
         costmap_matlab = loadmat(JMIPOD_DIR / costmap_name)["FisherInformation"]
 
-        np.testing.assert_allclose(costmap, costmap_matlab)
+        # cl.jmipod.compute_cost returns the cost in the same 4D block layout
+        # as the other JPEG-domain costs in this package; convert back to 2D
+        # to compare against the Matlab reference.
+        costmap_2d = cl.tools.dct.jpeglib_to_jpegio(costmap)
+        np.testing.assert_allclose(costmap_2d, costmap_matlab)
 
     @parameterized.expand([
         ("seal1.jpg", 1, "stego_seal1_seed_1.jpg"),

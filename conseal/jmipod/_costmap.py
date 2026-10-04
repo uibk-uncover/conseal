@@ -29,7 +29,7 @@ def compute_cost(
         of shape [8, 8]
     :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :return: cost for +-1 change,
-        of shape [num_vertical_blocks * 8, num_horizontal_blocks * 8]
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
@@ -107,4 +107,6 @@ def compute_cost(
         +     fisher_information_padded[16:, 16:]      # bottom right
     )
 
-    return fisher_information
+    # Rearrange from 2D (jpegio) to 4D (jpeglib) block layout,
+    # matching the other JPEG-domain cost functions in this package.
+    return tools.dct.jpegio_to_jpeglib(fisher_information)

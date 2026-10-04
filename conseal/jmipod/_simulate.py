@@ -48,7 +48,8 @@ def probability(
     :type n: int
     :return: tuple ((p_p1, p_m1), payload), where
         p_p1 is the probability of +1 change,
-        p_m1 is the probability of -1 change, and
+        p_m1 is the probability of -1 change,
+        both of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8], and
         payload is the absolute payload in bits.
     :rtype: tuple
 
@@ -113,7 +114,10 @@ def simulate_single_channel(
     ...     seed=12345)
     """
     # rho is the fisher information
-    rho = compute_cost(y0=y0, qt=qt)
+    # Rearrange from 4D (jpeglib) to 2D (jpegio) block layout: the random
+    # numbers below are drawn in that same order to reproduce the reference
+    # Matlab implementation coefficient by coefficient.
+    rho = tools.dct.jpeglib_to_jpegio(compute_cost(y0=y0, qt=qt))
 
     # Number of embeddable (non-zero AC) DCT coefficients
     nzAC = tools.dct.nzAC(y0)

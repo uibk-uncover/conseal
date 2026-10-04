@@ -76,7 +76,7 @@ def wiener2(
     #     local_variance[np.isnan(local_variance)] = 0
     #     local_variance = np.clip(local_variance, a_min=0.01, a_max=None)
     if (local_variance == 0).any():
-        warnings.warn('invalid variance in flat areas, clipping')
+        # warnings.warn('invalid variance in flat areas, clipping')
         local_variance = np.clip(local_variance, a_min=1e-8, a_max=None)
 
     # Estimate the noise power if needed
