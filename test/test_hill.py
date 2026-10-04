@@ -32,13 +32,13 @@ class TestHILL(unittest.TestCase):
         # simulate the stego
         alpha = .4
         rho_p1, rho_m1 = cl.hill.compute_cost_adjusted(x)
-        (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
+        (p_p1, p_m1), lbda = cl.simulate_old._ternary.probability(
             rhos=(rho_p1, rho_m1),
             alpha=alpha,
             n=x.size,
         )
         # estimate average relative payload
-        _, Hp = cl.simulate.average_payload(lbda=lbda, ps=(p_p1, p_m1))
+        _, Hp = cl.simulate_old.average_payload(lbda=lbda, ps=(p_p1, p_m1))
         alpha_hat = Hp/x.size
         self.assertAlmostEqual(alpha, alpha_hat, 3)
 

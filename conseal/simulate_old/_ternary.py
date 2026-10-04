@@ -13,8 +13,9 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 from typing import Tuple, Callable
 
-from ._defs import Sender
-from .optim_new import get_objective, get_d_objective, LambdaOptimizer
+from ..simulate._common import Sender
+from ..simulate._objective import Objective
+from ._lambda_optimizer import LambdaOptimizer
 
 
 def probability(
@@ -24,7 +25,7 @@ def probability(
     *,
     e: float = None,
     objective: Callable = None,
-    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER_DDE,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
     lambda_optimizer: LambdaOptimizer = LambdaOptimizer.BINARY_SEARCH_DDE,
     lbda0: Tuple[float] = None,
     tol: float = None,
@@ -64,8 +65,8 @@ def probability(
     if objective is not None and lambda_optimizer != LambdaOptimizer.BINARY_SEARCH:
         raise NotImplementedError('custom objective requires binary search')
     if objective is None:
-        objective = get_objective(e=e, sender=sender)
-        d_objective = get_d_objective(e=e, sender=sender)
+        objective = Objective(sender, e=e)
+        d_objective = objective.derivative
     else:
         d_objective = None
     #
@@ -166,7 +167,7 @@ def ternary(
     *,
     e: float = None,
     objective: Callable = None,
-    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER_DDE,
+    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
     **kw,
 ) -> np.ndarray:
     """Simulates ternary embedding given distortion and embedding rate.

@@ -18,8 +18,7 @@ from typing import Callable, Tuple
 import warnings
 
 from .. import tools
-from . import optim_new
-from ._defs import Sender
+from ..simulate._common import Sender
 
 
 def get_p(

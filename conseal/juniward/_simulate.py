@@ -7,7 +7,7 @@ Affiliation: University of Innsbruck
 import numpy as np
 
 from ._costmap import compute_cost_adjusted, Implementation
-from .. import simulate
+from .. import simulate_old
 from .. import tools
 
 
@@ -91,7 +91,7 @@ def simulate_single_channel(
     rho_m1_2d = tools.dct.jpeglib_to_jpegio(rho_m1)
 
     # STC simulation
-    delta_2d = simulate.ternary(
+    delta_2d = simulate_old.ternary(
         rhos=(rho_p1_2d, rho_m1_2d),
         alpha=alpha,
         n=nzAC,

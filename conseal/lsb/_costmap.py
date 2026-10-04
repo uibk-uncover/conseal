@@ -14,7 +14,7 @@ import typing
 import warnings
 
 from . import _selection_channel
-from .. import simulate
+from .. import simulate_old
 from .. import tools
 
 
@@ -244,4 +244,4 @@ def average_payload(*args, **kw):
     It sets a constant efficiency over all the embedding rates to 2.
     Other methods embed at the bound.
     """
-    return simulate._ternary.average_payload(*args, e=2, **kw)
+    return simulate_old._ternary.average_payload(*args, e=2, **kw)

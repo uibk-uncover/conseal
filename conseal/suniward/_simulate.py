@@ -9,7 +9,7 @@ Affiliation: University of Innsbruck
 import numpy as np
 
 from . import _costmap
-from ..simulate import _ternary
+from ..simulate_old import _ternary
 
 
 def simulate_single_channel(

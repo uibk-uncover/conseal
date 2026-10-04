@@ -19,7 +19,7 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 
 from . import _costmap
-from ..simulate import _ternary
+from ..simulate_old import _ternary
 
 
 def simulate_single_channel(

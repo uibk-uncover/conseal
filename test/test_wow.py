@@ -33,7 +33,7 @@ class TestWOW(unittest.TestCase):
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # embed steganography
         rho_p1, rho_m1 = cl.wow.compute_cost_adjusted(x0)
-        delta = cl.simulate.ternary(
+        delta = cl.simulate_old.ternary(
             rhos=(rho_p1, rho_m1),
             alpha=.4,
             n=x0.size,

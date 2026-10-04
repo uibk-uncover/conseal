@@ -9,7 +9,7 @@ Affiliation: University of Innsbruck
 import numpy as np
 
 from ._costmap import compute_cost_adjusted
-from ..simulate import _ternary
+from ..simulate_old import _ternary
 from .. import tools
 
 

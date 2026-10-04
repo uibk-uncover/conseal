@@ -19,6 +19,8 @@ from .. import tools
 def probability(
     y0: np.ndarray,
     alpha: float,
+    *,
+    n: int = None,
 ) -> np.ndarray:
     """Compute the nsF5 probability map.
 
@@ -28,6 +30,8 @@ def probability(
     :param alpha: embedding rate,
         in bits per nzAC coefficient
     :type alpha: float
+    :param n: number of elements, nzAC by default
+    :type n: int
     :return: tuple ((p_p1, p_m1), None), where
         p_p1 is the probability of +1 change
         p_m1 is the probability of -1 change.
@@ -48,12 +52,13 @@ def probability(
     beta = tools.inv_entropy(alpha)
 
     # Number of nonzero AC DCT coefficients
-    nzAC = tools.dct.nzAC(y0)
-    if nzAC == 0:
-        raise ValueError('There are no non-zero AC coefficients for embedding')
+    nzac = tools.dct.nzAC(y0)
+    n = nzac if n is None else n
+    if n == 0 or nzac == 0:
+        raise ValueError('no embeddable elements')
 
     # probability map
-    p = np.ones(y0.shape, dtype='float64') * beta
+    p = np.ones(y0.shape, dtype='float64') * beta * n / nzac
 
     # do not change zeros or DC mode
     p[y0 == 0] = 0
