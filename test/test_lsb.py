@@ -70,7 +70,7 @@ class TestLSB(unittest.TestCase):
         # embed steganography
         rhos = cl.lsb.compute_cost_adjusted(x0)
         seed = cl.tools.password_to_seed(f)
-        delta = cl.simulate_old.ternary(rhos=rhos, alpha=.4, n=x0.size, e=2, seed=seed)
+        delta = cl.simulate.simulate(rhos=rhos, alpha=.4, n=x0.size, e=2, seed=seed)
         # test change rate
         self.assertAlmostEqual(.4/2, (delta != 0).mean(), 2)
 
@@ -81,7 +81,7 @@ class TestLSB(unittest.TestCase):
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # embed steganography
         ps, _ = cl.lsb._costmap.probability(x0, alpha=.4)
-        delta = cl.simulate_old._ternary.simulate(ps=ps, seed=12345)
+        delta = cl.simulate.sample(ps, seed=12345)
         # test change rate
         self.assertAlmostEqual((delta != 0).mean(), .4/2, 2)
 

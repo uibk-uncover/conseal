@@ -9,6 +9,7 @@ Affiliation: University of Innsbruck
 
 import numpy as np
 from typing import Tuple, Callable
+import warnings
 
 from ._common import Sender, get_probability
 from ._objective import Objective
@@ -30,7 +31,8 @@ def probability(
 
     Searches λ, s.t., the objective meets alpha * n,
     and returns the probabilities p ~ exp(-λ ρ).
-    For payload-limited sender, the target is rounded to whole bits, as in DDE.
+    With DDE-compatible binary search and payload-limited sender,
+    the target is rounded to whole bits, as in DDE.
 
     :param rhos: costs of the changes, one tensor per change
     :type rhos: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -68,8 +70,9 @@ def probability(
     objective = Objective.of(objective, e=e)
     # target
     target = alpha * n
-    if objective.sender == Sender.PAYLOAD_LIMITED_SENDER:
-        target = int(np.round(target))  # message length in bits
+    if (solver == LambdaSolver.SOLVER_BSEARCH_DDE and  # for legacy consistency
+        objective.sender == Sender.PAYLOAD_LIMITED_SENDER):
+        target = int(np.round(target))  # message length in bits, as in DDE
     # λ search
     lbda = search(
         target=target,
@@ -98,11 +101,19 @@ def sample(
     and selects the change, whose cumulative probability interval contains it.
     Without any, the element is not changed.
 
+    The no-change state is implicit by default, with the remaining probability.
+    It can also be given explicitly as one of the probabilities,
+    with value 0 at its position in values,
+    in which case the probabilities should sum to 1.
+    Without 0 in values, all the probabilities are treated as changes,
+    including (1, -1) by default for two probabilities.
+
     :param ps: probabilities of the changes, one tensor per change,
         of an arbitrary shape
     :type ps: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param values: values of the changes,
-        (1,) for one change and (1, -1) for two changes by default
+        (1,) for one change and (1, -1) for two changes by default,
+        0 for an explicit no-change state
     :type values: tuple
     :param generator: random number generator,
         None (numpy default), 'MT19937' (used by Matlab),
@@ -115,6 +126,7 @@ def sample(
     :type seed: int
     :return: simulated changes, 0 for no change
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :raises ValueError: if the probabilities sum over 1
 
     :Example:
 
@@ -134,6 +146,17 @@ def sample(
             raise ValueError(f'values must be given for {len(ps)} changes')
     if len(values) != len(ps):
         raise ValueError(f'expected {len(ps)} values, got {len(values)}')
+
+    # validate probabilities
+    total = np.sum(ps, axis=0)
+    normalized = np.isclose(total, 1)
+    if np.any((total > 1) & ~normalized):  # probabilities above 1
+        raise ValueError('probabilities sum over 1')
+    if 0 in values and not np.all(normalized):  # explicit must be normalized
+        warnings.warn(
+            'probabilities with no-change state should sum up to 1',
+            RuntimeWarning,
+        )
 
     # select random number generator
     if generator is None:  # numpy default generator
@@ -201,8 +224,17 @@ def simulate(
     ...     alpha=.4,               # bits per element
     ...     seed=12345)             # seed
     """
-    ps, _ = probability(rhos=rhos, alpha=alpha, n=n, **kw)
-    return sample(ps, values=values, generator=generator, order=order, seed=seed)
+    ps, _ = probability(
+        rhos=rhos,
+        alpha=alpha,
+        n=n,
+        **kw)
+    return sample(
+        ps,
+        values=values,
+        generator=generator,
+        order=order,
+        seed=seed)
 
 
 __all__ = ['probability', 'sample', 'simulate']

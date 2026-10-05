@@ -101,21 +101,21 @@ class TestTools(unittest.TestCase):
             defl = {}
             # LSB
             ps_lsb, _ = cl.lsb._costmap.probability(x0, alpha=.4, e=None)
-            # print('LSB:', cl.simulate_old.average_payload(ps=ps_lsb)[1] / x0.size)
+            # print('LSB:', cl.simulate.entropy(ps_lsb, ps=ps_lsb) / x0.size)
             defl['lsb'] = cl.tools.lrt.attack(x0, ps=ps_lsb, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
             # HUGO
             rhos_hugo = cl.hugo.compute_cost_adjusted(x0)
-            ps_hugo, _ = cl.simulate_old._ternary.probability(rhos=rhos_hugo, alpha=.4, n=x0.size)
-            # print('HUGO:', cl.simulate_old.average_payload(ps=ps_hugo)[1] / x0.size)
+            ps_hugo, _ = cl.simulate.probability(rhos=rhos_hugo, alpha=.4, n=x0.size)
+            # print('HUGO:', cl.simulate.entropy(ps_hugo, ps=ps_hugo) / x0.size)
             defl['hugo'] = cl.tools.lrt.attack(x0, ps=ps_hugo, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
             # HILL
             rhos_hill = cl.hill.compute_cost_adjusted(x0)
-            ps_hill, _ = cl.simulate_old._ternary.probability(rhos=rhos_hill, alpha=.4, n=x0.size)
-            # print('HILL:', cl.simulate_old.average_payload(ps=ps_hill)[1] / x0.size)
+            ps_hill, _ = cl.simulate.probability(rhos=rhos_hill, alpha=.4, n=x0.size)
+            # print('HILL:', cl.simulate.entropy(ps_hill, ps=ps_hill) / x0.size)
             defl['hill'] = cl.tools.lrt.attack(x0, ps=ps_hill, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
             # MiPOD
             ps_mipod, _ = cl.mipod.probability(x0, alpha=.4)
-            # print('MiPOD:', cl.simulate_old.average_payload(ps=ps_mipod)[1] / x0.size)
+            # print('MiPOD:', cl.simulate.entropy(ps_mipod, ps=ps_mipod) / x0.size)
             defl['mipod'] = cl.tools.lrt.attack(x0, ps=ps_mipod, attacker=cl.ATTACKER_OMNISCIENT, clip=1e-4)
             #
             defls.append(defl)

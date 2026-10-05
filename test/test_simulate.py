@@ -13,6 +13,7 @@ from PIL import Image
 import tempfile
 import time
 import unittest
+from unittest import mock
 
 from . import defs
 
@@ -422,6 +423,53 @@ class TestSimulator(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             cl.simulate.sample(self.ps, generator='unknown', seed=1)
 
+    def test_sample_explicit_no_change(self):
+        self._logger.info('TestSimulator.test_sample_explicit_no_change')
+        n = 200_000
+        rhos = np.abs(np.random.default_rng(12345).normal(0, 1., size=(2, n)))
+        # implicit no-change state
+        ps = cl.simulate.get_probability(rhos, 1.)
+        # explicit no-change state, as the first state
+        rhos_zero = np.concatenate([np.zeros((1, n)), rhos])
+        ps_zero = cl.simulate.get_probability(rhos_zero, 1., add_zero=False)
+        delta = cl.simulate.sample(ps_zero, values=(0, 1, -1), seed=12345)
+        for p, v in zip(ps, (1, -1)):
+            np.testing.assert_allclose(np.mean(delta == v), p.mean(), atol=.005)
+        # binary with explicit no-change state needs values
+        ps_zero = cl.simulate.get_probability(rhos_zero[:2], 1., add_zero=False)
+        delta = cl.simulate.sample(ps_zero, values=(0, 1), seed=12345)
+        np.testing.assert_allclose(np.mean(delta == 1), ps_zero[1].mean(), atol=.005)
+        # without values, both are changes (1, -1), no element is kept
+        delta = cl.simulate.sample(ps_zero, seed=12345)
+        self.assertTrue(np.all(delta != 0))
+        # empty input
+        self.assertEqual(cl.simulate.sample(np.empty((2, 0)), seed=12345).size, 0)
+
+    def test_sample_invalid_probabilities(self):
+        self._logger.info('TestSimulator.test_sample_invalid_probabilities')
+        # probabilities over 1
+        with self.assertRaises(ValueError):
+            cl.simulate.sample(self.ps + .5, seed=12345)
+        with self.assertRaises(ValueError):
+            cl.simulate.sample(np.stack([self.ps[0], 1 - self.ps[0] + .1]), values=(0, 1), seed=12345)
+        # explicit no-change state not summing to 1
+        with self.assertWarns(RuntimeWarning):
+            cl.simulate.sample(self.ps, values=(0, 1), seed=12345)
+        # rounding error within tolerance
+        ps = np.stack([self.ps[0], 1 - self.ps[0] + 1e-12])
+        cl.simulate.sample(ps, values=(0, 1), seed=12345)
+
+    def test_sample_legacy_no_change(self):
+        self._logger.info('TestSimulator.test_sample_legacy_no_change')
+        # legacy samplers took the no-change state last, and ignored it
+        p0 = 1 - self.ps.sum(axis=0)
+        with self.assertWarns(DeprecationWarning):
+            delta = cl.simulate._ternary.simulate((*self.ps, p0), seed=12345)
+        np.testing.assert_array_equal(delta, cl.simulate.sample(self.ps, seed=12345))
+        with self.assertWarns(DeprecationWarning):
+            delta = cl.simulate._binary.simulate((self.ps[0], 1 - self.ps[0]), seed=12345)
+        np.testing.assert_array_equal(delta, cl.simulate.sample(self.ps[:1], seed=12345))
+
     @parameterized.expand([
         [solver, alpha]
         for solver in ['SOLVER_BSEARCH_DDE', 'SOLVER_NEWTON', 'SOLVER_BRENT']
@@ -435,6 +483,23 @@ class TestSimulator(unittest.TestCase):
         np.testing.assert_array_equal(ps, cl.simulate.get_probability(self.rhos, lbda))
         # payload of the probabilities
         np.testing.assert_allclose(cl.simulate.entropy(self.rhos, ps=ps) / n, alpha, atol=1e-3)
+
+    @parameterized.expand([
+        ['SOLVER_BSEARCH_DDE', 'PLS', 307],  # whole bits, as in DDE
+        ['SOLVER_NEWTON', 'PLS', 307.2],
+        ['SOLVER_BRENT', 'PLS', 307.2],
+        ['SOLVER_BSEARCH_DDE', 'DLS', 307.2],  # distortion is not rounded
+    ])
+    def test_probability_target(self, solver, sender, target):
+        self._logger.info(f'TestSimulator.test_probability_target({solver}, {sender})')
+        n = self.rhos[0].size  # 3072, i.e., alpha = .1 is 307.2
+        with mock.patch.object(cl.simulate, 'search', return_value=1.) as search:
+            cl.simulate.probability(
+                self.rhos, .1,
+                objective=getattr(cl.simulate, sender),
+                solver=getattr(cl.simulate, solver),
+            )
+        self.assertAlmostEqual(search.call_args.kwargs['target'], target)
 
     @parameterized.expand([['SOLVER_BSEARCH'], ['SOLVER_NEWTON'], ['SOLVER_BRENT']])
     def test_probability_dils(self, solver):

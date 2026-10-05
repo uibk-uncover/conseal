@@ -9,7 +9,7 @@ Affiliation: University of Innsbruck
 import numpy as np
 
 from . import _costmap
-from ..simulate_old import _ternary
+from .. import simulate
 
 
 def simulate_single_channel(
@@ -54,7 +54,7 @@ def simulate_single_channel(
     )
 
     # simulator
-    delta = _ternary.ternary(
+    delta = simulate.simulate(
         rhos=rhos,
         alpha=alpha,
         n=np.prod(x0.shape),
