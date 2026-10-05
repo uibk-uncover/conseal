@@ -13,9 +13,7 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 from typing import Tuple, Callable
 
-from ..simulate._common import Sender
-from ..simulate._objective import Objective
-from ._lambda_optimizer import LambdaOptimizer
+from ._optim import get_objective, calc_lambda, Sender
 
 
 def probability(
@@ -26,10 +24,6 @@ def probability(
     e: float = None,
     objective: Callable = None,
     sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
-    lambda_optimizer: LambdaOptimizer = LambdaOptimizer.BINARY_SEARCH_DDE,
-    lbda0: Tuple[float] = None,
-    tol: float = None,
-    max_iter: int = None,
 ) -> Tuple[np.ndarray, float]:
     """Convert binary distortion to binary probability.
 
@@ -62,31 +56,20 @@ def probability(
     ...   ps=(p_p1, p_m1),  # probability of +1 and -1
     ...   seed=12345)       # seed
     """
-    if objective is not None and lambda_optimizer != LambdaOptimizer.BINARY_SEARCH:
-        raise NotImplementedError('custom objective requires binary search')
     if objective is None:
-        objective = Objective(sender, e=e)
-        d_objective = objective.derivative
-    else:
-        d_objective = None
-    #
+        objective = get_objective(e=e, q=3, sender=sender)
+
     m = int(np.round(alpha * n))
-    ps, lbda = lambda_optimizer(
+    lbda = calc_lambda(
         rhos=rhos,
-        target=m,
+        m=m,
         n=n,
         objective=objective,
-        d_objective=d_objective,
-        lbda0=lbda0,
-        tol=tol,
-        max_iter=max_iter,
+        alpha_max=np.maximum(1., alpha + .1),
     )
-    return ps, lbda
-    # (p_p1, p_m1), H = objective(lbda=lbda, rhos=rhos)
-    # return (p_p1, p_m1), lbda
-    # #
-    # (p_p1, p_m1), H = objective(lbda=lbda, rhos=rhos)
-    # return (p_p1, p_m1), lbda
+    #
+    (p_p1, p_m1), H = objective(lbda=lbda, rhos=rhos)
+    return (p_p1, p_m1), lbda
 
 
 def simulate(

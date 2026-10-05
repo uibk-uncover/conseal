@@ -55,5 +55,6 @@ wheelhouse
 
 *.npz
 
+# Rust
 Cargo.lock
-target/
+target

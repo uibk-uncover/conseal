@@ -32,7 +32,7 @@ class TestSimulate(unittest.TestCase):
 
     @parameterized.expand([
         [alpha, solver]
-        for alpha in [.05, .1, .2, .4]
+        for alpha in [.05, .1, .2, .4, 1.2]
         for solver in ['SOLVER_BSEARCH', 'SOLVER_BSEARCH_DDE']
     ])
     def test_simulate_ternary_constant(self, alpha, solver):
@@ -55,7 +55,7 @@ class TestSimulate(unittest.TestCase):
 
     @parameterized.expand([
         [alpha, solver]
-        for alpha in [.05, .1, .2, .4]
+        for alpha in [.05, .1, .2, .4, 1.2]
         for solver in ['SOLVER_BSEARCH', 'SOLVER_BSEARCH_DDE']
     ])
     def test_simulate_ternary_random(self, alpha, solver):

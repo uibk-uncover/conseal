@@ -1,13 +1,35 @@
 
+[build-system]
+requires = ["maturin>=1.0"]
+build-backend = "maturin"
+
+[tool.maturin]
+module-name = "conseal._conseal"
+bindings = "pyo3"
+include = [
+    "conseal/**",
+    "src/**",
+    "LICENSE",
+    "README.md",
+    "pyproject.toml",
+    "Cargo.toml",
+    "Cargo.lock",
+]
+exclude = [
+    "test/**",
+    "docs/**",
+    ".github/**",
+    "run.py",
+]
+
 [project]
 name = "conseal"
-version = "2025.04"
+version = "2026.06"
 dependencies = [
     "numpy",
-    "jpeglib >= 1.0.0",
+    "jpeglib >= 1.0.2",
     "scipy",
-    "numba",
-    "setuptools"
+    "numba >= 0.61",
 ]
 requires-python = ">= 3.8"
 authors = [
@@ -48,17 +70,13 @@ dev = [
     "flake8",
     "parameterized",
     "pillow",
-    "pandas"
+    "pandas",
+    "maturin"
 ]
 deploy = []
 
 [project.scripts]
 unseal = "conseal.tools.scripts.unseal:run"
-
-[tool.setuptools.packages.find]
-include = ["conseal*"]
-exclude = ["wheelhouse*"]
-namespaces = false
 
 [tool.coverage.report]
 fail_under = 80

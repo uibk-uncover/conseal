@@ -19,6 +19,7 @@ from .. import tools
 def probability(
     y0: np.ndarray,
     alpha: float,
+    n: int = None,
 ) -> np.ndarray:
     """Compute the nsF5 probability map.
 
@@ -48,9 +49,9 @@ def probability(
     beta = tools.inv_entropy(alpha)
 
     # Number of nonzero AC DCT coefficients
-    nzAC = tools.dct.nzAC(y0)
-    if nzAC == 0:
-        raise ValueError('There are no non-zero AC coefficients for embedding')
+    if n is None:
+        n = tools.dct.nzAC(y0)
+    assert n > 0, 'there are no coefficients to embed to'
 
     # probability map
     p = np.ones(y0.shape, dtype='float64') * beta

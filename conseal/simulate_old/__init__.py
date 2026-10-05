@@ -1,4 +1,4 @@
-"""Legacy simulator, to be replaced by conseal.simulate.
+"""
 
 Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
@@ -11,21 +11,14 @@ from . import _binary
 from . import _ternary
 from ._binary import binary
 from ._ternary import ternary
-from ._lambda_optimizer import LambdaOptimizer
-from .optim import get_p, average_payload, average_distortion
-from ..simulate._common import Sender
+
+from ._optim import get_p, calc_lambda, average_payload
+from ._optim import Sender, average_distortion
 
 PAYLOAD_LIMITED_SENDER = Sender.PAYLOAD_LIMITED_SENDER
 DISTORTION_LIMITED_SENDER = Sender.DISTORTION_LIMITED_SENDER
 PLS = PAYLOAD_LIMITED_SENDER
 DLS = DISTORTION_LIMITED_SENDER
-# TAYLOR_NEWTON = LambdaOptimizer.TAYLOR_NEWTON
-# BINARY_SEARCH_NEWTON = LambdaOptimizer.BINARY_SEARCH_NEWTON
-BINARY_SEARCH_DDE = LambdaOptimizer.BINARY_SEARCH_DDE
-BINARY_SEARCH = LambdaOptimizer.BINARY_SEARCH
-NEWTON = LambdaOptimizer.NEWTON
-# # TAYLOR_NEWTON = LambdaOptimizer.TAYLOR_NEWTON
-# # BINARY_SEARCH_NEWTON = LambdaOptimizer.BINARY_SEARCH_NEWTON
 
 
 def simulate(
@@ -86,21 +79,19 @@ def simulate(
 
 
 __all__ = [
-    '_binary',
+    '_optim',
     '_ternary',
-    'binary',
     'ternary',
-    'simulate',
+    '_binary',
+    'binary',
     'get_p',
+    'simulate',
     'average_payload',
     'average_distortion',
-    'LambdaOptimizer',
+    'calc_lambda',
     'Sender',
     'PAYLOAD_LIMITED_SENDER',
     'DISTORTION_LIMITED_SENDER',
-    'PLS',
     'DLS',
-    'BINARY_SEARCH_DDE',
-    'BINARY_SEARCH',
-    'NEWTON',
+    'PLS',
 ]

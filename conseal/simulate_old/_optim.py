@@ -12,13 +12,48 @@ Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
 
-import enum
 import numpy as np
 from typing import Callable, Tuple
 import warnings
 
 from .. import tools
-from ..simulate._common import Sender
+
+
+# shared with the new simulator
+from ..simulate._common import Sender  # noqa: E402
+
+
+# def get_p(
+#     lbda: float,
+#     *rhos: np.ndarray,
+#     add_zero: bool = True,
+# ) -> np.ndarray:
+#     """Converts distortions into probabilities,
+#     using Boltzmann-Gibbs distribution
+
+#     For more details, see `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#embedding-simulation>`__.
+
+#     :param rhos: distortion of embedding choices, e.g. embedding +1 or embedding -1
+#     :type rhos: tuple
+#     :param lbda: parameter value
+#     :type lbda: float
+#     :param add_zero:
+#     :type add_zero: bool
+#     :param p_pm1: probability tensor for changes associated to rhos[0]
+#         of an arbitrary shape
+#     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+#     :Example:
+
+#     >>> # TODO
+#     """
+#     # denominator (forced left-associativity)
+#     denum = 1 if add_zero else 0
+#     for rho in rhos:
+#         denum += np.exp(-lbda * rho)
+#     #
+#     denum[denum == 0] = tools.EPS
+#     return np.exp(-lbda * rhos[0]) / denum
 
 
 def get_p(
@@ -45,15 +80,19 @@ def get_p(
 
     >>> # TODO
     """
-    warnings.warn('get_p is deprecated, use get_probability instead', DeprecationWarning)
-    # denominator (forced left-associativity)
-    denum = 1 if add_zero else 0
-    for rho in rhos:
-        denum += np.exp(-lbda * rho)
-    #
-    denum[denum == 0] = tools.EPS
-    return np.exp(-lbda * rhos[0]) / denum
-
+    all_rhos = [-lbda * rho for rho in rhos]
+    if add_zero:
+        # Create an array of zeros with the same shape as rhos
+        all_rhos.append(np.zeros_like(all_rhos[0]))
+    # shift
+    max_val = np.max(all_rhos, axis=0)
+    # stabilize denominator
+    denum = 0
+    for val in all_rhos:
+        denum += np.exp(val - max_val)
+    # stabilized numerator
+    num = np.exp((-lbda * rhos[0]) - max_val)
+    return num / denum
 
 def average_payload(
     *,
@@ -80,12 +119,12 @@ def average_payload(
 
     >>> # TODO
     """
-    # assert (
-    #     (ps is not None and rhos is None or ps is None and rhos is not None)
-    # ), 'one of ps or rhos must be given'
-    # assert (
-    #     lbda is not None or ps is not None
-    # ), 'lbda can be specified only with rhos'
+    assert (
+        (ps is not None and rhos is None or ps is None and rhos is not None)
+    ), 'one of ps or rhos must be given'
+    assert (
+        lbda is not None or ps is not None
+    ), 'lbda can be specified only with rhos'
     #
     if ps is None:
         add_zero = True if q is None else len(rhos) == q-1
@@ -104,52 +143,6 @@ def average_payload(
         H = tools._entropy(*ps)
 
     return ps, H
-
-
-def d_average_payload(
-    *,
-    ps: Tuple[np.ndarray] = None,
-    e: float = None,
-    lbda: float = None,
-    rhos: Tuple[np.ndarray] = None,
-    q: int = None,
-) -> float:
-    # assert (
-    #     (ps is not None and rhos is None or ps is None and rhos is not None)
-    # ), 'one of ps or rhos must be given'
-    # assert (
-    #     lbda is not None or ps is not None
-    # ), 'lbda can be specified only with rhos'
-    #
-    add_zero = True if q is None else len(rhos) == q-1
-    if ps is None:
-        ps = [
-            get_p(lbda, rhos[i], *rhos[:i], *rhos[i+1:], add_zero=add_zero)
-            for i in range(len(rhos))
-        ]
-
-    # Imperfect coding - given embedding efficiency
-    if e is not None:
-        raise NotImplementedError
-    else:
-        px = np.array(list(ps))
-        if add_zero:
-            px0 = 1-np.sum(px, axis=0)[None]
-            px = np.concatenate([px, px0], axis=0)
-
-        px[px <= 0] = 1  # avoid log(0)
-        p = px[:-1]
-        p0 = px[-1:]
-        E_rho = np.sum(p * rhos, axis=0, keepdims=True)
-        dp_dlambda = p * (E_rho - rhos)
-        log2_term = np.log2(p0) - np.log2(p)
-        dH = dp_dlambda * log2_term
-
-        # px[px <= 0] = 1  # avoid log(0)
-        # log2_px = np.log2(px)
-        # log2_recip = 1.4426950408889634  # 1 / np.log2(2)
-        # dH = (log2_px + log2_recip) * (log2_px - log2_px[-1:])
-    return np.sum(dH)
 
 
 def average_distortion(
@@ -208,37 +201,19 @@ def get_objective(
     if sender == Sender.PAYLOAD_LIMITED_SENDER:
         # print('selected PLS objective')
         return average_payload if e is None else _pls_objective
-    elif sender == Sender.DISTORTION_LIMITED_SENDER:
+    if sender == Sender.DISTORTION_LIMITED_SENDER:
         # print('selected DLS objective')
         assert e is None, 'e not implemented for DLS'
         return average_distortion
-    else:
-        raise NotImplementedError(f'unknown sender {sender}')
 
 
-def get_d_objective(
-    sender: Sender = Sender.PAYLOAD_LIMITED_SENDER,
-    e: float = None,
-    q: int = None,
-) -> Callable:
-    def _d_pls_objective(*args, **kw):
-        return d_average_payload(*args, e=e, q=q, **kw)
-
-    if sender == Sender.PAYLOAD_LIMITED_SENDER:
-        # print('selected PLS objective')
-        return d_average_payload if e is None else _d_pls_objective
-    elif sender == Sender.DISTORTION_LIMITED_SENDER:
-        raise NotImplementedError('DiLS not implemented for Newton')
-    else:
-        raise NotImplementedError(f'unknown sender {sender}')
-
-
-def binary_search_lambda(
+def calc_lambda(
     rhos: Tuple[np.ndarray],
     m: int,
     n: int,
     objective: Callable = None,
-    **kw
+    alpha_max: float = 1,
+    **kw,
 ) -> float:
     """Implements binary search for lambda.
 
@@ -280,7 +255,7 @@ def binary_search_lambda(
         l3 *= 2
 
         # Compute total entropy m3
-        _, m3 = objective(lbda=l3, rhos=rhos)  # objective function
+        _, m3 = objective(lbda=l3, rhos=rhos, **kw)  # objective function
 
         iterations += 1
 
@@ -292,17 +267,18 @@ def binary_search_lambda(
     # Initialize lower bound to zero
     l1 = 0
     # The lower bound for the message size is n
-    m1 = float(n)
+    m1 = float(n * alpha_max)  # allows alpha up to alpha_max bpp
+    # print(f'{alpha_max=}')
     alpha = float(m) / n  # embedding rate
 
     # Binary search for lambda
     # Relative payload must be within 1e-3 of the required relative payload
-    while float(m1 - m3) / n > alpha / 1000 and iterations < 30:
+    while float(m1 - m3) / n > alpha / 1000 and iterations < int(30 * alpha_max):
         # Mid of the interval [l1, l3]
         lbda = l1 + (l3 - l1) / 2
 
         # Calculate entropy at the mid of the interval
-        _, m2 = objective(lbda=lbda, rhos=rhos)  # objective function
+        _, m2 = objective(lbda=lbda, rhos=rhos, **kw)  # objective function
 
         # binary search
         if m2 < m:
@@ -315,6 +291,7 @@ def binary_search_lambda(
             # We can increase the lower bound
             l1 = lbda
             m1 = m2
+        # print(f'It {iterations} | {m1/n=} {m2/n=} {m3/n=} | {l1=} {lbda=} {l3=} |')
 
         # Proceed to the next iteration
         iterations = iterations + 1
@@ -323,21 +300,3 @@ def binary_search_lambda(
         warnings.warn("optimization might not have converged", RuntimeWarning)
 
     return lbda
-
-
-# class LambdaOptimizer(enum.Enum):
-#     """Type of lambda optimizer."""
-
-#     BINARY_SEARCH = enum.auto()
-#     """Binary search."""
-#     NEWTON = enum.auto()
-#     """Newton method."""
-
-#     def __call__(self, *args, **kw):
-#         global binary_search_lambda, _optim_binary
-#         if self == LambdaOptimizer.BINARY_SEARCH:
-#             return binary_search_lambda(*args, **kw)
-#         else:
-#             raise NotImplementedError(f"No implementation for optimizer {self}")
-
-

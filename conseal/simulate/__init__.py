@@ -127,6 +127,7 @@ from ._legacy import (  # noqa: E402
     get_p,
     average_payload,
     average_distortion,
+    calc_lambda,
 )
 
 
@@ -163,4 +164,5 @@ __all__ = [
     'get_p',
     'average_payload',
     'average_distortion',
+    'calc_lambda',
 ]

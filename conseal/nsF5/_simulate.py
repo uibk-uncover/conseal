@@ -45,6 +45,7 @@ def simulate_single_channel(
     y0: np.ndarray,
     alpha: float,
     *,
+    n: int = None,
     add_shrinkage: bool = False,
     e: float = None,
     seed: int = None,
@@ -90,8 +91,9 @@ def simulate_single_channel(
         e = alpha / tools.inv_entropy(alpha)
 
     # Number of nonzero DCT AC coefficients
-    nzAC = tools.dct.nzAC(y0)
-    assert nzAC > 0, 'there are no coefficients to embed to'
+    if n is None:
+        n = tools.dct.nzAC(y0)
+        assert n > 0, 'there are no coefficients to embed to'
 
     # Calculate change rate on the bound
     beta = alpha / e
@@ -108,7 +110,7 @@ def simulate_single_channel(
         """
 
     # Number of changes
-    num_changes = int(np.ceil(beta * nzAC))
+    num_changes = int(np.ceil(beta * n))
 
     # # Number of changes nsF5 would make on bound
     # num_changes = int(np.ceil(alpha * nzAC / e))
@@ -133,48 +135,13 @@ def simulate_single_channel(
     rng = np.random.RandomState(seed)
 
     # Create a pseudorandom walk over nonzero AC coefficients
-    permutation = rng.permutation(nzAC)
+    permutation = rng.permutation(n)
 
     # Permute indices
     permuted_indices_2d = indices_2d[permutation]
 
-    # # Temporarily save the permutation
-    # store_permutation = False
-    # if store_permutation:
-    #     from scipy.io import savemat
-
-    #     # Create an array to hold the order of coefficients used by Matlab (only count the changeable coefficients)
-    #     indices_matlab = np.zeros((num_vertical_blocks * 8, num_horizontal_blocks * 8), dtype=int)
-
-    #     # Because Matlab uses column-major order, reorder our coordinates by the y-dimension
-    #     indices_2d_reordered = indices_2d[np.lexsort((indices_2d[:, 0], indices_2d[:, 1]))]
-
-    #     # Fill index array sequentially
-    #     indices_matlab[indices_2d_reordered[:, 0], indices_2d_reordered[:, 1]] = np.arange(nzAC)
-
-    #     # Retrieve the permutation that Matlab will apply
-    #     permutation_matlab = indices_matlab[permuted_indices_2d[:, 0], permuted_indices_2d[:, 1]]
-
-    #     # Store the permutation to file
-    #     savemat(f"/tmp/random_permutation_seed_{seed}_nzAC_{nzAC}.mat", {"permutation": permutation_matlab})
-
     # Flatten cover DCT coefficients
     y0_2d = y0.transpose((0, 2, 1, 3)).reshape((num_vertical_blocks * 8, num_horizontal_blocks * 8))
-
-    # # Re-embed zeros (shrinkage)
-    # if add_shrinkage:
-    #     start = 0
-    #     num_zeros = (
-    #         np.abs(y0_2d[tuple(permuted_indices_2d[start:num_changes].T)]) == 1
-    #     ).sum()
-    #     while num_zeros > 0:
-    #         # Move segment
-    #         start = num_changes
-    #         num_changes += num_zeros
-    #         # Number of zeros in new segment
-    #         num_zeros = (
-    #             np.abs(y0_2d[tuple(permuted_indices_2d[start:num_changes].T)]) == 1
-    #         ).sum()
 
     # Coefficients to be changed
     to_be_changed_2d = permuted_indices_2d[:num_changes]

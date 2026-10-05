@@ -66,7 +66,6 @@ def compute_cost_adjusted(
     # compute cost
     rho = compute_cost(x0)
 
-
     # Assign wet cost
     rho[np.isinf(rho) | np.isnan(rho) | (rho > wet_cost)] = wet_cost
 

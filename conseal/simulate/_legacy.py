@@ -47,6 +47,7 @@ ternary = _deprecated(simulate_old.ternary, 'ternary')
 get_p = _deprecated(simulate_old.get_p, 'get_p')
 average_payload = _deprecated(simulate_old.average_payload, 'average_payload')
 average_distortion = _deprecated(simulate_old.average_distortion, 'average_distortion')
+calc_lambda = _deprecated(simulate_old.calc_lambda, 'calc_lambda', 'conseal.simulate.search')
 
 _binary = types.SimpleNamespace(
     probability=_deprecated(simulate_old._binary.probability, '_binary.probability'),
@@ -68,4 +69,5 @@ __all__ = [
     'get_p',
     'average_payload',
     'average_distortion',
+    'calc_lambda',
 ]

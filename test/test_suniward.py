@@ -37,7 +37,7 @@ class TestSUNIWARD(unittest.TestCase):
         for i, fname in enumerate(defs.TEST_IMAGES)
     ])
     def test_compare_embedding_matlab(self, fname: str, seed: int):
-        self._logger.info(f'TestWOW.test_compare_wow_matlab({fname}, {seed})')
+        self._logger.info(f'TestSUNIWARD.test_compare_wow_matlab({fname}, {seed})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
         # embed steganography

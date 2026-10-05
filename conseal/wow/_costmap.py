@@ -12,14 +12,16 @@ import numpy as np
 import scipy.signal
 from typing import Tuple
 
+from .._conseal import wow as rs
 from .. import tools
 
 
-def compute_cost(
+def _compute_cost(
     x0: np.ndarray,
     *,
     p: float = -1,
-) -> Tuple[np.ndarray]:
+    separable: bool = True,
+) -> np.ndarray:
     """Computes WOW cost.
 
     :param x0: uncompressed (pixel) cover image,
@@ -36,33 +38,72 @@ def compute_cost(
     >>> # TODO
     """
     assert len(x0.shape) == 2, 'single channel expected'
+    x0 = x0.astype('float64')
 
     # 2D wavelet filters (Daubechies 8)
-    _, F = tools.spatial.daubechies8()
+    _, F, F_sep = tools.spatial.daubechies8()
+    F_sep = [(i.astype('float64') for i in f) for f in F_sep]
 
     # add padding
     padSize = np.max([f.shape for f in F])
     x0_padded = np.pad(x0, padSize, 'symmetric')
 
+    # def pad_symmetric_1d(arr, pad, axis):
+    #     slices = [slice(None)] * arr.ndim
+    #     arr_pad = np.pad(arr, [
+    #         (pad if i==axis else 0, pad if i==axis else 0)
+    #         for i in range(arr.ndim)
+    #     ], mode='symmetric')
+    #     return arr_pad
+
     # compute directional residual and suitability \xi for each filter
     xi = []
     for fIndex in range(3):
 
-        # compute residual
-        R = scipy.signal.convolve2d(
-            x0_padded,
-            F[fIndex],
-            mode='same', boundary='symm'
-        )
+        if separable:
+            # compute residual
+            a, b = F_sep[fIndex]
+            tmp = scipy.signal.convolve2d(
+                x0_padded, a[:, None], mode="same", boundary="symm"
+            )
+            R = scipy.signal.convolve2d(
+                tmp, b[None, :], mode="same", boundary="symm"
+            )
+            # tmp = scipy.ndimage.convolve1d(pad_symmetric_1d(x0_padded, a.size//2, axis=0), a, axis=0, mode='constant', cval=0)
+            # R = scipy.ndimage.convolve1d(pad_symmetric_1d(tmp, b.size//2, axis=1), b, axis=1, mode='constant', cval=0)
+            # tmp = scipy.ndimage.convolve1d(x0_padded, a, axis=0, mode='mirror')  # vertical
+            # R = scipy.ndimage.convolve1d(tmp, b, axis=1, mode='mirror')  # horizontal
 
-        # compute sustability
-        xi.append(
-            scipy.signal.convolve2d(
-                np.abs(R),
-                np.rot90(np.abs(F[fIndex]), k=2),
+            # compute suitability
+            a_rev = np.abs(a)[::-1]
+            b_rev = np.abs(b)[::-1]
+            # tmp = scipy.ndimage.convolve1d(np.abs(R), a_rev, axis=0, mode='mirror')
+            # xi_val = scipy.ndimage.convolve1d(tmp, b_rev, axis=1, mode='mirror')
+            # tmp = scipy.ndimage.convolve1d(pad_symmetric_1d(np.abs(R), a.size//2, axis=0), a_rev, axis=0, mode='constant', cval=0)
+            # xi_val = scipy.ndimage.convolve1d(pad_symmetric_1d(tmp, b.size//2, axis=1), b_rev, axis=1, mode='constant', cval=0)
+            tmp = scipy.signal.convolve2d(
+                np.abs(R), a_rev[:, None], mode="same", boundary="symm"
+            )
+            xi_val = scipy.signal.convolve2d(
+                tmp, b_rev[None, :], mode="same", boundary="symm"
+            )
+            xi.append(xi_val)
+        else:
+            # compute residual
+            R = scipy.signal.convolve2d(
+                x0_padded,
+                F[fIndex],
                 mode='same', boundary='symm'
             )
-        )
+            # compute suitability
+            xi.append(
+                scipy.signal.convolve2d(
+                    np.abs(R),
+                    np.rot90(np.abs(F[fIndex]), k=2),
+                    mode='same', boundary='symm'
+                )
+            )
+
         # correct the suitability shift if filter size is even
         if F[fIndex].shape[0] % 2 != 0:
             xi[fIndex] = np.roll(xi[fIndex], 1, axis=0)
@@ -77,10 +118,47 @@ def compute_cost(
             x0_center[0]+1:-x0_center[0]+1,
             x0_center[1]+1:-x0_center[1]+1,
         ]
-
+        xi[fIndex] = np.clip(xi[fIndex], tools.EPS64, None)
     # compute embedding costs \rho
     rho = np.sum([xi[i]**p for i in range(3)], axis=0)**(-1/p)
-    # rho = np.expand_dims(rho, 2)
+    return rho
+
+
+def compute_cost(
+    x0: np.ndarray,
+    *,
+    p: float = -1,
+    separable: bool = True,
+) -> np.ndarray:
+    """Computes WOW cost.
+
+    :param x0: uncompressed (pixel) cover image,
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param p: parameter for reciprocal Hoelder norm
+    :type p: float
+    :return: cost for +-1 change,
+        of shape [height, width]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> # TODO
+    """
+    # choose implementation
+    backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST:
+        # check types
+        if x0.dtype != np.uint8:
+            raise TypeError('parameter x0 must be uint8')
+        rho = rs.compute_cost(x0=x0, p=p)
+    elif backend == tools.BACKEND_PYTHON:
+        rho = _compute_cost(x0=x0, p=p, separable=separable)
+
+    else:
+        raise NotImplementedError(f'unknown backend {backend}')
+
+    #
     return rho
 
 
@@ -105,9 +183,6 @@ def compute_cost_adjusted(
     >>> rhos = cl.wow.compute_cost_adjusted(x0=x0)
     """
     assert len(x0.shape) == 2, 'single channel expected'
-
-    # process input
-    x0 = x0.astype('float32')
 
     # Compute costmap
     rho = compute_cost(x0=x0, **kw)
