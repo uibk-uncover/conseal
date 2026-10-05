@@ -13,7 +13,9 @@ class Backend(enum.Enum):
     BACKEND_PYTHON = enum.auto()
     """Python (baseline) implementation."""
     BACKEND_RUST = enum.auto()
-    """RUST implementation, if available."""
+    """Rust implementation, default.
+
+    Falls back to Python with a warning, where not supported."""
 
     def __enter__(self):
         global backend
@@ -26,7 +28,7 @@ class Backend(enum.Enum):
         backend = self._backend_prev
 
 
-backend = Backend.BACKEND_PYTHON
+backend = Backend.BACKEND_RUST
 
 
 def get_backend() -> Backend:

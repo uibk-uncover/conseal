@@ -9,6 +9,7 @@ import scipy.io
 import tempfile
 import time
 import unittest
+import warnings
 
 from . import defs
 
@@ -45,8 +46,8 @@ class TestWOW(unittest.TestCase):
 
         # test costs against DDE matlab reference
         mat = scipy.io.loadmat(STEGO_DIR / f'costmap-matlab/{f}_costmap.mat')
-        np.testing.assert_allclose(rho_p1, mat['rhoP1'], rtol=1e-5)
-        np.testing.assert_allclose(rho_m1, mat['rhoM1'], rtol=1e-5)
+        np.testing.assert_allclose(rho_p1, mat['rhoP1'], rtol=1e-10)
+        np.testing.assert_allclose(rho_m1, mat['rhoM1'], rtol=1e-10)
         # test stego against DDE matlab reference
         x1_ref = np.array(Image.open(STEGO_DIR / f'{f}.png'))
         np.testing.assert_array_equal(x1, x1_ref)
@@ -80,34 +81,43 @@ class TestWOW(unittest.TestCase):
             x0 = np.array(Image.open(path))
             rho = cl.wow._costmap.compute_cost(x0)
         #
-        np.testing.assert_allclose(rho, rho_ref, rtol=1e-5)
-        """
-        SciPy appears to internally use f64, even if both arguments are f32.
-        Therefore, I must test down to 1e-5.
-        For high-cost elements, the absolute error differs even by 20.
-        But the relative error remains around 1e-7.
-        """
+        np.testing.assert_allclose(rho, rho_ref, rtol=1e-12)
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES[:2]])
+    def test_fallback(self, fname: str):
+        self._logger.info(f'TestWOW.test_fallback({fname=})')
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
+        with cl.BACKEND_RUST:
+            # uint8 cover, Rust without warning
+            with warnings.catch_warnings():
+                warnings.simplefilter('error', RuntimeWarning)
+                rho = cl.wow._costmap.compute_cost(x0)
+            # other dtype, falls back to Python with warning
+            with self.assertWarns(RuntimeWarning):
+                rho_float = cl.wow._costmap.compute_cost(x0.astype('float64'))
+            np.testing.assert_allclose(rho_float, rho, rtol=1e-10)
+        # non-separable filters, only in Python
+        with self.assertWarns(RuntimeWarning):
+            rho_2d = cl.wow._costmap.compute_cost(x0, separable=False)
+        np.testing.assert_allclose(rho_2d, rho, rtol=1e-10)
 
     def test_speedup(self):
         self._logger.info('TestWOW.test_speedup()')
-        #
-        with cl.BACKEND_RUST:
-            start = time.perf_counter()
-            for fname in defs.TEST_IMAGES:
-                path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
-                x0 = np.array(Image.open(path))
-                rho = cl.wow._costmap.compute_cost(x0)
-            end = time.perf_counter()
-            print('WOW rust:', end - start, 's')
-        #
-        with cl.BACKEND_PYTHON:
-            start = time.perf_counter()
-            for fname in defs.TEST_IMAGES:
-                path = defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'
-                x0 = np.array(Image.open(path))
-                rho = cl.wow._costmap.compute_cost(x0)
-            end = time.perf_counter()
-            print('WOW python:', end - start, 's')
-
+        # load covers once, time only the cost computation
+        x0s = [
+            np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
+            for fname in defs.TEST_IMAGES
+        ]
+        for name, backend, kw in [
+            ('rust', cl.BACKEND_RUST, {}),
+            ('python separable', cl.BACKEND_PYTHON, {'separable': True}),
+            ('python non-separable', cl.BACKEND_PYTHON, {'separable': False}),
+        ]:
+            with backend:
+                start = time.perf_counter()
+                for x0 in x0s:
+                    cl.wow._costmap.compute_cost(x0, **kw)
+                end = time.perf_counter()
+            print(f'WOW {name}: {end - start:.3f} s for {len(x0s)} images')
 
 __all__ = ['TestWOW']

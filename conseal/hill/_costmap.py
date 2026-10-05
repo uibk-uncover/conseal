@@ -11,6 +11,7 @@ B. Li, M. Wang, J. Huang, X. Li.
 import numpy as np
 import scipy.signal
 import typing
+import warnings
 
 from .._conseal import hill as rs
 from .. import tools
@@ -34,14 +35,14 @@ def _compute_cost(
     >>> rho = cl.hill.compute_cost(x0=x0)
     """
     # process input
-    x0 = x0.astype('float32')
+    x0 = x0.astype('float64')
 
     # high-pass filter
     H_KB = np.array([
         [-1, +2, -1],
         [+2, -4, +2],
         [-1, +2, -1]
-    ], dtype='float32')
+    ], dtype='float64')
     I1 = scipy.signal.convolve2d(
         x0, H_KB,
         mode='same', boundary='symm',
@@ -49,7 +50,7 @@ def _compute_cost(
     # print(np.abs(I1 / 4.))
 
     # low-pass filter 1
-    L1 = np.ones((3, 3), dtype='float32') / 3**2
+    L1 = np.ones((3, 3), dtype='float64') / 3**2
     I2 = scipy.signal.convolve2d(
         np.abs(I1 / 4.), L1,
         mode='same', boundary='symm',
@@ -82,6 +83,9 @@ def compute_cost(
 ) -> np.ndarray:
     """Computes HILL cost.
 
+    Rust backend requires uint8 cover,
+    otherwise falls back to Python with a warning.
+
     :param x0: uncompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -95,10 +99,14 @@ def compute_cost(
     """
     # choose implementation
     backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST and x0.dtype != np.uint8:
+        warnings.warn(
+            f'Rust backend of HILL requires uint8 cover, got {x0.dtype}, '
+            'falling back to Python',
+            RuntimeWarning,
+        )
+        backend = tools.BACKEND_PYTHON
     if backend == tools.BACKEND_RUST:
-        # check types
-        if x0.dtype != np.uint8:
-            raise TypeError('parameter x0 must be uint8')
         rho = rs.compute_cost(x0=x0)
     elif backend == tools.BACKEND_PYTHON:
         rho = _compute_cost(x0=x0)

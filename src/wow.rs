@@ -1,14 +1,14 @@
-
 use pyo3::prelude::*;
-// use pyo3::types::PyDict;
-use numpy::{PyArray1, PyArray2, PyArray3, PyReadonlyArray2};
-use numpy::{ndarray::Array, ndarray::Array1, ndarray::Array2, ndarray::Array3, ndarray::stack, ndarray::s, ndarray::Axis};
-// use numpy::{PyReadonlyArray2, PyArray2};
-// use pyo3::{prelude::*, Python};
+use numpy::{PyArray2, PyReadonlyArray2};
+use numpy::ndarray::Array2;
 
 
-// ---------- internal helper, NOT exposed to Python ----------
-fn daubechies8() -> (Array3<f64>, Vec<(Array1<f64>, Array1<f64>)>) {
+// ---------- internal helpers, NOT exposed to Python ----------
+
+/// Daubechies 8 wavelet filters, as separable pairs (vertical, horizontal).
+///
+/// The 2D filters are outer products: LH = l h^T, HL = h l^T, HH = h h^T.
+fn daubechies8() -> [(Vec<f64>, Vec<f64>); 3] {
     let hpdf: [f64; 16] = [
         -0.0544158422,  0.3128715909, -0.6756307363,  0.5853546837,
          0.0158291053, -0.2840155430, -0.0004724846,  0.1287474266,
@@ -22,102 +22,84 @@ fn daubechies8() -> (Array3<f64>, Vec<(Array1<f64>, Array1<f64>)>) {
         lpdf[i] = ((-1f64).powi(i as i32)) * hpdf[15 - i];
     }
 
-    let h = Array::from_shape_vec((16, 1), hpdf.to_vec()).unwrap();
-    let l = Array::from_shape_vec((16, 1), lpdf.to_vec()).unwrap();
-
-    // 2D filters (as before)
-    let f0 = l.dot(&h.t());
-    let f1 = h.dot(&l.t());
-    let f2 = h.dot(&h.t());
-    let filters = stack(Axis(0), &[f0.view(), f1.view(), f2.view()]).unwrap();
-
-    // 1D separable pairs [(lpdf, hpdf), (hpdf, lpdf), (hpdf, hpdf)]
-    let sep = vec![
-        (Array1::from_vec(lpdf.to_vec()), Array1::from_vec(hpdf.to_vec())),
-        (Array1::from_vec(hpdf.to_vec()), Array1::from_vec(lpdf.to_vec())),
-        (Array1::from_vec(hpdf.to_vec()), Array1::from_vec(hpdf.to_vec())),
-    ];
-
-    (filters, sep)
+    [
+        (lpdf.to_vec(), hpdf.to_vec()),
+        (hpdf.to_vec(), lpdf.to_vec()),
+        (hpdf.to_vec(), hpdf.to_vec()),
+    ]
 }
 
-// Symmetric padding (SciPy boundary='symm')
-fn reflect_index(i: isize, n: isize) -> isize {
-    if i < 0 { -i-1 }
-    else if i < n { i }
-    else { 2*n - i - 1 }
+/// Mirror index into [0, n), edge included (SciPy boundary='symm').
+fn reflect_index(i: isize, n: isize) -> usize {
+    (if i < 0 { -i - 1 } else if i < n { i } else { 2 * n - i - 1 }) as usize
 }
 
-/// Symmetric pad a 2D array
-fn pad_symmetric(input: &Array2<f64>, pad_v: usize, pad_h: usize) -> Array2<f64> {
-    let (h, w) = input.dim();
-    let mut output = Array2::<f64>::zeros((h + 2*pad_v, w + 2*pad_h));
-
-    for i in 0..output.nrows() {
-        for j in 0..output.ncols() {
-            let ii = reflect_index(i as isize - pad_v as isize, h as isize);
-            let jj = reflect_index(j as isize - pad_h as isize, w as isize);
-            output[[i, j]] = input[[ii as usize, jj as usize]];
+/// Symmetric padding of a row-major image of shape [h, w].
+fn pad_symmetric(input: &[f64], h: usize, w: usize, pad: usize) -> (Vec<f64>, usize, usize) {
+    let (hp, wp) = (h + 2 * pad, w + 2 * pad);
+    let cols: Vec<usize> = (0..wp)
+        .map(|j| reflect_index(j as isize - pad as isize, w as isize))
+        .collect();
+    let mut output = vec![0f64; hp * wp];
+    for i in 0..hp {
+        let ii = reflect_index(i as isize - pad as isize, h as isize);
+        let src = &input[ii * w..(ii + 1) * w];
+        for (dst, &jj) in output[i * wp..(i + 1) * wp].iter_mut().zip(&cols) {
+            *dst = src[jj];
         }
     }
-    output
+    (output, hp, wp)
 }
 
-/// 2D convolution with symmetric padding and mode='same'
-fn convolve2d(input: &Array2<f64>, kernel: &Array2<f64>) -> Array2<f64> {
-    let (h, w) = input.dim();
-    let (kh, kw) = kernel.dim();
-    let pad_h = kh / 2;
-    let pad_w = kw / 2;
-    let pad = pad_h.max(pad_w);
-    let input_pad = pad_symmetric(input, pad_h, pad_w);
+/// 2D convolution with the separable kernel a b^T, mode='valid'.
+///
+/// out[i, j] = sum_{u, v} input[i + u, j + v] * a[ka-1-u] * b[kb-1-v]
+fn convolve_separable(input: &[f64], h: usize, w: usize, a: &[f64], b: &[f64]) -> (Vec<f64>, usize, usize) {
+    let (ka, kb) = (a.len(), b.len());
+    let (ho, wo) = (h - ka + 1, w - kb + 1);
 
-    let mut output = Array2::<f64>::zeros((h, w));
-    for i in 0..h {
-        for j in 0..w {
-            let mut sum = 0.0f64;
-            for u in 0..kh {
-                for v in 0..kw {
-                    let x = i + u;
-                    let y = j + v;
-                    sum += input_pad[[x, y]] * kernel[[kh - 1 - u, kw - 1 - v]];  // flip kernel
-                }
+    // vertical pass, accumulating whole rows
+    let mut tmp = vec![0f64; ho * w];
+    for i in 0..ho {
+        let dst = &mut tmp[i * w..(i + 1) * w];
+        for u in 0..ka {
+            let c = a[ka - 1 - u];
+            let src = &input[(i + u) * w..(i + u + 1) * w];
+            for (d, s) in dst.iter_mut().zip(src) {
+                *d += c * s;
             }
-            output[[i, j]] = sum;
         }
     }
 
-    output
+    // horizontal pass, flipped kernel
+    let b_rev: Vec<f64> = b.iter().rev().copied().collect();
+    let mut output = vec![0f64; ho * wo];
+    for i in 0..ho {
+        let src = &tmp[i * w..(i + 1) * w];
+        for (j, d) in output[i * wo..(i + 1) * wo].iter_mut().enumerate() {
+            *d = src[j..j + kb].iter().zip(&b_rev).map(|(s, c)| s * c).sum();
+        }
+    }
+    (output, ho, wo)
 }
 
-
-
-fn convolve1d_horizontal(input: &Array2<f64>, kernel: &[f64]) -> Array2<f64> {
-    let (h, w) = input.dim();
-    let k = kernel.len();
-    let pad = k / 2;
-    let input_pad = pad_symmetric(input, 0, pad);
-
-    let mut out = Array2::<f64>::zeros((h, w));
-
+/// WOW directional residual xi for one filter pair (a, b), of shape [h, w].
+///
+/// xi = |x * K| * |rot180(K)|, with K = a b^T
+fn residual(x_pad: &[f64], hp: usize, wp: usize, h: usize, w: usize, a: &[f64], b: &[f64]) -> Vec<f64> {
+    // residual
+    let (r, hr, wr) = convolve_separable(x_pad, hp, wp, a, b);
+    let r_abs: Vec<f64> = r.iter().map(|v| v.abs()).collect();
+    // rotate 180 + absolute kernel, separable as well
+    let a_rot: Vec<f64> = a.iter().rev().map(|v| v.abs()).collect();
+    let b_rot: Vec<f64> = b.iter().rev().map(|v| v.abs()).collect();
+    let (xi, _, wx) = convolve_separable(&r_abs, hr, wr, &a_rot, &b_rot);
+    // crop, matches mode='same' on the padded image with offset 1
+    let mut out = Vec::with_capacity(h * w);
     for i in 0..h {
-        for j in 0..w {
-            let mut sum = 0.0;
-            for u in 0..k {
-                sum += input_pad[[i, j + u]] * kernel[k - 1 - u];
-            }
-            out[[i, j]] = sum;
-        }
+        out.extend_from_slice(&xi[(i + 1) * wx + 1..(i + 1) * wx + 1 + w]);
     }
-
     out
-}
-
-fn convolve1d_vertical(input: &Array2<f64>, kernel: &[f64]) -> Array2<f64> {
-    // transpose the input
-    let input_t = input.t();
-    let mut tmp = convolve1d_horizontal(&input_t.to_owned(), kernel);
-    tmp.t().to_owned() // transpose back
 }
 
 // Computes WOW cost.
@@ -126,79 +108,41 @@ fn convolve1d_vertical(input: &Array2<f64>, kernel: &[f64]) -> Array2<f64> {
 // ----------
 // x0 : np.ndarray
 //     uncompressed (pixel) cover image of shape [height, width]
+// p : float
+//     power of the aggregation
 //
 // Returns
 // -------
 // np.ndarray
 //     cost for +-1 change of shape [height, width]
-// #[pyfunction]
-// #[pyo3(signature = (x0))]
 #[pyfunction]
 #[pyo3(signature = (x0, p = -1.0))]
 fn compute_cost<'py>(py: Python<'py>, x0: PyReadonlyArray2<'py, u8>, p: f64)
     -> PyResult<Py<PyArray2<f64>>> {
 
-    let input = x0.as_array().mapv(|v| v as f64);
-    let (h, w) = input.dim();
-    let mut x0_pad = pad_symmetric(&input, 16 as usize, 16 as usize);
+    let x0 = x0.as_array();
+    let (h, w) = x0.dim();
+    let input: Vec<f64> = x0.iter().map(|&v| v as f64).collect();
 
-    //
-    // let filters = daubechies8();
-    let (filters, sep_filters) = daubechies8();
-    let mut filters_rot = filters.clone();
-    filters_rot.invert_axis(Axis(2));
-    filters_rot.invert_axis(Axis(1));
+    // pad once, both convolutions are 'valid'
+    let (x_pad, hp, wp) = pad_symmetric(&input, h, w, 16);
 
-    let mut xi = Vec::with_capacity(3);
+    // directional residuals
+    let xi: Vec<Vec<f64>> = daubechies8()
+        .iter()
+        .map(|(a, b)| residual(&x_pad, hp, wp, h, w, a, b))
+        .collect();
 
-    for f in 0..3 {
-
-        // // --- 1D separated ---
-        // // separable filters: (a, b)
-        // let (a, b) = (&sep_filters[f].0, &sep_filters[f].1);
-        // // residual
-        // let tmp = convolve1d_vertical(&x0_pad, a.as_slice().unwrap());
-        // let r  = convolve1d_horizontal(&tmp, b.as_slice().unwrap());
-        // // rotate 180 + absolute kernel
-        // let mut a_rev = a.clone();
-        // a_rev.invert_axis(Axis(0));
-        // a_rev = a_rev.to_owned().mapv(|v| v.abs());
-        // let mut b_rev = b.clone();
-        // b_rev.invert_axis(Axis(0));
-        // b_rev = b_rev.to_owned().mapv(|v| v.abs());
-        // // suitability
-        // let tmp2 = convolve1d_vertical(&r.mapv(|v| v.abs()), a_rev.as_slice().unwrap());
-        // let x = convolve1d_horizontal(&tmp2, b_rev.as_slice().unwrap());
-
-
-        // --- 2D ---
-        // filter
-        let kernel = filters.index_axis(Axis(0), f).to_owned();
-        // residual
-        let r = convolve2d(&x0_pad, &kernel);
-        // rotate 180 + absolute kernel
-        let kernel_rot_abs = filters_rot.index_axis(Axis(0), f).to_owned().mapv(|v| v.abs());
-        // suitability
-        let x = convolve2d(&r.mapv(|v| v.abs()), &kernel_rot_abs);
-
-
-        // ----------
-        // remove symmetric padding (center crop)
-        let crop_h = (x.shape()[0] - h) / 2 + 1;
-        let crop_w = (x.shape()[1] - w) / 2 + 1;
-        let x_crop = x.slice(s![crop_h..crop_h+h, crop_w..crop_w+w]).to_owned();
-
-        xi.push(x_crop);
-    }
-
-    // convert xi Vec<Array2<f64>> into a single Array3<f64> of shape (3, h, w)
-    let xi_3d = Array3::from_shape_vec(
-        (3, h, w),
-        xi.into_iter().flat_map(|arr| arr.into_raw_vec()).collect()
-    ).unwrap();
-
-    // compute sum over channels of xi_i^p
-    let rho = xi_3d.mapv(|v| v.max(f64::EPSILON)).mapv(|v| v.powf(p)).sum_axis(Axis(0)).mapv(|v| v.powf(-1.0f64 / p));
+    // aggregate: rho = (sum_i xi_i^p)^(-1/p)
+    let rho: Vec<f64> = (0..h * w)
+        .map(|k| {
+            xi.iter()
+                .map(|x| x[k].max(f64::EPSILON).powf(p))
+                .sum::<f64>()
+                .powf(-1.0f64 / p)
+        })
+        .collect();
+    let rho = Array2::from_shape_vec((h, w), rho).unwrap();
     Ok(PyArray2::from_owned_array(py, rho).into())
 }
 

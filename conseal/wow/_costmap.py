@@ -11,6 +11,7 @@ V. Holub, and J. Fridrich. http://www.ws.binghamton.edu/fridrich/research/WOW_re
 import numpy as np
 import scipy.signal
 from typing import Tuple
+import warnings
 
 from .._conseal import wow as rs
 from .. import tools
@@ -132,25 +133,35 @@ def compute_cost(
 ) -> np.ndarray:
     """Computes WOW cost.
 
+    Rust backend requires uint8 cover and separable filters,
+    otherwise falls back to Python with a warning.
+
     :param x0: uncompressed (pixel) cover image,
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param p: parameter for reciprocal Hoelder norm
     :type p: float
+    :param separable: whether to use separable filters,
+        non-separable is supported only by Python backend
+    :type separable: bool
     :return: cost for +-1 change,
         of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
 
-    >>> # TODO
+    >>> rho = cl.wow.compute_cost(x0=x0)
     """
     # choose implementation
     backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST and (x0.dtype != np.uint8 or not separable):
+        reason = f'uint8 cover, got {x0.dtype}' if x0.dtype != np.uint8 else 'separable filters'
+        warnings.warn(
+            f'Rust backend of WOW requires {reason}, falling back to Python',
+            RuntimeWarning,
+        )
+        backend = tools.BACKEND_PYTHON
     if backend == tools.BACKEND_RUST:
-        # check types
-        if x0.dtype != np.uint8:
-            raise TypeError('parameter x0 must be uint8')
         rho = rs.compute_cost(x0=x0, p=p)
     elif backend == tools.BACKEND_PYTHON:
         rho = _compute_cost(x0=x0, p=p, separable=separable)
