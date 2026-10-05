@@ -6,7 +6,6 @@ Affiliation: University of Innsbruck
 
 import conseal as cl
 import logging
-logging.basicConfig(level=logging.DEBUG)
 import numpy as np
 import os
 from parameterized import parameterized
