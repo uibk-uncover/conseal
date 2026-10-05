@@ -244,4 +244,4 @@ def average_payload(*args, **kw):
     It sets a constant efficiency over all the embedding rates to 2.
     Other methods embed at the bound.
     """
-    return simulate._ternary.average_payload(*args, e=2, **kw)
+    return simulate.entropy(*args, e=2, **kw)

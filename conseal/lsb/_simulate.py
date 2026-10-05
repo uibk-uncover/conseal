@@ -9,7 +9,7 @@ import typing
 
 from . import _costmap
 from ._costmap import Change, Location
-from ..simulate import _ternary
+from ..simulate import sample
 
 
 def simulate(
@@ -108,8 +108,8 @@ def simulate(
         wet_cost=wet_cost
     )
     # simulate
-    delta = _ternary.simulate(
-        ps=ps,
+    delta = sample(
+        ps,
         **kw,
     )
     return cover + delta.astype(cover.dtype)

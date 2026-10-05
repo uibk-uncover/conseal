@@ -7,7 +7,7 @@ Affiliation: University of Innsbruck
 import numpy as np
 
 from . import _costmap
-from ..simulate import _ternary
+from .. import simulate
 
 
 def simulate_single_channel(
@@ -55,10 +55,10 @@ def simulate_single_channel(
     )
 
     # Simulate
-    ps, _ = _ternary.probability(
+    ps, _ = simulate.probability(
         rhos=rhos,
         alpha=alpha,
         n=x0.size,
     )
-    delta = _ternary.simulate(ps=ps, **kw)
+    delta = simulate.sample(ps, **kw)
     return x0 + delta.astype('uint8')

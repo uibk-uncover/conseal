@@ -12,7 +12,6 @@ Author: Martin Benes, Benedikt Lorch
 Affiliation: University of Innsbruck
 """
 
-import enum
 import numpy as np
 from typing import Callable, Tuple
 import warnings
@@ -20,13 +19,8 @@ import warnings
 from .. import tools
 
 
-class Sender(enum.Enum):
-    """Type of sender."""
-
-    PAYLOAD_LIMITED_SENDER = enum.auto()
-    """Payload-limited sender."""
-    DISTORTION_LIMITED_SENDER = enum.auto()
-    """Distortion-limited sender."""
+# shared with the new simulator
+from ..simulate._common import Sender  # noqa: E402
 
 
 # def get_p(

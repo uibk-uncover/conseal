@@ -3,6 +3,7 @@
 from . import coding
 from . import color
 from . import simulate
+from . import simulate_old
 from . import tools
 
 # spatial
@@ -44,6 +45,7 @@ DISTORTION_LIMITED_SENDER = simulate.DISTORTION_LIMITED_SENDER
 PAYLOAD_LIMITED_SENDER = simulate.PAYLOAD_LIMITED_SENDER
 PLS = PAYLOAD_LIMITED_SENDER
 DLS = DISTORTION_LIMITED_SENDER
+DiLS = DISTORTION_LIMITED_SENDER
 ATTACKER_INDIFFERENT = tools.ATTACKER_INDIFFERENT
 ATTACKER_OMNISCIENT = tools.ATTACKER_OMNISCIENT
 BACKEND_PYTHON = tools.BACKEND_PYTHON
@@ -82,6 +84,7 @@ __all__ = [
     'sunigard',
     'suniward',
     'simulate',
+    'simulate_old',
     'tools',
     'JUNIWARD_ORIGINAL',
     'JUNIWARD_FIX_OFF_BY_ONE',

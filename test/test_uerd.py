@@ -52,15 +52,15 @@ class TestUERD(unittest.TestCase):
 
         # Transform costmaps into embedding probability maps
         n = cl.tools.dct.nzAC(y0)
-        ps, lbda = cl.simulate._ternary.probability(
+        ps, lbda = cl.simulate.probability(
             rhos=(rho_p1_2d, rho_m1_2d),
             alpha=embedding_rate,
             n=n,
         )
 
         # Simulate embedding
-        delta_2d = cl.simulate._ternary.simulate(
-            ps=ps,
+        delta_2d = cl.simulate.sample(
+            ps,
             generator='MT19937',
             seed=seed,
         )
@@ -87,21 +87,21 @@ class TestUERD(unittest.TestCase):
 
         # Simulate the stego
         rhos = cl.uerd.compute_cost_adjusted(jpeg0.Y, jpeg0.qt[0])
-        ps, lbda = cl.simulate._ternary.probability(
+        ps, lbda = cl.simulate.probability(
             rhos=rhos,
             alpha=alpha,
             n=jpeg0.Y.size,
         )
-        jpeg1.Y += cl.simulate._ternary.simulate(
-            ps=ps,
+        jpeg1.Y += cl.simulate.sample(
+            ps,
             seed=12345,
         )
 
         # Estimate average relative payload
-        _, Hx = cl.simulate.average_payload(
-            lbda=lbda,
+        Hx = cl.simulate.entropy(
+            rhos,
             ps=ps,
-            q=3
+            q=3,
         )
 
         alpha_hat = Hx / jpeg0.Y.size

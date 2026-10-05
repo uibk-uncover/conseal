@@ -19,7 +19,7 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 
 from . import _costmap
-from ..simulate import _ternary
+from .. import simulate
 
 
 def simulate_single_channel(
@@ -74,7 +74,7 @@ def simulate_single_channel(
     )
 
     # Simulate
-    delta = _ternary.ternary(
+    delta = simulate.simulate(
         rhos=rhos,
         alpha=alpha,
         n=x0.size,
