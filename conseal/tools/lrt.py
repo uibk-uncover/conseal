@@ -9,7 +9,6 @@ import numpy as np
 import scipy.signal
 from typing import Tuple
 
-from .. import mipod
 from .common import EPS
 
 
@@ -65,61 +64,10 @@ def attack(
 ) -> float:
     """Likelihood ratio test with cover x0 and assumed change rates.
 
-    The method assumes a Gaussian cover model.
-    In practice, it is used to quickly benchmark steganographic methods,
-    without need to train an actual classifier.
+    Moved to sealwatch, use :func:`sealwatch.mvg.deflection` instead.
 
-    It was introduced in
-    Sedighi, Cogranne, Fridrich.
-    Content-Adaptive Steganography by Minimizing Statistical Detectability.
-    IEEE TIFS, 2016.
-
-    :param x0: uncompressed (pixel) cover image
-        of shape [height, width]
-    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param ps: probability tensors for changes
-        of an arbitrary shape
-    :type ps: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param clip: bottom clip of variance to ensure numerical stability,
-        EPS by default
-    :type clip: float
-    :param attacker: assumed attacker,
-        omniscient attacker (knowing SCA) by default
-    :type attacker: :class:`Attacker`
-    :return: value of the deflection coefficient
-    :rtype: float
-
-    :Example:
-
-    >>> rho_p1, rho_m1 = cl.hill.compute_cost_adjusted(x0)
-    >>> (p_p1, p_m1), lbda = cl.simulate._ternary.probability(
-    ...     rhos=(rho_p1, rho_m1),
-    ...     alpha=.1,
-    ...     n=x0.size)
-    >>> defl_hill = cl.tools.lrt.attack(x0, (p_p1, p_m1), clip=1e-3)
+    :raises NotImplementedError: always
     """
-    assert len(x0.shape) == 2, 'grayscale expected'
-    x0 = x0.astype('float32')
-    # ternary to binary
-    p = np.sum(ps, axis=0)
-
-    # estimate variance (with MiPOD estimator)
-    # Vx0 = estimate_variance(x0)  # worse
-    v0 = x0 - mipod.wiener2(x0, kernel_size=(2, 2))
-    Vx0 = mipod.estimate_variance(v0, block_size=3, degree=3)
-
-    # fisher information
-    Vx0 = np.clip(Vx0, clip, None)  # clip FI in flat areas
-    fi = 1. / Vx0**2
-    fi[np.isinf(fi)] = 0  # ignores infinities
-
-    # deflection coefficient
-    # Eq. 11
-    if attacker == Attacker.ATTACKER_OMNISCIENT:
-        lr = np.sqrt(2) * np.sqrt(np.nansum(fi * p**2))
-    # Eq. 12
-    elif attacker == Attacker.ATTACKER_INDIFFERENT:
-        lr = np.sqrt(2) * np.nansum(fi * p) / np.sqrt(np.nansum(fi))
-    else:
-        raise NotImplementedError(f'unknown attacker {attacker}')
-    return float(lr)
+    raise NotImplementedError(
+        'cl.tools.lrt.attack() moved to sealwatch, use sw.mvg.deflection() instead'
+    )
