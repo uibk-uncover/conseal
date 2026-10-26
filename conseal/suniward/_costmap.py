@@ -10,17 +10,45 @@ V. Holub, J. Fridrich and T. Denemark. http://dde.binghamton.edu/vholub/pdf/EURA
 """
 
 import numpy as np
-from scipy.signal import correlate2d
+from scipy.signal import convolve2d, correlate2d
 from typing import List, Tuple
+import warnings
 
+from .._conseal import suniward as rs
 from .. import tools
 
 
-def compute_cost(
+def _compute_cost_separable(
+    x0: np.ndarray,
+    *,
+    sigma: float = 1,
+) -> np.ndarray:
+    """Computes S-UNIWARD cost with separable Daubechies 8 filters.
+
+    Equivalent to :func:`_compute_cost` with default filters,
+    with 'valid' 1D convolutions on the symmetrically padded image.
+    """
+    x0 = np.asarray(x0, dtype='float64')
+    height, width = x0.shape
+    x0_padded = np.pad(x0, 16, 'symmetric')
+    rho = np.zeros(x0.shape)
+    for a, b in tools.spatial.daubechies8()[2]:
+        # residual: convolution with K = a b^T
+        residual = convolve2d(convolve2d(x0_padded, a[:, None], mode='valid'), b[None, :], mode='valid')
+        # suitability: correlation with |K|
+        xi = correlate2d(1. / (np.abs(residual) + sigma), np.abs(a)[:, None], mode='valid')
+        xi = correlate2d(xi, np.abs(b)[None, :], mode='valid')
+        # crop, matches 'same' on the padded image with offset 1
+        rho += xi[1:1 + height, 1:1 + width]
+    return rho
+
+
+def _compute_cost(
     x0: np.ndarray,
     *,
     sigma: float = 1,
     filters: List[np.ndarray] = None,
+    separable: bool = True,
 ) -> np.ndarray:
     """Computes S-UNIWARD cost.
 
@@ -31,6 +59,9 @@ def compute_cost(
     :type sigma: float
     :param filters: filters to use, by default Daubechies8 wavelet
     :type filters:
+    :param separable: whether to use separable filters,
+        applies to the default filters only
+    :type separable: bool
     :return: cost for +-1 change,
         of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -39,6 +70,10 @@ def compute_cost(
 
     >>> # TODO
     """  # noqa: E501
+    x0 = np.asarray(x0, dtype='float64')
+    if separable and filters is None:
+        return _compute_cost_separable(x0=x0, sigma=sigma)
+
     # Get 2D wavelet filters - Daubechies 8
     if filters is None:
         filters = tools.spatial.daubechies8()[1]
@@ -75,10 +110,62 @@ def compute_cost(
 
         xis.append(xi)
 
-    # Compute embedding costmap rho
-    rho = xis[0] + xis[1] + xis[2]
+    # Compute embedding costmap rho, sum over all filters
+    rho = sum(xis)
 
     return rho
+
+
+def compute_cost(
+    x0: np.ndarray,
+    *,
+    sigma: float = 1,
+    filters: List[np.ndarray] = None,
+    separable: bool = True,
+) -> np.ndarray:
+    """Computes S-UNIWARD cost.
+
+    Rust backend requires uint8 cover, otherwise falls back to Python with a warning.
+    It uses separable Daubechies 8 filters by default,
+    custom or non-separable filters run in Rust as well.
+
+    :param x0: uncompressed (pixel) cover image,
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param sigma: stabilizing constant. Small sigmas make the embedding very sensitive to the image content. Large sigmas smooth out the embedding change probabilities.
+    :type sigma: float
+    :param filters: filters to use, by default Daubechies8 wavelet
+    :type filters:
+    :param separable: whether to use separable filters,
+        applies to the default filters only
+    :type separable: bool
+    :return: cost for +-1 change,
+        of shape [height, width]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> rho = cl.suniward.compute_cost(x0=x0)
+    """  # noqa: E501
+    # choose implementation
+    backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST and x0.dtype != np.uint8:
+        warnings.warn(
+            f'Rust backend of S-UNIWARD requires uint8 cover, got {x0.dtype}, falling back to Python',
+            RuntimeWarning,
+        )
+        backend = tools.BACKEND_PYTHON
+    if backend == tools.BACKEND_RUST:
+        if filters is None and separable:
+            return rs.compute_cost(x0=x0, sigma=float(sigma))
+        if filters is None:
+            filters = tools.spatial.daubechies8()[1]
+        filters = [np.ascontiguousarray(f, dtype='float64') for f in filters]
+        return rs.compute_cost_filters(x0=x0, filters=filters, sigma=float(sigma))
+    elif backend == tools.BACKEND_PYTHON:
+        return _compute_cost(x0=x0, sigma=sigma, filters=filters, separable=separable)
+    else:
+        raise NotImplementedError(f'unknown backend {backend}')
 
 
 def compute_cost_adjusted(
@@ -103,9 +190,6 @@ def compute_cost_adjusted(
     >>> rhos = cl.suniward.compute_cost_adjusted(x0=x0)
     """
     assert len(x0.shape) == 2, 'single channel expected'
-
-    # process input
-    x0 = x0.astype('float64')
 
     # Calculate costmap
     rho = compute_cost(x0=x0, **kw)

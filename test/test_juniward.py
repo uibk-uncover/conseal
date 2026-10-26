@@ -5,6 +5,8 @@ from parameterized import parameterized
 import unittest
 import numpy as np
 from scipy.io import loadmat
+import time
+import warnings
 
 from . import defs
 # from .defs import ASSETS_DIR
@@ -57,7 +59,7 @@ class TestJUNIWARD(unittest.TestCase):
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
 
-        x0 = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
+        x0 = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0])
         jpeg0 = jpeglib.read_dct(cover_filepath)
         y0 = jpeg0.Y
         qt = jpeg0.qt[0]
@@ -68,7 +70,6 @@ class TestJUNIWARD(unittest.TestCase):
             x0=x0,
             y0=y0,
             qt=qt,
-            dtype=np.float64,
             implementation=implementation,
             wet_cost=wet_cost,
         )
@@ -107,7 +108,7 @@ class TestJUNIWARD(unittest.TestCase):
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_matlab_filepath = STEGO_DIR / 'costmap-matlab' / costmap_matlab_filename
 
-        x0 = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0]).astype(np.float64)
+        x0 = np.squeeze(jpeglib.read_spatial(cover_filepath).spatial[..., 0])
         jpeg0 = jpeglib.read_dct(cover_filepath)
         qt = jpeg0.qt[0]
 
@@ -142,7 +143,6 @@ class TestJUNIWARD(unittest.TestCase):
 
         # Read grayscale image
         x0 = jpeglib.read_spatial(cover_filepath).spatial[:, :, 0]
-        x0 = x0.astype(np.float64)
 
         # Read DCT coefficients and quantization table
         jpeg0 = jpeglib.read_dct(cover_filepath)
@@ -244,6 +244,82 @@ class TestJUNIWARD(unittest.TestCase):
 
         mask = costmap_cpp[:, :, 2] < 10 ** 13
         np.testing.assert_allclose(costmap_matlab[mask], costmap_cpp[mask, 2], rtol=1e-05, atol=1e-08)
+
+    @staticmethod
+    def _load(fname: str):
+        path = defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg'
+        x0 = np.squeeze(jpeglib.read_spatial(path).spatial[..., 0])
+        qt = jpeglib.read_dct(path).qt[0]
+        return x0, qt
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_rust(self, fname: str):
+        self._logger.info(f'TestJUNIWARD.test_rust({fname=})')
+        x0, qt = self._load(fname)
+        kw = {'implementation': cl.juniward.JUNIWARD_FIX_OFF_BY_ONE}
+        with cl.BACKEND_PYTHON:
+            rho_ref = cl.juniward._costmap.compute_cost(x0, qt, **kw)
+        with cl.BACKEND_RUST:
+            rho = cl.juniward._costmap.compute_cost(x0, qt, **kw)
+        # 1 / (|w| + sigma) amplifies rounding of small wavelet coefficients
+        np.testing.assert_allclose(rho, rho_ref, rtol=1e-10)
+
+    @parameterized.expand([
+        [f, impl]
+        for f in defs.TEST_IMAGES
+        for impl in cl.juniward.Implementation
+    ])
+    def test_separable(self, fname: str, implementation):
+        self._logger.info(f'TestJUNIWARD.test_separable({fname=}, {implementation=})')
+        x0, qt = self._load(fname)
+        with cl.BACKEND_PYTHON:
+            rho_2d = cl.juniward._costmap.compute_cost(x0, qt, separable=False, implementation=implementation)
+            rho = cl.juniward._costmap.compute_cost(x0, qt, separable=True, implementation=implementation)
+        np.testing.assert_allclose(rho, rho_2d, rtol=1e-10)
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES[:2]])
+    def test_fallback(self, fname: str):
+        self._logger.info(f'TestJUNIWARD.test_fallback({fname=})')
+        x0, qt = self._load(fname)
+        kw = {'implementation': cl.juniward.JUNIWARD_FIX_OFF_BY_ONE}
+        with cl.BACKEND_RUST:
+            # off-by-one fix, Rust without warning
+            with warnings.catch_warnings():
+                warnings.simplefilter('error', RuntimeWarning)
+                rho = cl.juniward._costmap.compute_cost(x0, qt, **kw)
+                # original implementation, silently in Python
+                rho_orig = cl.juniward._costmap.compute_cost(x0, qt, implementation=cl.juniward.JUNIWARD_ORIGINAL)
+            # non-separable, falls back to Python with warning
+            with self.assertWarns(RuntimeWarning):
+                rho_2d = cl.juniward._costmap.compute_cost(x0, qt, separable=False, **kw)
+            # other dtypes, fall back to Python with warning
+            with self.assertWarns(RuntimeWarning):
+                rho_float = cl.juniward._costmap.compute_cost(x0.astype('float64'), qt, **kw)
+            with self.assertWarns(RuntimeWarning):
+                rho_qt = cl.juniward._costmap.compute_cost(x0, qt.astype('int32'), **kw)
+        with cl.BACKEND_PYTHON:
+            rho_orig_ref = cl.juniward._costmap.compute_cost(x0, qt, implementation=cl.juniward.JUNIWARD_ORIGINAL)
+        np.testing.assert_array_equal(rho_orig, rho_orig_ref)
+        np.testing.assert_allclose(rho_2d, rho, rtol=1e-10)
+        np.testing.assert_allclose(rho_float, rho, rtol=1e-10)
+        np.testing.assert_allclose(rho_qt, rho, rtol=1e-10)
+
+    def test_speedup(self):
+        self._logger.info('TestJUNIWARD.test_speedup()')
+        # load covers once, time only the cost computation
+        covers = [self._load(fname) for fname in defs.TEST_IMAGES]
+        kw = {'implementation': cl.juniward.JUNIWARD_FIX_OFF_BY_ONE}
+        for name, backend, sep in [
+            ('rust', cl.BACKEND_RUST, True),
+            ('python separable', cl.BACKEND_PYTHON, True),
+            ('python non-separable', cl.BACKEND_PYTHON, False),
+        ]:
+            with backend:
+                start = time.perf_counter()
+                for x0, qt in covers:
+                    cl.juniward._costmap.compute_cost(x0, qt, separable=sep, **kw)
+                end = time.perf_counter()
+            print(f'J-UNIWARD {name}: {end - start:.3f} s for {len(covers)} images')
 
 
 __all__ = ['TestJUNIWARD']

@@ -18,9 +18,12 @@ Permission to use, copy, modify, and distribute this software for educational, r
 
 import enum
 import numpy as np
+import scipy.fft
 import scipy.signal
 import typing
+import warnings
 
+from .._conseal import juniward as rs
 from .. import tools
 
 
@@ -36,13 +39,54 @@ class Implementation(enum.Enum):
     """
 
 
-def compute_cost(
+def _compute_cost_separable(
     x0: np.ndarray,
     qt: np.ndarray,
     *,
     sigma: float = 2**-6,
-    dtype: np.dtype = np.float64,
-    implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
+    implementation: Implementation = Implementation.JUNIWARD_FIX_OFF_BY_ONE,
+) -> np.ndarray:
+    """Compute the J-UNIWARD cost with separable filters.
+
+    Equivalent to :func:`_compute_cost` with non-separable filters.
+    The DCT basis and the Daubechies 8 filters are separable,
+    so the impact of each DCT mode on the wavelet coefficients is an outer product,
+    and the cost of a block is P S Q^T with S the reciprocal wavelet coefficients.
+    """
+    height, width = x0.shape
+    # start of the [height + 15, width + 15] window in 'valid' coordinates
+    if implementation == Implementation.JUNIWARD_ORIGINAL:
+        start = 2
+    elif implementation == Implementation.JUNIWARD_FIX_OFF_BY_ONE:
+        start = 1
+    else:
+        raise NotImplementedError(f'unknown implementation {implementation}')
+
+    x0_padded = np.pad(x0.astype('float64'), 16, mode='symmetric')
+    basis = scipy.fft.idct(np.eye(8), axis=0, norm='ortho')  # basis[:, k] = idct(delta_k)
+    costs = 0
+    for a, b in tools.spatial.daubechies8()[2]:
+        # impact of the DCT modes on the wavelet coefficients, [8, 23]
+        P = np.abs(np.stack([scipy.signal.correlate(basis[:, k], a, mode='full') for k in range(8)]))
+        Q = np.abs(np.stack([scipy.signal.correlate(basis[:, k], b, mode='full') for k in range(8)]))
+        # wavelet coefficients of the cover, correlation with K = a b^T
+        rc = scipy.signal.correlate2d(x0_padded, a[:, None], mode='valid')
+        rc = scipy.signal.correlate2d(rc, b[None, :], mode='valid')
+        rc = rc[start:start + height + 15, start:start + width + 15]
+        # [23, 23] window per block
+        S = np.reciprocal(np.abs(rc) + sigma)
+        S = np.lib.stride_tricks.sliding_window_view(S, (23, 23))[::8, ::8]
+        costs = costs + np.einsum('ik,mnkl,jl->mnij', P, S, Q, optimize=True)
+    return costs * np.abs(qt).astype('float64')
+
+
+def _compute_cost(
+    x0: np.ndarray,
+    qt: np.ndarray,
+    *,
+    sigma: float = 2**-6,
+    implementation: Implementation = Implementation.JUNIWARD_FIX_OFF_BY_ONE,
+    separable: bool = True,
 ) -> np.ndarray:
     """Compute the J-UNIWARD cost.
 
@@ -54,10 +98,10 @@ def compute_cost(
     :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
     :param sigma: parameter controlling the content sensitivity, avoids division by zero but also controls the sensitivity to content.
     :type sigma: float
-    :param dtype: data type to use for distortion computation, float64 by default
-    :type dtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`__
-    :param implementation: choose J-UNIWARD implementation
+    :param implementation: choose J-UNIWARD implementation, off-by-one fix by default
     :type implementation: :class:`Implementation`
+    :param separable: whether to use separable filters
+    :type separable: bool
     :return: embedding cost
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -70,6 +114,8 @@ def compute_cost(
     height, width = x0.shape
     assert height % 8 == 0, "Expected height to be a multiple of 8"
     assert width % 8 == 0, "Expected width to be a multiple of 8"
+    if separable:
+        return _compute_cost_separable(x0=x0, qt=qt, sigma=sigma, implementation=implementation)
 
     # Get 2D wavelet filters - Daubechies
     (high_pass_decomposition_filter, _), filters, _ = tools.spatial.daubechies8()
@@ -77,11 +123,11 @@ def compute_cost(
     num_filters = len(filters)
 
     # Pre-compute impact in spatial domain when a JPEG coefficient is changed by 1
-    spatial_impact = np.zeros((8, 8, 8, 8), dtype=dtype)
+    spatial_impact = np.zeros((8, 8, 8, 8), dtype='float64')
     for j in range(8):
         for i in range(8):
             # Simulate a single pixel change in the DCT domain
-            y = np.zeros((8, 8), dtype=dtype)
+            y = np.zeros((8, 8), dtype='float64')
             y[j, i] = 1
             spatial_impact[j, i] = tools.dct.idct2(y) * qt[j, i]
 
@@ -90,7 +136,7 @@ def compute_cost(
     # Changing a DCT coefficient will affect a block of 8x8 pixels and therefore a block of (8 + s - 1) x (8 + s - 1) wavelet coefficients.
     change_window_len = 8 + wavelet_filter_size - 1
     assert change_window_len == 23, "Expected change window in Wavelet domain to have length 23"
-    wavelet_impact = np.zeros((num_filters, 8, 8, change_window_len, change_window_len), dtype=dtype)
+    wavelet_impact = np.zeros((num_filters, 8, 8, change_window_len, change_window_len), dtype='float64')
     for filter_idx in range(num_filters):
         for j in range(8):
             for i in range(8):
@@ -174,15 +220,84 @@ def compute_cost(
     return costs
 
 
+def compute_cost(
+    x0: np.ndarray,
+    qt: np.ndarray,
+    *,
+    sigma: float = 2**-6,
+    implementation: Implementation = Implementation.JUNIWARD_FIX_OFF_BY_ONE,
+    separable: bool = True,
+) -> np.ndarray:
+    """Compute the J-UNIWARD cost.
+
+    Rust backend supports the off-by-one fix (default) with separable filters,
+    uint8 decompressed image and uint16 quantization table, as read by jpeglib.
+    The original implementation runs in Python,
+    otherwise falls back to Python with a warning.
+
+    :param x0: decompressed (pixel) image
+        of shape [height, width]
+    :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table
+        of shape [8, 8]
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param sigma: parameter controlling the content sensitivity, avoids division by zero but also controls the sensitivity to content.
+    :type sigma: float
+    :param implementation: choose J-UNIWARD implementation, off-by-one fix by default
+    :type implementation: :class:`Implementation`
+    :param separable: whether to use separable filters,
+        non-separable is supported only by Python backend
+    :type separable: bool
+    :return: embedding cost
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> rho = cl.juniward._costmap.compute_cost(x0=x0, qt=qt)
+    """  # noqa: E501
+    # choose implementation
+    backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST and implementation != Implementation.JUNIWARD_FIX_OFF_BY_ONE:
+        backend = tools.BACKEND_PYTHON  # original implementation only in Python
+    if backend == tools.BACKEND_RUST:
+        if not separable:
+            reason = 'separable filters'
+        elif x0.dtype != np.uint8:
+            reason = f'uint8 decompressed image, got {x0.dtype}'
+        elif qt.dtype != np.uint16:
+            reason = f'uint16 quantization table, got {qt.dtype}'
+        else:
+            reason = None
+        if reason is not None:
+            warnings.warn(
+                f'Rust backend of J-UNIWARD requires {reason}, falling back to Python',
+                RuntimeWarning,
+            )
+            backend = tools.BACKEND_PYTHON
+    if backend == tools.BACKEND_RUST:
+        assert len(x0.shape) == 2, "Expected grayscale image"
+        assert x0.shape[0] % 8 == 0, "Expected height to be a multiple of 8"
+        assert x0.shape[1] % 8 == 0, "Expected width to be a multiple of 8"
+        return rs.compute_cost(x0=x0, qt=qt, sigma=float(sigma))
+    elif backend == tools.BACKEND_PYTHON:
+        return _compute_cost(
+            x0=x0, qt=qt, sigma=sigma,
+            implementation=implementation, separable=separable,
+        )
+    else:
+        raise NotImplementedError(f'unknown backend {backend}')
+
+
 def compute_cost_adjusted(
     x0: np.ndarray,
     y0: np.ndarray,
     qt: np.ndarray,
     *,
-    dtype: np.dtype = np.float64,
-    implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
+    implementation: Implementation = Implementation.JUNIWARD_FIX_OFF_BY_ONE,
     wet_cost: float = 10**13,
     avoid_saturated: bool = False,
+    separable: bool = True,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
     """Compute the adjusted J-UNIWARD cost for a ternary embedding.
 
@@ -195,14 +310,14 @@ def compute_cost_adjusted(
     :param qt: quantization table,
         of shape [8, 8]
     :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param dtype: data type to use for distortion computation, float64 by default
-    :type dtype: np.dtype
-    :param implementation: choose J-UNIWARD implementation
+    :param implementation: choose J-UNIWARD implementation, off-by-one fix by default
     :type implementation: :class:`Implementation`
     :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
     :param avoid_saturated: hard-sets blocks with saturated pixels to wet
     :type avoid_saturated: bool
+    :param separable: whether to use separable filters
+    :type separable: bool
     :return: embedding costs of +1 and -1 changes,
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :rtype: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -229,8 +344,8 @@ def compute_cost_adjusted(
     rho = compute_cost(
         x0=x0,
         qt=qt,
-        dtype=dtype,
         implementation=implementation,
+        separable=separable,
     )
 
     # Assign wet cost

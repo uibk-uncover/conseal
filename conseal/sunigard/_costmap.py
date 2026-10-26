@@ -47,14 +47,14 @@ def gabor(
     # process parameters
     π = np.pi
     θs = -np.linspace(0, π, num_angles, endpoint=False).astype('float64')
-    ϕs = np.linspace(0, π, num_phases, endpoint=False).astype('float32')
+    ϕs = np.linspace(0, π, num_phases, endpoint=False).astype('float64')
     cos_θs, sin_θs = np.cos(θs), np.sin(θs)
     λ = wavelength
     γ = gamma
     σ = sigma
 
     # produce grid
-    xy = np.arange(num_points).astype('float32') - num_points//2
+    xy = np.arange(num_points).astype('float64') - num_points//2
     x, y = np.meshgrid(xy, xy)
 
     # produce filters
@@ -81,7 +81,9 @@ def compute_cost(
     filters: List[np.ndarray] = None,
     **kw
 ) -> np.ndarray:
-    """Computes S-SUNIGARD cost.
+    """Computes S-UNIGARD cost.
+
+    Rust backend requires uint8 cover, otherwise falls back to Python with a warning.
 
     :param x0: uncompressed (pixel) cover image,
         of shape [height, width]
@@ -128,9 +130,6 @@ def compute_cost_adjusted(
     """
     assert len(x0.shape) == 2, 'single channel expected'
 
-    # process input
-    x0 = x0.astype('float64')
-
     # Calculate costmap
     rho = compute_cost(x0=x0, **kw)
 
@@ -148,4 +147,3 @@ def compute_cost_adjusted(
 
     # return costs
     return rho_p1, rho_m1
-

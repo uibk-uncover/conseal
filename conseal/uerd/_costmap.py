@@ -17,7 +17,9 @@ Affiliation: University of Innsbruck
 import numpy as np
 from scipy.signal import convolve2d
 import typing
+import warnings
 
+from .._conseal import uerd as rs
 from .. import tools
 
 
@@ -58,7 +60,7 @@ def compute_block_energies(
     return block_energies
 
 
-def compute_cost(
+def _compute_cost(
     y0: np.ndarray,
     qt: np.ndarray,
 ) -> np.ndarray:
@@ -111,6 +113,50 @@ def compute_cost(
     rho = rho.reshape(num_vertical_blocks, num_horizontal_blocks, 8, 8)
 
     return rho
+
+
+def compute_cost(
+    y0: np.ndarray,
+    qt: np.ndarray,
+) -> np.ndarray:
+    """Compute the UERD cost.
+
+    Check Eq. 4 of the paper.
+
+    Rust backend requires int16 DCT coefficients and uint16 quantization table,
+    as read by jpeglib, otherwise falls back to Python with a warning.
+
+    :param y0: quantized cover DCT coefficients,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param qt: quantization table,
+        of shape [8, 8]
+    :type qt: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: embedding cost,
+        of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> rho = cl.uerd._costmap.compute_cost(
+    ...   y0=jpeg0.Y,  # DCT
+    ...   qt=jpeg0.qt[0])  # QT
+    """
+    # choose implementation
+    backend = tools.get_backend()
+    if backend == tools.BACKEND_RUST and (y0.dtype != np.int16 or qt.dtype != np.uint16):
+        reason = f'int16 DCT, got {y0.dtype}' if y0.dtype != np.int16 else f'uint16 quantization table, got {qt.dtype}'
+        warnings.warn(
+            f'Rust backend of UERD requires {reason}, falling back to Python',
+            RuntimeWarning,
+        )
+        backend = tools.BACKEND_PYTHON
+    if backend == tools.BACKEND_RUST:
+        return rs.compute_cost(y0=np.ascontiguousarray(y0), qt=qt)
+    elif backend == tools.BACKEND_PYTHON:
+        return _compute_cost(y0=y0, qt=qt)
+    else:
+        raise NotImplementedError(f'unknown backend {backend}')
 
 
 def compute_cost_adjusted(

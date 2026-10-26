@@ -18,8 +18,8 @@ def simulate_single_channel(
     alpha: float,
     *,
     wet_cost: float = 10**13,
-    dtype: np.dtype = np.float64,
-    implementation: Implementation = Implementation.JUNIWARD_ORIGINAL,
+    implementation: Implementation = Implementation.JUNIWARD_FIX_OFF_BY_ONE,
+    separable: bool = True,
     generator: str = None,
     seed: int = None,
 ) -> np.ndarray:
@@ -47,11 +47,10 @@ def simulate_single_channel(
     :type alpha: float
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
-    :param dtype: data type to use for distortion computation,
-        float64 by default
-    :type dtype: `np.dtype <https://numpy.org/doc/stable/reference/generated/numpy.dtype.html>`__
-    :param implementation: choose J-UNIWARD implementation
+    :param implementation: choose J-UNIWARD implementation, off-by-one fix by default
     :type implementation: :class:`Implementation`
+    :param separable: whether to use separable filters
+    :type separable: bool
     :param generator: type of PRNG used by embedding simulator
     :type generator: `numpy.random.Generator <https://numpy.org/doc/stable/reference/random/generator.html>`__
     :param seed: random seed for embedding simulator
@@ -81,9 +80,9 @@ def simulate_single_channel(
         x0=x0,
         y0=y0,
         qt=qt,
-        dtype=dtype,
         implementation=implementation,
         wet_cost=wet_cost,
+        separable=separable,
     )
 
     # Rearrange from 4D to 2D

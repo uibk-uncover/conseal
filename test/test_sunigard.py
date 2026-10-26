@@ -6,7 +6,9 @@ import os
 from parameterized import parameterized
 from PIL import Image
 import scipy.io
+import time
 import unittest
+import warnings
 # from scipy.io import loadmat
 
 from . import defs
@@ -55,6 +57,52 @@ class TestSUNIGARD(unittest.TestCase):
 
         # no reference for S-UNIGARD :(
 
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_rust(self, fname: str):
+        self._logger.info(f'TestSUNIGARD.test_rust({fname=})')
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
+        with cl.BACKEND_PYTHON:
+            rho_ref = cl.sunigard._costmap.compute_cost(x0)
+        with cl.BACKEND_RUST:
+            rho = cl.sunigard._costmap.compute_cost(x0)
+        np.testing.assert_allclose(rho, rho_ref, rtol=1e-12)
+
+    def test_fallback(self):
+        self._logger.info('TestSUNIGARD.test_fallback()')
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{defs.TEST_IMAGES[0]}.png'))
+        with cl.BACKEND_RUST:
+            # uint8 cover, Rust without warning
+            with warnings.catch_warnings():
+                warnings.simplefilter('error', RuntimeWarning)
+                rho = cl.sunigard._costmap.compute_cost(x0)
+            # other dtype, falls back to Python with warning
+            with self.assertWarns(RuntimeWarning):
+                rho_float = cl.sunigard._costmap.compute_cost(x0.astype('float64'))
+        np.testing.assert_allclose(rho_float, rho, rtol=1e-12)
+
+    def test_all_filters(self):
+        self._logger.info('TestSUNIGARD.test_all_filters()')
+        # cost sums over all 32 Gabor filters, not only the first three
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{defs.TEST_IMAGES[0]}.png'))
+        filters = cl.sunigard._costmap.gabor()
+        rho = cl.sunigard._costmap.compute_cost(x0)
+        rho_sum = sum(cl.suniward._costmap.compute_cost(x0, filters=[f]) for f in filters)
+        np.testing.assert_allclose(rho, rho_sum, rtol=1e-12)
+
+    def test_speedup(self):
+        self._logger.info('TestSUNIGARD.test_speedup()')
+        # load covers once, time only the cost computation
+        x0s = [
+            np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
+            for fname in defs.TEST_IMAGES
+        ]
+        for name, backend in [('rust', cl.BACKEND_RUST), ('python', cl.BACKEND_PYTHON)]:
+            with backend:
+                start = time.perf_counter()
+                for x0 in x0s:
+                    cl.sunigard._costmap.compute_cost(x0)
+                end = time.perf_counter()
+            print(f'S-UNIGARD {name}: {end - start:.3f} s for {len(x0s)} images')
 
 
 __all__ = ["TestSUNIGARD"]

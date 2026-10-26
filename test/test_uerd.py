@@ -8,7 +8,9 @@ import jpeglib
 import logging
 import numpy as np
 from parameterized import parameterized
+import time
 import unittest
+import warnings
 from . import defs
 
 
@@ -110,6 +112,62 @@ class TestUERD(unittest.TestCase):
         # Compute embedding rate bound
         alpha_bound = cl.tools.dct.embedding_rate(jpeg0.Y, jpeg1.Y, q=3)
         self.assertLess(alpha, alpha_bound)
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES])
+    def test_rust(self, fname: str):
+        self._logger.info(f'TestUERD.test_rust({fname=})')
+        jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg')
+        with cl.BACKEND_PYTHON:
+            rho_ref = cl.uerd._costmap.compute_cost(jpeg0.Y, jpeg0.qt[0])
+        with cl.BACKEND_RUST:
+            rho = cl.uerd._costmap.compute_cost(jpeg0.Y, jpeg0.qt[0])
+        # integer arithmetic up to the division, bit-identical
+        np.testing.assert_array_equal(rho, rho_ref)
+
+    @parameterized.expand([[f] for f in defs.TEST_IMAGES[:2]])
+    def test_fallback(self, fname: str):
+        self._logger.info(f'TestUERD.test_fallback({fname=})')
+        jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg')
+        with cl.BACKEND_RUST:
+            # int16 DCT, Rust without warning
+            with warnings.catch_warnings():
+                warnings.simplefilter('error', RuntimeWarning)
+                rho = cl.uerd._costmap.compute_cost(jpeg0.Y, jpeg0.qt[0])
+            # other dtype, falls back to Python with warning
+            with self.assertWarns(RuntimeWarning):
+                rho_float = cl.uerd._costmap.compute_cost(jpeg0.Y.astype('float64'), jpeg0.qt[0])
+            with self.assertWarns(RuntimeWarning):
+                rho_qt = cl.uerd._costmap.compute_cost(jpeg0.Y, jpeg0.qt[0].astype('int32'))
+        np.testing.assert_array_equal(rho_float, rho)
+        np.testing.assert_array_equal(rho_qt, rho)
+
+    def test_rust_zero_energy(self):
+        self._logger.info('TestUERD.test_rust_zero_energy()')
+        # blocks with zero AC energy in the neighborhood get infinite cost
+        jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{defs.TEST_IMAGES[0]}.jpg')
+        y0 = np.zeros_like(jpeg0.Y)
+        y0[0, 0, 0, 1] = 5  # single non-zero AC, energy only around block (0, 0)
+        with cl.BACKEND_PYTHON:
+            rho_ref = cl.uerd._costmap.compute_cost(y0, jpeg0.qt[0])
+        with cl.BACKEND_RUST:
+            rho = cl.uerd._costmap.compute_cost(y0, jpeg0.qt[0])
+        self.assertTrue(np.isinf(rho).any())
+        np.testing.assert_array_equal(rho, rho_ref)
+
+    def test_speedup(self):
+        self._logger.info('TestUERD.test_speedup()')
+        # load covers once, time only the cost computation
+        jpegs = [
+            jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg')
+            for fname in defs.TEST_IMAGES
+        ]
+        for name, backend in [('rust', cl.BACKEND_RUST), ('python', cl.BACKEND_PYTHON)]:
+            with backend:
+                start = time.perf_counter()
+                for jpeg0 in jpegs:
+                    cl.uerd._costmap.compute_cost(jpeg0.Y, jpeg0.qt[0])
+                end = time.perf_counter()
+            print(f'UERD {name}: {end - start:.3f} s for {len(jpegs)} images')
 
 
 __all__ = ["TestUERD"]
