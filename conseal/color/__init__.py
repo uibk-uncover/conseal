@@ -5,15 +5,15 @@ Affiliation: University of Innsbruck
 """
 
 # globals
-from .common import num_dct, map_channels, seed_per_channel, transpose01
-from .qary import q_to_pow2q
+from ._common import num_dct, map_channels, seed_per_channel, transpose01
 
 # modules
+from . import concatenate
 from . import joint
-from . import qary
 
 
 __all__ = [
+    'concatenate',
     'joint',
     'map_channels',
     'num_dct',
