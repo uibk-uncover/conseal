@@ -112,7 +112,7 @@ sphinx-build -W -b html docs docs/_build/html
 
 ## Pull requests
 
-Open the pull request against the `dev` branch.
+Open the pull request against the `main` branch.
 Describe what you changed and why,
 and how you checked it, e.g., against which reference.
 
