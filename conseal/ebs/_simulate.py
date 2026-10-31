@@ -29,9 +29,6 @@ def simulate_single_channel(
     C. Wang, et al. An efficient JPEG steganographic scheme based on block entropy of DCT coefficients.
     IEEE ICASSP, 2012.
 
-    The details of the methods are described in the
-    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#entropy-block-stego>`__.
-
     :param y0: quantized cover DCT coefficients
         of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
     :type y0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__

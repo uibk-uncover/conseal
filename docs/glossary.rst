@@ -1,124 +1,118 @@
 Glossary
 ========
 
-This part briefly explains the concepts behind the library.
-The rest of documentation will refer to this page as a knowledge base.
+Short definitions of the terms used in the documentation.
+For the concepts behind them, see the :doc:`guide/index`,
+and for JPEG specifically, the `glossary of jpeglib <https://jpeglib.readthedocs.io/en/latest/glossary.html>`__.
 
-.. contents:: Table of Contents
-   :local:
-   :depth: 2
+.. glossary::
+   :sorted:
 
-Steganographic design
----------------------
+   adaptive steganography
+      Steganography that prefers changing elements in textured or noisy areas,
+      where changes are hard to detect.
+      The preference is expressed by the :term:`cost` of each element.
 
-*TODO: To be completed*
+   bpc
+      Bits per coefficient, an :term:`embedding rate` relative to all DCT coefficients.
 
-Embedding simulation
---------------------
+   bpe
+      Bits per element, an :term:`embedding rate` relative to all pixel values, over all color channels.
 
-Modern steganography consists of distortion calculation,
-followed by coding, e.g., using syndrome-trellis codes (STC),
-low-density generator-matrix (LDGM), wet-paper codes, codes, Hamming codes, etc.
-In research, the coding step is usually replaced by simulating the embedding changes.
-The advantages of simulation over true message coding are
+   bpnzAC
+      Bits per nonzero AC coefficient, the usual :term:`embedding rate` of JPEG steganography.
 
-- faster runtime,
-- easier implementation, and
-- ethical code publishing.
+   bpp
+      Bits per pixel, the usual :term:`embedding rate` of spatial steganography.
 
-Mutually independent (MI) simulator
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   change probability
+      The probability that an element is changed by the embedding, e.g., by +1 or -1.
+      The :term:`simulator` computes it from the :term:`cost`.
 
-A simple simulator assumes mutual independence (MI) between elements.
-For each element of index :math:`i`, the MI simulator performs two steps,
+   coding loss
+      How much a practical code falls short of :term:`optimal coding`,
+      i.e., how many more changes it needs for the same :term:`payload`.
 
-- converting distortion :math:`\rho_i` into probability :math:`p_i`; and
-- simulating the embedding change from Bernoulli or Multinoulli distribution, parameterized by the probability :math:`p_i`.
+   cost
+      The detection risk of changing a given element, denoted ρ.
+      The methods differ mainly in how they define the cost.
 
-The probability conversion is done using a Boltzmann-Gibbs distribution,
+   distortion
+      The total sum of the :term:`costs <cost>` of the changes, for additive costs.
+      The embedding minimizes it, or its expectation in the :term:`simulator`.
 
-.. math::
-   p_i^{(v)} = 1 / Z * \text{exp}( - \lambda \rho_i^{(v)}),
+   cover
+      The image before the embedding.
 
-where :math:`p_i^{(v)}` is the probability of change :math:`v`,
-:math:`\rho_i^{(v)}` is the distortion associated with the change :math:`v`,
-:math:`\lambda` is the parameter encorporating required message size,
-and :math:`Z` is a normalization constant.
+   DCT coefficient
+      A coefficient of the discrete cosine transform of an 8x8 block of a JPEG image,
+      quantized by the :term:`quantization table`.
+      The first coefficient of each block is the DC, the other 63 are AC.
 
+   distortion-limited sender
+      A sender that embeds as large a :term:`payload` as possible,
+      within a given expected :term:`distortion`.
 
-MI simulator for ternary embedding
-""""""""""""""""""""""""""""""""""
+   embedding efficiency
+      The number of message bits embedded per change, denoted e.
 
-For the common case of ternary embedding with
-:math:`+1` and :math:`-1` changes, and
-:math:`\rho^{(0)}=0`,
-which is also implemented in the `conseal` package,
-the equation above can be written as follows.
+   embedding rate
+      The :term:`payload` relative to the size of the :term:`cover`, denoted α,
+      e.g., in :term:`bpp` or :term:`bpnzAC`.
 
-.. math::
-   p_i^{(+1)} &= \frac{\text{exp}( - \lambda \rho_i^{(+1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+\text{exp}(-\lambda \rho_i^{(-1)})} \\
-   p_i^{(-1)} &= \frac{\text{exp}( - \lambda \rho_i^{(-1)})}{1+\text{exp}(-\lambda \rho_i^{(+1)})+\text{exp}(-\lambda \rho_i^{(-1)})} \\
+   lambda
+      The parameter λ of the :term:`change probability` p ~ exp(-λρ),
+      chosen by the :term:`simulator` to meet the :term:`payload`, or the :term:`distortion`.
 
+   optimal coding
+      Coding at the theoretical bound, with the highest possible :term:`embedding efficiency`.
+      The :term:`simulator` assumes it by default.
 
-Sublattice simulator
-^^^^^^^^^^^^^^^^^^^^
+   payload
+      The length of the message, in bits.
 
-*Will be added in the future*
+   payload-limited sender
+      A sender that embeds a given :term:`payload` with the least expected :term:`distortion`.
+      The default sender of the :term:`simulator`.
 
+   quantization table
+      The 8x8 table of step sizes, by which a JPEG image divides its DCT coefficients.
 
-Cost functions
---------------
+   reference implementation
+      The implementation of a method by its authors.
+      conseal is tested to produce the same costs or stego images.
 
-F5 and non-shrinkage F5 (nsF5)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   selection channel
+      The :term:`change probabilities <change probability>` of the embedding.
+      Steganalysis that knows them detects better, which is called selection-channel-aware.
 
-F5 is an LSB steganography for DCT domain.
-It performs "*permutative straddling*", when the message is spreaded over the non-zero DCT AC coefficients of the cover.
-F5 reembeds message bit, whenever 1 or -1 are turned into 0.
+   side-informed embedding
+      Embedding that uses a precover, e.g., the uncompressed image before JPEG compression,
+      to lower the cost of elements with a large rounding error.
 
-This causes a detectable artifact, later improved in non-shrinkage F5 (nsF5) by introducing wet-paper codes.
+   simulator
+      Simulates the changes of the embedding without embedding a message,
+      as :term:`optimal coding` would make them.
 
-Entropy Block Stego (EBS) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   steganalysis
+      The detection of steganography.
 
-*TODO: To be completed*
+   stego
+      The image after the embedding.
 
-Uniform Embedding Revisited (UERD) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   syndrome-trellis codes
+   STC
+      Practical codes, which embed close to :term:`optimal coding`,
+      with costs of each element.
 
-*TODO: To be completed*
+   wet element
+      An element that must not change, e.g., the DC coefficient, or a saturated pixel.
+      It gets the :term:`wet cost`.
 
-Wavelet Obtained Weights (WOW) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   wet cost
+      A large cost given to :term:`wet elements <wet element>`, e.g., 10\ :sup:`10`,
+      so that they practically never change.
 
-*TODO: To be completed*
-
-Spatial Universal Wavelet Relative (S-UNIWARD) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*TODO: To be completed*
-
-JPEG Universal Wavelet Relative (J-UNIWARD) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*TODO: To be completed*
-
-EBS was used in ALASKA 1 and as a benchmark against the SI-UNIWARD.
-
-HIgh-Low-Low (HILL) cost
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-*TODO: To be completed*
-
-Minimizing the Power of Optimal Detector (MiPOD) cost
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*TODO: To be completed*
-
-JPEG and DCT
-------------
-
-JPEG is a lossy image format.
-Because of its popularity, it is a good target for steganography, typically done on top of DCT coefficients.
-To read coefficients from JPEG and write them back, we encourage you to use our other project, `jpeglib <https://pypi.org/project/jpeglib/>`__.
-In its `glossary <https://jpeglib.readthedocs.io/en/latest/glossary.html>`__, you can find a lot of details on JPEG specifically.
+   wet-paper codes
+      Codes that embed without changing :term:`wet elements <wet element>`,
+      while the receiver does not need to know which elements were wet.

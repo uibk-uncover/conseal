@@ -31,7 +31,7 @@ dependencies = [
     "scipy",
     "numba >= 0.61",
 ]
-requires-python = ">= 3.8"
+requires-python = ">= 3.10"
 authors = [
     {name = "Martin Benes", email = "martin.benes@uibk.ac.at"},
     {name = "Benedikt Lorch", email = "benedikt.lorch@uibk.ac.at"}

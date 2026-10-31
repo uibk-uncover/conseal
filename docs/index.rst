@@ -41,7 +41,7 @@ of modern steganographic methods, for JPEG and spatial images.
       :link: glossary
       :link-type: doc
 
-      Concepts behind the package: costs, simulation, coding, JPEG.
+      Short definitions of the terms, from payload to wet-paper codes.
 
    .. grid-item-card:: FAQ
       :link: faq

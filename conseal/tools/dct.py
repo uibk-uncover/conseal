@@ -109,14 +109,34 @@ def Lambda(x: float) -> np.array:
 
 
 def dct2(a: np.ndarray) -> np.ndarray:
-    """"""
+    """Computes the orthonormal 2D DCT of a block.
+
+    :param a: block of shape [height, width], e.g., [8, 8]
+    :type a: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: DCT coefficients of the same shape
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> y = cl.tools.dct.dct2(x[:8, :8] - 128.)
+    """
     a = scipy.fftpack.dct(a, axis=0, norm='ortho')
     a = scipy.fftpack.dct(a, axis=1, norm='ortho')
     return a
 
 
 def idct2(a: np.ndarray) -> np.ndarray:
-    """"""
+    """Computes the orthonormal 2D inverse DCT of a block, inverse of :func:`dct2`.
+
+    :param a: DCT coefficients of shape [height, width], e.g., [8, 8]
+    :type a: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :return: block of the same shape
+    :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+
+    :Example:
+
+    >>> x = cl.tools.dct.idct2(y) + 128.
+    """
     a = scipy.fftpack.idct(a, axis=0, norm='ortho')
     a = scipy.fftpack.idct(a, axis=1, norm='ortho')
     return a

@@ -31,7 +31,7 @@ a.example-toggle .example-arrow {
   line-height: 1;
   color: var(--pst-color-text-muted);
 }
-/* colour only, the arrow tells open or closed */
+/* color only, the arrow tells open or closed */
 a.example-toggle:hover .example-arrow,
 a.example-toggle:hover code,
 a.example-toggle[aria-expanded="true"] .example-arrow,

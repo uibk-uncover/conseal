@@ -23,9 +23,6 @@ def simulate_single_channel(
     B. Li, et al. A New Cost Function For Spatial Image Steganography.
     IEEE ICIP, 2014.
 
-    The details of the methods are described in the
-    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#high-low-low>`__.
-
     :param x0: uncompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
@@ -35,7 +32,7 @@ def simulate_single_channel(
     :param wet_cost: wet cost for unembeddable coefficients
     :type wet_cost: float
     :return: stego pixels
-        of shape [height, width, channels]
+        of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:
@@ -43,7 +40,7 @@ def simulate_single_channel(
     >>> x1 = cl.hill.simulate_single_channel(
     ...     x0=x0,  # cover pixels
     ...     alpha=.4,  # embedding rate [bpp]
-    ...     seed=12345)  # seed for PSNR
+    ...     seed=12345)  # seed for PRNG
     """
     if alpha == 0:
         return x0

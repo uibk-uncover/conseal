@@ -53,6 +53,23 @@ def iterate(
     x: np.ndarray,
     key: int = None,
 ):
+    """Generator of the indices of all elements, in order or permuted by key.
+
+    Without key, the first axis changes fastest, e.g., column by column in 2D.
+    For a 4D DCT tensor, the last axis changes fastest instead.
+
+    :param x: tensor to iterate over
+    :type x: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param key: seed of the random permutation, no permutation if None
+    :type key: int
+    :return: generator of the index tuples
+    :rtype: generator
+
+    :Example:
+
+    >>> list(cl.tools.iterate(np.zeros((2, 3))))[:3]
+    [(0, 0), (1, 0), (0, 1)]
+    """
     # flip
     flip = len(x.shape) == 4
 

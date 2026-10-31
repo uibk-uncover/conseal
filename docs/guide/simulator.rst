@@ -54,7 +54,7 @@ and hits the payload a few hundred times more precisely.
 Coding efficiency
 -----------------
 
-By default, the simulator assumes optimal coding, which implies :math:`e = \alpha / H^{-1}(\alpha)`.
+By default, the simulator assumes :term:`optimal coding`, which implies :math:`e = \alpha / H^{-1}(\alpha)`.
 
 .. code-block:: python
 
@@ -62,7 +62,7 @@ By default, the simulator assumes optimal coding, which implies :math:`e = \alph
    ps, lbda = cl.simulator.probability(rhos, alpha=0.4)
 
 Practical steganography needs more changes for the same payload.
-For example, LSB steganography embeds at a constant embedding efficiency e=2 bits per change.
+For example, LSB steganography embeds at a constant :term:`embedding efficiency` e=2 bits per change.
 
 
 .. code-block:: python

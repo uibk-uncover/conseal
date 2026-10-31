@@ -55,7 +55,10 @@ def map_channels(
     :Example:
 
     >>> x0 = np.array(Image.open('cover.png').convert('RGB'))
-    >>> rhos =
+    >>> # raw cost per channel, stacked to [height, width, channels]
+    >>> rho = cl.color.map_channels(cl.hill._costmap.compute_cost, x0)
+    >>> # costs of +1 and -1 per channel, unstacked
+    >>> rhos = cl.color.map_channels(cl.hill.compute_cost_adjusted, x0, stack_axis=None)
     """
     x_ = [
         fun(x[..., c], *args, **kw)
@@ -94,4 +97,18 @@ def seed_per_channel(
 
 
 def transpose01(x):
+    """Swaps the first two levels of a nested sequence.
+
+    E.g., probabilities per channel and change become per change and channel.
+
+    :param x: nested sequence, indexed as x[i][j]
+    :type x: list
+    :return: transposed sequence, indexed as y[j][i]
+    :rtype: tuple of lists
+
+    :Example:
+
+    >>> cl.color.transpose01([[1, 2], [3, 4], [5, 6]])
+    ([1, 3, 5], [2, 4, 6])
+    """
     return tuple(map(list, zip(*x)))

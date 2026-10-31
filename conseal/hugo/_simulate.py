@@ -37,9 +37,6 @@ def simulate_single_channel(
     T. Pevny, et al. Using High-Dimensional Image Models to Perform Highly Undetectable Steganography.
     ACM IH, 2010.
 
-    The details of the methods are described in the
-    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#highly-undetectable-stego>`__.
-
     :param x0: uncompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__

@@ -16,7 +16,7 @@ __all__ = [
     '_simulate',
     '_costmap',
     'compute_cost_adjusted',
-    'simulate_single_channel',
+    'simulate',
     'Change',
     'Location',
 ]

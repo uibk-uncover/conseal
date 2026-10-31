@@ -32,9 +32,6 @@ def simulate(
     Allows both replacement and matching, sequential and permuted pass.
     LSB is well-known since early 1990's.
 
-    The details of the methods are described in the
-    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#least-significant-bit>`__.
-
     :param x0: cover image, in pixel or DCT domain,
         of arbitrary shape
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__

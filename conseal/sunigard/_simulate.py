@@ -33,7 +33,7 @@ def simulate_single_channel(
     :param wet_cost: cost for unembeddable coefficients
     :type wet_cost: float
     :return: stego pixels,
-        of shape [height, width, channels]
+        of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:

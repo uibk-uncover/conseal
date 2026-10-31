@@ -21,15 +21,18 @@ def distortion(
     q: int = None,
 ) -> float:
     """
-    Compute the expected distortion E[D] under the Gibbs distribution for
-    a binary embedding model:
-        p_i = 1 / (1 + exp(lambda * rho_i))
-        E[D] = sum_i (rho_i * p_i)
+    Compute the expected distortion E[D] = sum of p * rho over the elements and the changes,
+    under the Gibbs distribution p ~ exp(-λ ρ).
 
-    :param rho: embedding costs
-    :type rho: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
-    :param lbda: inverse temperature λ
+    :param rhos: costs of the changes, one tensor per change
+    :type rhos: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param lbda: inverse temperature λ, if the probabilities are not given
     :type lbda: float
+    :param ps: probabilities of the changes, computed from λ by default
+    :type ps: tuple of `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
+    :param q: number of states, len(rhos) + 1 by default,
+        i.e., no change is implicit with zero cost
+    :type q: int
     :return: value of the expected distortion
     :rtype: float
     """

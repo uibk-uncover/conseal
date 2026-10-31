@@ -30,9 +30,6 @@ def simulate_single_channel(
     V. Holub, et al. Universal distortion function for steganography in an arbitrary domain.
     EURASIP JIS, 2014.
 
-    The details of the methods are described in the
-    `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#jpeg-universal-wavelet-relative-distortion-j-uniward>`__.
-
     :param x0: decompressed (pixel) cover image
         of shape [height, width]
     :type x0: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__

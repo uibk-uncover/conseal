@@ -19,17 +19,16 @@ def estimate_variance(
 ) -> np.ndarray:
     """
     Estimate the pixels' variance by fitting a local parametric model based on a 2D-DCT (trigonometric polynomial) to the neighbors of each residual value.
+
     :param image: image residual
     :type image: np.ndarray
-    :param block_size: size of the local neighborhood, denoted as p in the paper. See Fig. 2.
-        Small p: extreme content adaptivity;
-        Medium p: Medium content adaptivity;
-        Large p: Low content adaptivity.
+    :param block_size: size of the local neighborhood, denoted as p in the paper, see Fig. 2,
+        small p gives extreme content adaptivity, large p low content adaptivity
     :type block_size: int
     :param degree: degree of the polynomial
     :type degree: int
     :return: estimated variance per pixel
-    :rtype:
+    :rtype: np.ndarray
     """
     assert block_size % 2 != 0, 'block dimensions must be odd'
     assert degree <= block_size, 'number of basis vectors exceeds block size'

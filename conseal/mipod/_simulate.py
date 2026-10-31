@@ -85,7 +85,7 @@ def simulate_single_channel(
     :param seed: random seed for embedding simulator
     :type seed: int
     :return: stego pixels,
-        of shape [height, width, channels]
+        of shape [height, width]
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__
 
     :Example:

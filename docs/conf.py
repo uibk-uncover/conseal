@@ -71,7 +71,6 @@ html_show_sourcelink = False
 html_sidebars = {
     'faq': [],
     'glossary': [],
-    'reference': [],
 }
 
 # copy code without the >>> and ... prompts
@@ -80,3 +79,15 @@ copybutton_prompt_is_regexp = True
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
+
+# -- Module docstrings
+
+def _strip_authors(app, what, name, obj, options, lines):
+    """Drops Author and Affiliation lines from module docstrings."""
+    if what == 'module':
+        lines[:] = [l for l in lines if not l.startswith(('Author:', 'Affiliation:'))]
+
+
+def setup(app):
+    app.connect('autodoc-process-docstring', _strip_authors)

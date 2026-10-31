@@ -31,7 +31,7 @@ from ..simulator._common import Sender  # noqa: E402
 #     """Converts distortions into probabilities,
 #     using Boltzmann-Gibbs distribution
 
-#     For more details, see `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#embedding-simulation>`__.
+#     For more details, see `user guide <https://conseal.readthedocs.io/en/latest/guide/simulator.html>`__.
 
 #     :param rhos: distortion of embedding choices, e.g. embedding +1 or embedding -1
 #     :type rhos: tuple
@@ -64,7 +64,7 @@ def get_p(
     """Converts distortions into probabilities,
     using Boltzmann-Gibbs distribution
 
-    For more details, see `glossary <https://conseal.readthedocs.io/en/latest/glossary.html#embedding-simulation>`__.
+    For more details, see `user guide <https://conseal.readthedocs.io/en/latest/guide/simulator.html>`__.
 
     :param rhos: distortion of embedding choices, e.g. embedding +1 or embedding -1
     :type rhos: tuple

@@ -37,7 +37,7 @@ Mid level
 
 The costs and the simulation are separate calls.
 The costs are already adjusted,
-i.e., elements which must not change, such as saturated ones, are wet.
+i.e., elements which must not change, such as saturated ones, are :term:`wet <wet element>`.
 The simulator returns the changes, to be added to the cover.
 
 .. code-block:: python
@@ -89,5 +89,5 @@ the parameter which sets the payload.
    y1 = jpeg.Y + delta
 
 The probabilities are useful on their own,
-e.g., as the selection channel for steganalysis,
+e.g., as the :term:`selection channel` for steganalysis,
 or to compute the payload, see :doc:`payload`.

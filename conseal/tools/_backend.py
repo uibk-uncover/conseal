@@ -32,9 +32,32 @@ backend = Backend.BACKEND_RUST
 
 
 def get_backend() -> Backend:
+    """Returns the current backend.
+
+    :return: current backend, Rust by default
+    :rtype: :class:`Backend`
+
+    :Example:
+
+    >>> cl.get_backend()
+    <Backend.BACKEND_RUST: 2>
+    """
     return backend
 
 
 def set_backend(b: Backend):
+    """Sets the backend globally.
+
+    To set it only for a block of code, use the backend as a context manager.
+
+    :param b: backend to use
+    :type b: :class:`Backend`
+
+    :Example:
+
+    >>> cl.set_backend(cl.BACKEND_PYTHON)
+    >>> with cl.BACKEND_RUST:
+    ...     rhos = cl.hill.compute_cost_adjusted(x0)
+    """
     global backend
     backend = b

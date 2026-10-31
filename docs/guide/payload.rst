@@ -76,9 +76,9 @@ so the simulator is slightly optimistic about the detectability.
 Payload or distortion
 ---------------------
 
-By default, the sender is payload-limited:
+By default, the sender is :term:`payload-limited <payload-limited sender>`:
 it embeds the given payload with the least distortion.
-A distortion-limited sender instead embeds as much as possible
+A :term:`distortion-limited sender` instead embeds as much as possible
 within a given average cost per element.
 
 .. code-block:: python
