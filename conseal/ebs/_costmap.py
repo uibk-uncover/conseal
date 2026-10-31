@@ -130,7 +130,7 @@ def compute_cost_adjusted(
     >>> (rho_p1, rho_m1) = cl.ebs.compute_cost_adjusted(
     ...   y0=im_dct.Y,  # DCT
     ...   qt=im_dct.qt[0])  # QT
-    >>> im_dct.Y += cl.simulate.ternary(
+    >>> im_dct.Y += cl.simulate(
     ...   rhos=(rho_p1, rho_m1)  # costs of +1 and -1 changes
     ...   alpha=0.4,  # alpha
     ...   n=im_dct.Y.size,  # cover size

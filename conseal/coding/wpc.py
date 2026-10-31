@@ -144,7 +144,7 @@ def embed(
         0 by default
     :type seed: int
     :param add_zero: whether no change is implicit with zero cost,
-        as in :func:`conseal.simulate.get_probability`
+        as in :func:`conseal.simulator.get_probability`
     :type add_zero: bool
     :param wet_cost: costs from this value up are wet, 10^10 by default
     :type wet_cost: float

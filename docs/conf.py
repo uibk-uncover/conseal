@@ -67,6 +67,13 @@ html_theme_options = {
 }
 html_show_sourcelink = False
 
+# no section navigation on pages without subpages
+html_sidebars = {
+    'faq': [],
+    'glossary': [],
+    'reference': [],
+}
+
 # copy code without the >>> and ... prompts
 copybutton_prompt_text = r'>>> |\.\.\. |\$ '
 copybutton_prompt_is_regexp = True

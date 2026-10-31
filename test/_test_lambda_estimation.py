@@ -7,7 +7,7 @@ import conseal.simulate as sim
 
 
 class TestLambdaEstimation(unittest.TestCase):
-    """Unit tests for λ estimation methods in conseal.simulate._lambda_estimation"""
+    """Unit tests for λ estimation methods in conseal.simulator._lambda_estimation"""
 
     @classmethod
     def setUpClass(cls):

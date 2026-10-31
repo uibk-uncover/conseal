@@ -328,7 +328,7 @@ def compute_cost_adjusted(
     ...     y0=jpeg0.Y,      # DCT
     ...     qt=jpeg0.qt[0],  # QT
     ...     x0=im0.spatial)  # decompressed spatial
-    >>> im_dct.Y += cl.simulate.ternary(
+    >>> im_dct.Y += cl.simulate(
     ...     rhos=(rho_p1, rho_m1),  # distortion of +1 and -1 change
     ...     alpha=0.4,              # alpha
     ...     n=im_dct.Y.size,        # cover size

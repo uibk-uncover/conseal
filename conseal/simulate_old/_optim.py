@@ -20,7 +20,7 @@ from .. import tools
 
 
 # shared with the new simulator
-from ..simulate._common import Sender  # noqa: E402
+from ..simulator._common import Sender  # noqa: E402
 
 
 # def get_p(

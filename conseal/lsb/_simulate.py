@@ -9,7 +9,7 @@ import typing
 
 from . import _costmap
 from ._costmap import Change, Location
-from ..simulate import sample
+from ..simulator import sample
 
 
 def simulate(

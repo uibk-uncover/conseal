@@ -14,7 +14,7 @@ import typing
 import warnings
 
 from . import _selection_channel
-from .. import simulate
+from .. import simulator
 from .. import tools
 
 
@@ -108,7 +108,7 @@ def compute_cost_adjusted(
     :Example:
 
     >>> rhos = cl.lsb.compute_cost_adjusted(x0)
-    >>> x1 = x0 + cl.simulate.ternary(rhos=rhos, alpha=.4, seed=12345)
+    >>> x1 = x0 + cl.simulate(rhos=rhos, alpha=.4, seed=12345)
     """
     # compute cost
     rho_p1, rho_m1 = compute_cost(
@@ -171,7 +171,7 @@ def probability(
     :Example:
 
     >>> ps, _ = cl.lsb.probability(x0, alpha=.4)
-    >>> x1 = x0 + cl.simulate._ternary.simulate(ps=ps, seed=12345)
+    >>> x1 = x0 + cl.simulator.sample(ps=ps, seed=12345)
     """
     if permute is not None:
         warnings.warn(
@@ -244,4 +244,4 @@ def average_payload(*args, **kw):
     It sets a constant efficiency over all the embedding rates to 2.
     Other methods embed at the bound.
     """
-    return simulate.entropy(*args, e=2, **kw)
+    return simulator.entropy(*args, e=2, **kw)

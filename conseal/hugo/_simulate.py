@@ -19,7 +19,7 @@ Permission to use, copy, modify, and distribute this software for educational, r
 import numpy as np
 
 from . import _costmap
-from .. import simulate
+from .. import simulator
 
 
 def simulate_single_channel(
@@ -74,7 +74,7 @@ def simulate_single_channel(
     )
 
     # Simulate
-    delta = simulate.simulate(
+    delta = simulator.simulate(
         rhos=rhos,
         alpha=alpha,
         n=x0.size,

@@ -2,7 +2,8 @@
 #
 from . import coding
 from . import color
-from . import simulate
+from . import simulator
+from . import simulate  # joint call, and the legacy simulator
 from . import simulate_old
 from . import tools
 
@@ -41,8 +42,8 @@ LOCATION_SEQUENTIAL = lsb.Location.LOCATION_SEQUENTIAL
 LOCATION_SELECTED = lsb.Location.LOCATION_SELECTED
 MiPOD_ORIGINAL = mipod.Implementation.MiPOD_ORIGINAL
 MiPOD_FIX_WET = mipod.Implementation.MiPOD_FIX_WET
-DISTORTION_LIMITED_SENDER = simulate.DISTORTION_LIMITED_SENDER
-PAYLOAD_LIMITED_SENDER = simulate.PAYLOAD_LIMITED_SENDER
+DISTORTION_LIMITED_SENDER = simulator.DISTORTION_LIMITED_SENDER
+PAYLOAD_LIMITED_SENDER = simulator.PAYLOAD_LIMITED_SENDER
 PLS = PAYLOAD_LIMITED_SENDER
 DLS = DISTORTION_LIMITED_SENDER
 DiLS = DISTORTION_LIMITED_SENDER
@@ -50,15 +51,15 @@ ATTACKER_INDIFFERENT = tools.ATTACKER_INDIFFERENT
 ATTACKER_OMNISCIENT = tools.ATTACKER_OMNISCIENT
 BACKEND_PYTHON = tools.BACKEND_PYTHON
 BACKEND_RUST = tools.BACKEND_RUST
-# BINARY_SEARCH = simulate.BINARY_SEARCH
-# NEWTON = simulate.NEWTON
-# POLYNOMIAL_PROXY = simulate.POLYNOMIAL_PROXY
-# TAYLOR_INVERSE = simulate.TAYLOR_INVERSE
-# SOLVER_BSEARCH_DDE = simulate.SOLVER_BSEARCH_DDE
-# SOLVER_BSEARCH = simulate.SOLVER_BSEARCH
-# SOLVER_NEWTON = simulate.SOLVER_NEWTON
-# SOLVER_POLYPROXY = simulate.SOLVER_POLYPROXY
-# TAYLOR_NEWTON = simulate.TAYLOR_NEWTON
+# BINARY_SEARCH = simulator.BINARY_SEARCH
+# NEWTON = simulator.NEWTON
+# POLYNOMIAL_PROXY = simulator.POLYNOMIAL_PROXY
+# TAYLOR_INVERSE = simulator.TAYLOR_INVERSE
+# SOLVER_BSEARCH_DDE = simulator.SOLVER_BSEARCH_DDE
+# SOLVER_BSEARCH = simulator.SOLVER_BSEARCH
+# SOLVER_NEWTON = simulator.SOLVER_NEWTON
+# SOLVER_POLYPROXY = simulator.SOLVER_POLYPROXY
+# TAYLOR_NEWTON = simulator.TAYLOR_NEWTON
 
 # set version
 try:
@@ -84,6 +85,7 @@ __all__ = [
     'sunigard',
     'suniward',
     'simulate',
+    'simulator',
     'simulate_old',
     'tools',
     'JUNIWARD_ORIGINAL',

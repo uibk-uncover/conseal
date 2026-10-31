@@ -47,10 +47,10 @@ the unit is set by n in the call.
    rhos = cl.uerd.compute_cost_adjusted(y0=jpeg.Y, qt=jpeg.qt[0])
 
    # 0.4 bits per nonzero AC coefficient
-   ps, lbda = cl.simulate.probability(rhos, alpha=0.4, n=cl.tools.nzAC(jpeg.Y))
+   ps, lbda = cl.simulator.probability(rhos, alpha=0.4, n=cl.tools.nzAC(jpeg.Y))
 
    # 0.4 bits per coefficient
-   ps, lbda = cl.simulate.probability(rhos, alpha=0.4, n=jpeg.Y.size)
+   ps, lbda = cl.simulator.probability(rhos, alpha=0.4, n=jpeg.Y.size)
 
 
 Simulated payload
@@ -65,7 +65,7 @@ You can check it from the probabilities.
 .. code-block:: python
 
    rhos = cl.hill.compute_cost_adjusted(x0)
-   ps, lbda = cl.simulate.probability(rhos, alpha=0.4)
+   ps, lbda = cl.simulator.probability(rhos, alpha=0.4)
 
    cl.tools.entropy(*ps) / x0.size  # ≈ 0.4 bits per pixel
 
@@ -83,7 +83,7 @@ within a given average cost per element.
 
 .. code-block:: python
 
-   ps, lbda = cl.simulate.probability(
+   ps, lbda = cl.simulator.probability(
        rhos,
        alpha=0.05,          # average cost per pixel
        objective=cl.DLS,    # distortion-limited sender

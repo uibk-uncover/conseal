@@ -118,12 +118,12 @@ class TestColor(unittest.TestCase):
         stacked = (np.stack(rhos[0]), np.stack(rhos[1]))
         # DDE: same as the stacked search, and as the former joint
         (p_p1, p_m1), lbda = cl.color.concatenate.probability(rhos=rhos, alpha=.4)
-        (q_p1, q_m1), lbda_stacked = cl.simulate.probability(stacked, alpha=.4, n=x0.size)
+        (q_p1, q_m1), lbda_stacked = cl.simulator.probability(stacked, alpha=.4, n=x0.size)
         self.assertEqual(lbda, lbda_stacked)
         np.testing.assert_array_equal(np.stack(p_p1), q_p1)
         np.testing.assert_array_equal(np.stack(p_m1), q_m1)
         # other solvers, the payload is met
-        (p_p1, p_m1), _ = cl.color.concatenate.probability(rhos=rhos, alpha=.4, solver=cl.simulate.SOLVER_NEWTON)
+        (p_p1, p_m1), _ = cl.color.concatenate.probability(rhos=rhos, alpha=.4, solver=cl.simulator.SOLVER_NEWTON)
         alpha_hat = np.sum([cl.tools.entropy(p_p1[c], p_m1[c]) for c in range(3)]) / x0.size
         self.assertAlmostEqual(alpha_hat, .4, places=3)
 
@@ -227,7 +227,7 @@ class TestColor(unittest.TestCase):
         # joint embedding
         alpha = .4
         rhos_joint = cl.color.joint.from_marginal(rhos)
-        ps_joint, _ = cl.simulate.probability(rhos_joint, alpha=alpha, n=x0.size)
+        ps_joint, _ = cl.simulator.probability(rhos_joint, alpha=alpha, n=x0.size)
         # marginal embedding rate
         ps = cl.color.joint.to_marginal(ps=ps_joint, symmetric=symmetric)
         alpha_hat = np.sum([

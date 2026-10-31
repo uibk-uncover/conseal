@@ -7,7 +7,7 @@ This gives 2**C or 3**C joint states, including the no change.
 
 The marginal costs or probabilities of the channels expand
 into the joint ones of the patterns, and the joint ones marginalize back.
-The no change is implicit, as in :mod:`conseal.simulate`,
+The no change is implicit, as in :mod:`conseal.simulator`,
 so the joint tensors have 2**C - 1 or 3**C - 1 patterns.
 
 Author: Martin Benes
@@ -152,7 +152,7 @@ def to_marginal(
 
     :Example:
 
-    >>> ps, _ = cl.simulate.probability(rhos_joint, alpha=.4, n=x0.size)
+    >>> ps, _ = cl.simulator.probability(rhos_joint, alpha=.4, n=x0.size)
     >>> p_p1, p_m1 = cl.color.joint.to_marginal(ps=ps)  # [H, W, 3]
     """
     if (rhos is None) == (ps is None):

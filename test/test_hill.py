@@ -35,13 +35,13 @@ class TestHILL(unittest.TestCase):
         # simulate the stego
         alpha = .4
         rho_p1, rho_m1 = cl.hill.compute_cost_adjusted(x)
-        (p_p1, p_m1), lbda = cl.simulate.probability(
+        (p_p1, p_m1), lbda = cl.simulator.probability(
             rhos=(rho_p1, rho_m1),
             alpha=alpha,
             n=x.size,
         )
         # estimate average relative payload
-        Hp = cl.simulate.entropy((rho_p1, rho_m1), ps=(p_p1, p_m1))
+        Hp = cl.simulator.entropy((rho_p1, rho_m1), ps=(p_p1, p_m1))
         alpha_hat = Hp/x.size
         self.assertAlmostEqual(alpha, alpha_hat, 3)
 
@@ -79,7 +79,7 @@ class TestHILL(unittest.TestCase):
         denum = 1 + np.exp(-lbda_ref * rho_p1) + np.exp(-lbda_ref * rho_m1)
         ps_ref = np.exp(-lbda_ref * rho_p1) / denum, np.exp(-lbda_ref * rho_m1) / denum
         # conseal
-        ps, _ = cl.simulate.probability(cl.hill.compute_cost_adjusted(x0), alpha)
+        ps, _ = cl.simulator.probability(cl.hill.compute_cost_adjusted(x0), alpha)
         # same change probabilities, also in flat areas
         np.testing.assert_allclose(ps, ps_ref, atol=1e-9)
         """

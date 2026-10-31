@@ -120,7 +120,7 @@ def compute_cost_adjusted(
     :Example:
 
     >>> rhos = cl.nsF5.compute_cost_adjusted(jpeg0.Y)
-    >>> jpeg1.Y = jpeg0.Y + cl.simulate.ternary(rhos=rhos, alpha=.4, seed=12345)
+    >>> jpeg1.Y = jpeg0.Y + cl.simulate(rhos=rhos, alpha=.4, seed=12345)
     """
     # Compute costmap
     rho = compute_cost(y0=y0, wet_cost=wet_cost)

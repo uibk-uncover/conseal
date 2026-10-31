@@ -52,7 +52,7 @@ class TestEBS(unittest.TestCase):
         # probabilities, as in the simulator
         rhos = cl.ebs.compute_cost_adjusted(jpeg.Y, jpeg.qt[0], implementation=cl.EBS_ORIGINAL)
         nzAC = cl.tools.dct.nzAC(jpeg.Y)
-        ps, _ = cl.simulate.probability(rhos, alpha=.4, n=nzAC)
+        ps, _ = cl.simulator.probability(rhos, alpha=.4, n=nzAC)
 
         # payload in bits per nzAC, as round(payload*nzAC) in the Matlab reference
         np.testing.assert_allclose(cl.tools.entropy(*ps), .4 * nzAC, rtol=1e-2)

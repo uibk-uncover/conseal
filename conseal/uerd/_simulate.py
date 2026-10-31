@@ -9,7 +9,7 @@ Affiliation: University of Innsbruck
 import numpy as np
 
 from ._costmap import compute_cost_adjusted
-from .. import simulate
+from .. import simulator
 from .. import tools
 
 
@@ -81,13 +81,13 @@ def simulate_single_channel(
         raise ValueError('There are no non-zero AC coefficients for embedding')
 
     # simulator
-    ps, lbda = simulate.probability(
+    ps, lbda = simulator.probability(
         rhos=rhos,
         alpha=alpha,
         n=n,
     )
 
-    delta = simulate.sample(
+    delta = simulator.sample(
         ps,
         seed=seed,
     )

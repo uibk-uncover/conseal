@@ -57,7 +57,7 @@ def probability(
 
     :Example:
 
-    >>> (p_p1, p_m1), lbda = cl.simulate.probability(
+    >>> (p_p1, p_m1), lbda = cl.simulator.probability(
     ...     rhos=(rho_p1, rho_m1),  # costs of +1 and -1
     ...     alpha=.4)               # bits per element
     """
@@ -130,7 +130,7 @@ def sample(
 
     :Example:
 
-    >>> im_dct.Y += cl.simulate.sample(
+    >>> im_dct.Y += cl.simulator.sample(
     ...     ps=(p_p1, p_m1),  # probabilities of +1 and -1
     ...     seed=12345)       # seed
     """
@@ -219,7 +219,7 @@ def simulate(
 
     :Example:
 
-    >>> im_dct.Y += cl.simulate.simulate(
+    >>> im_dct.Y += cl.simulate(
     ...     rhos=(rho_p1, rho_m1),  # costs of +1 and -1
     ...     alpha=.4,               # bits per element
     ...     seed=12345)             # seed

@@ -128,7 +128,7 @@ Unlike the high-level API, the simulator returns only the embedding changes, whi
        y0=jpeg.Y,      # DCT
        qt=jpeg.qt[0],  # QT
    )
-   jpeg.Y += cl.simulate.simulate(
+   jpeg.Y += cl.simulate(
        rhos=rhos,                # costs of +1 and -1 changes
        alpha=0.4,                # embedding rate
        n=cl.tools.nzAC(jpeg.Y),  # cover size
@@ -187,9 +187,7 @@ WOW adjusted cost
 Mid-level Simulator API
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: conseal.simulate.ternary
-
-.. autofunction:: conseal.simulate.binary
+.. autofunction:: conseal.simulator.simulate
 
 Steganographic coding
 ^^^^^^^^^^^^^^^^^^^^^
@@ -234,12 +232,12 @@ the simulator which takes the probabilities.
        qt=jpeg.qt[0],  # QT
    )
    # ... (sanitize rho, create rho_p1 and rho_m1)
-   (p_p1, p_m1), lbda = cl.simulate.probability(
+   (p_p1, p_m1), lbda = cl.simulator.probability(
        rhos=(rho_p1, rho_m1),    # embedding costs
        alpha=0.4,                # embedding rate
        n=cl.tools.nzAC(jpeg.Y),  # cover size
    )
-   jpeg.Y += cl.simulate.sample(
+   jpeg.Y += cl.simulator.sample(
        (p_p1, p_m1),  # probabilities of +1 and -1 changes
        seed=12345,    # seed for PRNG
    )
@@ -320,6 +318,8 @@ LSB probability
 Low-level Simulator API
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: conseal.simulate._ternary.probability
+.. autofunction:: conseal.simulator.probability
 
-.. autofunction:: conseal.simulate._ternary.simulate
+.. autofunction:: conseal.simulator.sample
+
+.. autofunction:: conseal.simulator.search

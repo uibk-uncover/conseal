@@ -132,7 +132,7 @@ as tested in the unit tests, see the `methods <../index.html#methods>`__.
      - default
    * - UERD
      - Troyes
-     - mid level, ``cl.simulate.sample(ps, generator='MT19937', seed=seed)``
+     - mid level, ``cl.simulator.sample(ps, generator='MT19937', seed=seed)``
        on the costs arranged by ``cl.tools.jpeglib_to_jpegio``
    * - HILL
      - Barcelona

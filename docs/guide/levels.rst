@@ -46,7 +46,7 @@ The simulator returns the changes, to be added to the cover.
    rhos = cl.uerd.compute_cost_adjusted(y0=jpeg.Y, qt=jpeg.qt[0])
 
    # simulate the changes
-   delta = cl.simulate.simulate(
+   delta = cl.simulate(
        rhos=rhos,
        alpha=0.4,                 # embedding rate
        n=cl.tools.nzAC(jpeg.Y),   # cover size, see Payload
@@ -78,14 +78,14 @@ the parameter which sets the payload.
    rho_m1[jpeg.Y <= -1023] = wet_cost
 
    # probabilities of +1 and -1 changes, and λ
-   (p_p1, p_m1), lbda = cl.simulate.probability(
+   (p_p1, p_m1), lbda = cl.simulator.probability(
        rhos=(rho_p1, rho_m1),
        alpha=0.4,
        n=cl.tools.nzAC(jpeg.Y),
    )
 
    # sample the changes
-   delta = cl.simulate.sample((p_p1, p_m1), seed=12345)
+   delta = cl.simulator.sample((p_p1, p_m1), seed=12345)
    y1 = jpeg.Y + delta
 
 The probabilities are useful on their own,

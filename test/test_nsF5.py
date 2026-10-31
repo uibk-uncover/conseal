@@ -68,7 +68,7 @@ class TestnsF5(unittest.TestCase):
         jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg')
         # embed steganography
         ps, _ = cl.nsF5._costmap.probability(y0=jpeg0.Y, alpha=.4)
-        delta = cl.simulate.sample(ps, seed=12345)
+        delta = cl.simulator.sample(ps, seed=12345)
         # direct simulation as reference
         delta_ref = jpeg0.Y - cl.nsF5.simulate_single_channel(
             y0=jpeg0.Y,
@@ -86,7 +86,7 @@ class TestnsF5(unittest.TestCase):
         jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg')
         # embed steganography
         rhos = cl.nsF5.compute_cost_adjusted(jpeg0.Y)
-        delta = cl.simulate.simulate(
+        delta = cl.simulator.simulate(
             rhos=rhos,
             alpha=.4,
             n=cl.tools.nzAC(jpeg0.Y),

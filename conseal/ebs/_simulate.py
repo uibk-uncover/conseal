@@ -7,7 +7,7 @@ Affiliation: University of Innsbruck
 import numpy as np
 
 from ._costmap import compute_cost_adjusted, Implementation
-from .. import simulate
+from .. import simulator
 from .. import tools
 
 
@@ -78,7 +78,7 @@ def simulate_single_channel(
     # STC simulation
     rho_p1 = tools.dct.jpeglib_to_jpegio(rho_p1)
     rho_m1 = tools.dct.jpeglib_to_jpegio(rho_m1)
-    delta = simulate.simulate(
+    delta = simulator.simulate(
         rhos=(rho_p1, rho_m1),
         alpha=alpha,
         n=n,

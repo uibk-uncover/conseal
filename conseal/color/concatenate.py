@@ -13,7 +13,7 @@ import numpy as np
 from typing import Callable, List, Tuple
 
 from . import _common
-from .. import simulate as sim
+from .. import simulator as sim
 
 
 def _flatten(xs: List[np.ndarray]) -> np.ndarray:
@@ -43,7 +43,7 @@ def probability(
     :type alpha: float
     :param n: number of elements, of all channels by default
     :type n: int
-    :param kw: arguments of :func:`conseal.simulate.probability`,
+    :param kw: arguments of :func:`conseal.simulator.probability`,
         e.g., objective, solver, or embedding efficiency e
     :return: tuple (ps, lbda) of probabilities,
         one list of channels per change, and λ
@@ -83,7 +83,7 @@ def sample(
     :type seed: int
     :param stack_axis: axis along which to stack the channels, no stacking if None
     :type stack_axis: int
-    :param kw: arguments of :func:`conseal.simulate.sample`,
+    :param kw: arguments of :func:`conseal.simulator.sample`,
         e.g., values, generator, or order
     :return: simulated changes, 0 for no change
     :rtype: `np.ndarray <https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html>`__ or list
@@ -131,11 +131,11 @@ def simulate(
     :type seed: int
     :param stack_axis: axis along which to stack the channels, no stacking if None
     :type stack_axis: int
-    :param values: values of the changes, see :func:`conseal.simulate.sample`
+    :param values: values of the changes, see :func:`conseal.simulator.sample`
     :type values: tuple
-    :param generator: random number generator, see :func:`conseal.simulate.sample`
+    :param generator: random number generator, see :func:`conseal.simulator.sample`
     :type generator: str or callable
-    :param order: order of changes, see :func:`conseal.simulate.sample`
+    :param order: order of changes, see :func:`conseal.simulator.sample`
     :type order: str
     :param kw: arguments of :func:`probability`,
         e.g., objective, solver, or embedding efficiency e
