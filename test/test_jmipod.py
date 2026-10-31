@@ -30,7 +30,7 @@ class TestJMiPOD(unittest.TestCase):
         ("seal7.jpg", "seal7_costmap.mat"),
         ("seal8.jpg", "seal8_costmap.mat"),
     ])
-    def test_compare_costmap_matlab(self, cover_name, costmap_name):
+    def test_cost_reference(self, cover_name, costmap_name):
         cover_dct = jpeglib.read_dct(COVER_DIR / cover_name)
         costmap = cl.jmipod.compute_cost(y0=cover_dct.Y, qt=cover_dct.qt[0])
         costmap_matlab = loadmat(JMIPOD_DIR / costmap_name)["FisherInformation"]
@@ -51,7 +51,7 @@ class TestJMiPOD(unittest.TestCase):
         ("seal7.jpg", 7, "stego_seal7_seed_7.jpg"),
         ("seal8.jpg", 8, "stego_seal8_seed_8.jpg"),
     ])
-    def test_compare_matlab(self, cover_name, seed, stego_name):
+    def test_stego_reference(self, cover_name, seed, stego_name):
         cover_dct = jpeglib.read_dct(COVER_DIR / cover_name)
 
         y1 = cl.jmipod.simulate_single_channel(

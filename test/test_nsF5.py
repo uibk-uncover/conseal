@@ -31,8 +31,8 @@ class TestnsF5(unittest.TestCase):
         del self.tmp
 
     @parameterized.expand([[f, .4, i+1] for i, f in enumerate(defs.TEST_IMAGES)])
-    def test_simulate(self, fname, alpha, seed):
-        self._logger.info('TestnsF5.test_simulate()')
+    def test_stego_reference(self, fname, alpha, seed):
+        self._logger.info('TestnsF5.test_stego_reference()')
         #
         jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg')
         y1 = cl.nsF5.simulate_single_channel(

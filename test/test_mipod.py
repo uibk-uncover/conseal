@@ -30,7 +30,7 @@ class TestMiPOD(unittest.TestCase):
         ("uncompressed_gray/seal7.png", "seal7_embedding_change_probs.mat"),
         ("uncompressed_gray/seal8.png", "seal8_embedding_change_probs.mat"),
     ])
-    def test_compare_embedding_change_probability(self, cover_name, stego_name):
+    def test_probability_reference(self, cover_name, stego_name):
         x0 = np.array(Image.open(COVER_DIR / cover_name))
         ps, _ = cl.mipod.probability(x0=x0, alpha=0.4)
         ps_matlab = loadmat(MIPOD_DIR / stego_name)["pChange"]
@@ -48,7 +48,7 @@ class TestMiPOD(unittest.TestCase):
         ("uncompressed_gray/seal7.png", 7, "stego_seal7_seed_7.png"),
         ("uncompressed_gray/seal8.png", 8, "stego_seal8_seed_8.png"),
     ])
-    def test_compare_matlab(self, cover_name, seed, stego_name):
+    def test_stego_reference(self, cover_name, seed, stego_name):
         x0 = np.array(Image.open(COVER_DIR / cover_name))
 
         x1 = cl.mipod.simulate_single_channel(

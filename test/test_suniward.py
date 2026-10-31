@@ -22,8 +22,8 @@ class TestSUNIWARD(unittest.TestCase):
     _logger = logging.getLogger(__name__)
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_compare_suniward_matlab(self, f):
-        self._logger.info(f'TestSUNIWARD.test_compare_suniward_matlab({f})')
+    def test_cost_reference(self, f):
+        self._logger.info(f'TestSUNIWARD.test_cost_reference({f})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # calculate cost
@@ -38,8 +38,8 @@ class TestSUNIWARD(unittest.TestCase):
         [fname, i+1]
         for i, fname in enumerate(defs.TEST_IMAGES)
     ])
-    def test_compare_embedding_matlab(self, fname: str, seed: int):
-        self._logger.info(f'TestSUNIWARD.test_compare_wow_matlab({fname}, {seed})')
+    def test_stego_reference(self, fname: str, seed: int):
+        self._logger.info(f'TestSUNIWARD.test_stego_reference({fname}, {seed})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
         # embed steganography

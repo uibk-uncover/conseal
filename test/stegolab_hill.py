@@ -1,8 +1,10 @@
-"""HILL cost of stegolab, reference implementation for the tests.
+"""HILL of stegolab, reference implementation for the tests.
 
 Taken from https://github.com/daniellerch/stegolab, HILL/HILL.py,
-commit 051694f3de93, functions hill_cost, ternary_entropyf and calc_lambda.
-Modified: np.float replaced by float, removed in numpy 1.24.
+commit 051694f3de93, functions hill_cost, ternary_entropyf, calc_lambda
+and embedding_simulator.
+Modified: np.float replaced by float, removed in numpy 1.24,
+and hide() takes and returns arrays instead of files.
 
 Differs from conseal's HILL by design:
 the residual is not divided by 4, i.e., the cost is 4 times lower,
@@ -96,3 +98,35 @@ def calc_lambda(rho_p1, rho_m1, message_length, n):
             m1 = m2
     iterations = iterations + 1;
     return lamb
+
+
+
+def embedding_simulator(x, rho_p1, rho_m1, m):
+    n = x.shape[0]*x.shape[1]
+    lamb = calc_lambda(rho_p1, rho_m1, m, n)
+    pChangeP1 = (np.exp(-lamb * rho_p1)) / (1 + np.exp(-lamb * rho_p1) + np.exp(-lamb * rho_m1));
+    pChangeM1 = (np.exp(-lamb * rho_m1)) / (1 + np.exp(-lamb * rho_p1) + np.exp(-lamb * rho_m1));
+    y = x.copy()
+    randChange = np.random.rand(y.shape[0], y.shape[1])
+    y[randChange < pChangeP1] = y[randChange < pChangeP1] + 1;
+    y[(randChange >= pChangeP1) & (randChange < pChangeP1+pChangeM1)] = y[(randChange >= pChangeP1) & (randChange < pChangeP1+pChangeM1)] - 1;
+    return y
+
+
+
+def hide(I, payload, T=5):
+
+    rho = hill_cost(I)
+
+    wet_cost = 10**10
+    rho[np.isnan(rho)] = wet_cost
+    rho[rho>wet_cost] = wet_cost
+
+    rho_m1 = rho.copy()
+    rho_p1 = rho.copy()
+    rho_p1[I==255] = wet_cost
+    rho_m1[I==0] = wet_cost
+
+
+    stego = embedding_simulator(I, rho_p1, rho_m1, payload*I.shape[0]*I.shape[1])
+    return stego

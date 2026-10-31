@@ -28,8 +28,8 @@ class TestHUGO(unittest.TestCase):
         del self.tmp
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_hugo_costmap(self, f: str):
-        self._logger.info(f'TestHUGO.test_compare_hugo_matlab({f})')
+    def test_cost_reference(self, f: str):
+        self._logger.info(f'TestHUGO.test_cost_reference({f})')
         # load cover
         x = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # embed steganography
@@ -40,8 +40,8 @@ class TestHUGO(unittest.TestCase):
         np.testing.assert_allclose(rho_m1, mat['rhoM1'])
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_hugo_stego(self, f: str):
-        self._logger.info(f'TestHUGO.test_hugo_stego({f})')
+    def test_stego_reference(self, f: str):
+        self._logger.info(f'TestHUGO.test_stego_reference({f})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # embed steganography

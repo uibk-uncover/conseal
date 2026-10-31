@@ -31,9 +31,9 @@ class TestUERD(unittest.TestCase):
         ("seal7.jpg", 0.4, 7, "seal7_alpha_0.4_seed_7.jpg"),
         ("seal8.jpg", 0.4, 8, "seal8_alpha_0.4_seed_8.jpg"),
     ])
-    def test_matlab_equivalence(self, cover_filepath, embedding_rate, seed, stego_filepath):
+    def test_stego_reference(self, cover_filepath, embedding_rate, seed, stego_filepath):
         self._logger.info(
-            f'TestUERD.test_matlab_equivalence('
+            f'TestUERD.test_stego_reference('
             f'{cover_filepath=}, {stego_filepath=}, {embedding_rate=}, {seed=})'
         )
 

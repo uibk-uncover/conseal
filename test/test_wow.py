@@ -29,8 +29,8 @@ class TestWOW(unittest.TestCase):
         del self.tmp
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_cost(self, f):
-        self._logger.info(f'TestWOW.test_cost({f})')
+    def test_cost_reference(self, f):
+        self._logger.info(f'TestWOW.test_cost_reference({f})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # embed steganography
@@ -53,8 +53,8 @@ class TestWOW(unittest.TestCase):
         np.testing.assert_array_equal(x1, x1_ref)
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_simulate(self, f):
-        self._logger.info(f'TestWOW.test_simulate({f})')
+    def test_stego_reference(self, f):
+        self._logger.info(f'TestWOW.test_stego_reference({f})')
         # load cover
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{f}.png'))
         # embed steganography

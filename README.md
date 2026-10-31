@@ -47,9 +47,10 @@ pip3 install .
 | J-UNIWARD: JPEG-domain universal wavelet relative distortion | JPEG | [Reference](https://dde.binghamton.edu/vholub/pdf/EURASIP14_Universal_Distortion_Function_for_Steganography_in_an_Arbitrary_Domain.pdf) |
 | J-MiPOD: JPEG-domain minimizing the power of optimal detector | JPEG | [Reference](https://doi.org/10.1145/3369412.3395075) |
 | LSB: least significant bit | Spatial / JPEG | |
-| HILL: high-low-low | Spatial | [Reference](https://projet.liris.cnrs.fr/imagine/pub/proceedings/ICIP-2014/Papers/1569891955.pdf) |
-| HUGO: highly undetectable stego | Spatial | [Reference](http://agents.fel.cvut.cz/stegodata/pdfs/Pev10-Hugo.pdf) |
+| HILL: high-low-low | Spatial | [Reference](https://doi.org/10.1109/ICIP.2014.7025854) |
+| HUGO: highly undetectable stego | Spatial | [Reference](https://doi.org/10.1007/978-3-642-16435-4_13) |
 | MiPOD: minimizing the power of optimal detector | Spatial | [Reference](https://dde.binghamton.edu/vsedighi/pdf/TIFS2015_Content_Adaptive_Steganography_by_Minimizing_Statistical_Detectability.pdf) |
+| S-UNIGARD: spatial-domain universal Gabor residual distortion | spatial | [Reference](https://doi.org/10.1109/WIFS.2014.7084302) |
 | S-UNIWARD: spatial-domain universal wavelet relative distortion | spatial | [Reference](https://dde.binghamton.edu/vholub/pdf/EURASIP14_Universal_Distortion_Function_for_Steganography_in_an_Arbitrary_Domain.pdf) |
 | WOW: wavelet obtained weights | spatial | [Reference](https://dde.binghamton.edu/vholub/pdf/WIFS12_Designing_Steganographic_Distortion_Using_Directional_Filters.pdf) |
 

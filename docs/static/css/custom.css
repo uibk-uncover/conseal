@@ -1,0 +1,77 @@
+/* landing page */
+.hero-title h1,
+h1.hero-title {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+p.hero-tagline {
+  text-align: center;
+  font-size: 1.3rem;
+  color: var(--pst-color-text-muted);
+  margin-bottom: 2rem;
+}
+
+/* methods table, examples toggled inline */
+a.example-toggle,
+a.example-toggle:hover {
+  white-space: nowrap;
+  text-decoration: none;
+}
+a.example-toggle code {
+  color: var(--pst-color-text-muted);
+  background: none;
+  border: none;
+  padding: 0;
+}
+a.example-toggle .example-arrow {
+  display: inline-block;
+  width: 1em;
+  font-size: 1.15em;
+  line-height: 1;
+  color: var(--pst-color-text-muted);
+}
+/* colour only, the arrow tells open or closed */
+a.example-toggle:hover .example-arrow,
+a.example-toggle:hover code,
+a.example-toggle[aria-expanded="true"] .example-arrow,
+a.example-toggle[aria-expanded="true"] code {
+  color: var(--pst-color-link);
+}
+table.method-table tr.example-row > td {
+  background: var(--pst-color-background);
+  padding: 0.25rem 0.5rem 0.5rem;
+}
+table.method-table tr.example-row div.highlight {
+  margin: 0;
+}
+
+/* verified against reference implementations */
+a.verified {
+  display: inline-block;
+  padding: 0 0.45em;
+  margin-right: 0.15em;
+  font-size: 0.8em;
+  line-height: 1.6;
+  border-radius: 0.6em;
+  color: var(--pst-color-success);
+  border: 1px solid var(--pst-color-success);
+  text-decoration: none;
+}
+a.verified:hover {
+  color: var(--pst-color-background);
+  background: var(--pst-color-success);
+}
+a.verified-ref {
+  font-size: 0.85em;
+  margin-left: 0.2em;
+}
+table.method-table abbr {
+  text-decoration: none;
+  cursor: help;
+}
+p.table-footnote {
+  font-size: 0.75em;
+  color: var(--pst-color-text-muted);
+  margin-top: -0.5rem;
+}

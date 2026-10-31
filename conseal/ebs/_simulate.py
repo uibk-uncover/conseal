@@ -61,14 +61,10 @@ def simulate_single_channel(
     ...   alpha=0.4,        # alpha
     ...   seed=12345)       # seed
     """
-    # Count number of embeddable DCT coefficients
-    N, M, _, _ = y0.shape
-    if implementation == Implementation.EBS_ORIGINAL:
-        num_DCT_coeffs = y0.size - 4*N*M
-    elif implementation == Implementation.EBS_FIX_WET:
-        num_DCT_coeffs = y0.size
-    else:
-        raise NotImplementedError(f'unknown implementation {implementation}')
+    # Payload in bits per nzAC, as other JPEG methods
+    n = tools.dct.nzAC(y0)
+    if n == 0:
+        raise ValueError('There are no non-zero AC coefficients for embedding')
 
     # Compute cost for embedding into the quantized DCT coefficients
     # of shape [num_vertical_blocks, num_horizontal_blocks, 8, 8]
@@ -85,7 +81,7 @@ def simulate_single_channel(
     delta = simulate.simulate(
         rhos=(rho_p1, rho_m1),
         alpha=alpha,
-        n=num_DCT_coeffs,
+        n=n,
         generator=generator,
         order=order,
         seed=seed,

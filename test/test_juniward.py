@@ -53,8 +53,8 @@ class TestJUNIWARD(unittest.TestCase):
         ('seal7.jpg', 'seal7_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
         ('seal8.jpg', 'seal8_fix_off_by_one.costmap', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
     ])
-    def test_costmap_cpp_python_equivalence(self, cover_filename, costmap_cpp_filename, implementation):
-        self._logger.info(f'TestJUNIWARD.test_costmap_cpp_python_equivalence({cover_filename=}, {costmap_cpp_filename=}, {implementation=})')
+    def test_cost_reference_cpp(self, cover_filename, costmap_cpp_filename, implementation):
+        self._logger.info(f'TestJUNIWARD.test_cost_reference_cpp({cover_filename=}, {costmap_cpp_filename=}, {implementation=})')
 
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_cpp_filepath = STEGO_DIR / 'costmap-cpp' / costmap_cpp_filename
@@ -102,8 +102,8 @@ class TestJUNIWARD(unittest.TestCase):
         ('seal7.jpg', 'seal7_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
         ('seal8.jpg', 'seal8_costmap_fix_off_by_one.mat', cl.juniward.Implementation.JUNIWARD_FIX_OFF_BY_ONE),
     ])
-    def test_costmap_matlab_python_equivalence(self, cover_filename, costmap_matlab_filename, implementation):
-        self._logger.info(f'TestJUNIWARD.test_costmap_matlab_python_equivalence({cover_filename=}, {costmap_matlab_filename=}, {implementation=})')
+    def test_cost_reference(self, cover_filename, costmap_matlab_filename, implementation):
+        self._logger.info(f'TestJUNIWARD.test_cost_reference({cover_filename=}, {costmap_matlab_filename=}, {implementation=})')
 
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         costmap_matlab_filepath = STEGO_DIR / 'costmap-matlab' / costmap_matlab_filename
@@ -135,8 +135,8 @@ class TestJUNIWARD(unittest.TestCase):
         ('seal7.jpg', 'seal7_alpha_0.4_seed_7.jpg', 0.4, 7),
         ('seal8.jpg', 'seal8_alpha_0.4_seed_8.jpg', 0.4, 8),
     ])
-    def test_simulation_python_matlab_equivalence(self, cover_filename, stego_filename, alpha, seed):
-        self._logger.info(f'TestJUNIWARD.test_simulation_python_matlab_equivalence('f'{cover_filename=}, {alpha=}, {seed=})')
+    def test_stego_reference(self, cover_filename, stego_filename, alpha, seed):
+        self._logger.info(f'TestJUNIWARD.test_stego_reference('f'{cover_filename=}, {alpha=}, {seed=})')
 
         cover_filepath = defs.COVER_COMPRESSED_GRAY_DIR / cover_filename
         stego_matlab_filepath = STEGO_DIR / 'stego-matlab' / stego_filename

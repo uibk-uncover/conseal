@@ -63,8 +63,8 @@ class TestHILL(unittest.TestCase):
         self.assertGreaterEqual(delta.min(), -1)
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
-    def test_stegolab_probability(self, fname: str):
-        self._logger.info(f'TestHILL.test_stegolab_probability({fname=})')
+    def test_probability_reference(self, fname: str):
+        self._logger.info(f'TestHILL.test_probability_reference({fname=})')
         x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
         alpha = .4
         # stegolab, as in HILL.hide()
@@ -92,6 +92,16 @@ class TestHILL(unittest.TestCase):
         This makes the costs differ in flat areas.
         To avoid heuristics, we instead compare in the probability space.
         """
+
+    @parameterized.expand([[f, i] for i, f in enumerate(defs.TEST_IMAGES, 1)])
+    def test_stego_reference(self, fname: str, seed: int):
+        self._logger.info(f'TestHILL.test_stego_reference({fname=}, {seed=})')
+        x0 = np.array(Image.open(defs.COVER_UNCOMPRESSED_GRAY_DIR / f'{fname}.png'))
+        # simulate, with the generator of stegolab, np.random.seed(seed)
+        x1 = cl.hill.simulate_single_channel(x0, .4, generator='MT19937', seed=seed)
+        # compare to stego of stegolab, stegolab_hill.hide()
+        x1_ref = np.array(Image.open(defs.ASSETS_DIR / 'hill' / f'{fname}_alpha_0.4_seed_{seed}.png'))
+        np.testing.assert_array_equal(x1, x1_ref)
 
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
     def test_rust(self, fname: str):
