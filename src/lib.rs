@@ -5,6 +5,8 @@ use pyo3::prelude::*;
 
 mod hill;
 mod juniward;
+mod wpc;
+mod wpc_lt;
 mod suniward;
 mod uerd;
 mod wavelet;
@@ -32,6 +34,14 @@ fn _conseal(py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     let uerd_mod = PyModule::new(py, "uerd")?;
     uerd::init_uerd_module(py, &uerd_mod)?;
     m.add_submodule(&uerd_mod)?;
+    //
+    let lt_mod = PyModule::new(py, "lt")?;
+    wpc_lt::init_lt_module(py, &lt_mod)?;
+    m.add_submodule(&lt_mod)?;
+    //
+    let wpc_mod = PyModule::new(py, "wpc")?;
+    wpc::init_wpc_module(py, &wpc_mod)?;
+    m.add_submodule(&wpc_mod)?;
 
     // m.add_function(wrap_pyfunction!(extract, m)?)?;
     Ok(())

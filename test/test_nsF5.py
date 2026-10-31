@@ -44,6 +44,23 @@ class TestnsF5(unittest.TestCase):
         jpeg1_ref = jpeglib.read_dct(STEGO_DIR / f'{fname}_alpha_{alpha}_seed_{seed}.jpg')
         np.testing.assert_array_equal(y1, jpeg1_ref.Y)
 
+    @parameterized.expand([[f, i+1] for i, f in enumerate(defs.TEST_IMAGES)])
+    def test_embed_extract(self, fname, key):
+        self._logger.info(f'TestnsF5.test_embed_extract({fname}, {key})')
+        # crop of cover
+        jpeg0 = jpeglib.read_dct(defs.COVER_COMPRESSED_GRAY_DIR / f'{fname}.jpg')
+        y0 = jpeg0.Y[:16, :16]
+        length = int(.4 * cl.tools.dct.nzAC(y0)) // 8
+        message = np.random.default_rng(key).bytes(length)
+        # embed and extract
+        y1 = cl.nsF5.embed_single_channel(y0, message, key)
+        self.assertEqual(cl.nsF5.extract_single_channel(y1, length, key), message)
+        # only nonzero AC, decreased in absolute value
+        changed = y1 != y0
+        self.assertTrue((np.abs(y1[changed]) == np.abs(y0[changed]) - 1).all())
+        self.assertFalse(changed[y0 == 0].any())
+        self.assertFalse(changed[:, :, 0, 0].any())
+
     @parameterized.expand([[f] for f in defs.TEST_IMAGES])
     def test_probability(self, fname):
         self._logger.info('TestnsF5.test_probability()')
