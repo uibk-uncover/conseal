@@ -1,18 +1,18 @@
 :html_theme.sidebar_secondary.remove:
 
-.. image:: static/seal.png
-   :width: 180px
-   :align: center
-   :alt: conseal
-
 .. rst-class:: hero-title
 
 conseal
 =======
 
+.. image:: static/seal.png
+   :width: 120px
+   :class: hero-logo
+   :alt: conseal
+
 .. rst-class:: hero-tagline
 
-Making research in steganography and steganalysis reproducible and accessible.
+Making research in steganography reproducible and accessible.
 
 **conseal** is a Python package implementing the cost functions and embedding simulators
 of modern steganographic methods, for JPEG and spatial images.
@@ -41,7 +41,7 @@ of modern steganographic methods, for JPEG and spatial images.
       :link: glossary
       :link-type: doc
 
-      Short definitions of the terms, from payload to wet-paper codes.
+      Short definitions of the terms.
 
    .. grid-item-card:: FAQ
       :link: faq
@@ -182,7 +182,7 @@ Methods
      - JPEG, spatial
      -
      - —
-     - 
+     -
 
 .. rst-class:: table-footnote new-tab
 

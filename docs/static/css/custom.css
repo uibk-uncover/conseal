@@ -1,15 +1,41 @@
-/* landing page */
-.hero-title h1,
-h1.hero-title {
-  text-align: center;
-  font-size: 3rem;
-  margin-bottom: 0;
+/* landing page, logo next to the title and tagline */
+section.hero-title {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1.5rem;
 }
-p.hero-tagline {
-  text-align: center;
+section.hero-title > * {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+section.hero-title > .hero-logo,
+section.hero-title > a:has(> .hero-logo) {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+section.hero-title > h1 {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  font-size: 3rem;
+  margin: 0;
+}
+section.hero-title > p.hero-tagline {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
   font-size: 1.3rem;
   color: var(--pst-color-text-muted);
-  margin-bottom: 2rem;
+  margin: 0 0 1.5rem;
+}
+@media (max-width: 576px) {
+  img.hero-logo {
+    width: 80px !important;
+  }
+  section.hero-title > h1 {
+    font-size: 2.2rem;
+  }
 }
 
 /* methods table, examples toggled inline */
